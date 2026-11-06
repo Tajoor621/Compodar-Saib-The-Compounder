@@ -14,6 +14,10 @@ The server-side adapter supports provider selection through AI_PROVIDER and opti
 
 Provider model names and free-tier availability can change. Configure keys only as server environment variables. Do not put secrets in source control or browser-visible VITE_ variables.
 
+## Image / photo processing
+
+The medicine-pack OCR reader uses xAI Grok through the server-side XAI_API_KEY. The browser requires an explicit photo-consent checkbox before invoking the server function. It is intended only for medicine packaging, not patient scans or clinical images. The image is resized in the browser and sent to xAI; the app does not add it to assistant chat history. This is not a local OCR path.
+
 ## Retrieval sources
 
 - PubMed / NCBI E-utilities: article metadata and abstracts when available.
