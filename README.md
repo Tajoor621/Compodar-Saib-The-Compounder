@@ -43,7 +43,7 @@ At least one provider key is required. Keys must be configured as server environ
 
 - Never enter names, dates of birth, phone numbers, email addresses, addresses, national identifiers, medical record numbers, or patient photos.
 - A submitted question and the retrieved public reference passages are sent to the configured model provider for processing.
-- The current assistant stores conversation history in browser local storage. Clearing assistant history removes that history only; a global clear-all control covering every local database and server session is not yet implemented.
+- The privacy page provides a clear-all control for localStorage, IndexedDB, browser Cache Storage and service-worker registrations; when Better Auth is enabled it also requests server-side sign-out. The app currently has no IndexedDB clinical-data store. If server sign-out cannot be confirmed, the page reports failure.
 - Do not use real patient data. No patient identifiers should be submitted, even where a detector fails to recognize them.
 - AI output is not a prescription or diagnosis. Verify every clinical decision against the current local label and current guideline with a licensed professional.
 - Emergency symptoms require local emergency services; do not wait for an AI response.
