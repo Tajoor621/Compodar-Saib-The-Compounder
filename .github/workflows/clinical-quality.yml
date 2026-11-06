@@ -30,7 +30,10 @@ jobs:
       - name: Lint
         if: always()
         run: npm run lint
-      - name: Unit and safety tests
+      - name: Focused clinical and safety tests
+        if: always()
+        run: npm run test:clinical
+      - name: Full repository test suite
         if: always()
         run: npm test
       - name: Clinical evaluation release gate
