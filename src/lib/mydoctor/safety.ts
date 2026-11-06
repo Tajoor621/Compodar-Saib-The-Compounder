@@ -42,6 +42,7 @@ const injectionPatterns = [
 ];
 
 export function neutralizePromptInjection(value: string): string {
+  // eslint-disable-next-line no-control-regex
   let result = value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, " ");
   for (const pattern of injectionPatterns) result = result.replace(pattern, "[neutralized instruction override]");
   return result.slice(0, 1600);
