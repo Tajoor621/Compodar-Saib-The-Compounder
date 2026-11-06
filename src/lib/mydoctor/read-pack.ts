@@ -35,7 +35,7 @@ export const readPackPhoto = createServerFn({ method: "POST" })
             content: [
               {
                 type: "text",
-                text: 'Read this medicine pack. Reply with JSON only: {"name":"","strength":"","form":"tablet|capsule|syrup|oral-drops|eye|ear|nasal|powder|cream|inhaler|injection|unknown","volume":"","seen":""}. form is eye, ear, or nasal only when those words are printed. oral-drops means drops to swallow. volume is the printed bottle size such as 5 ml, not a guessed dose. Copy only words you can read. If unreadable, leave strings empty. Do not guess from colour or bottle shape.',
+                text: 'Read this image only if it is clearly medicine packaging. If it is a patient scan, radiology image, body photo, prescription, patient record, or any document showing a patient identifier, refuse by returning empty strings and form "unknown". Never interpret or describe clinical images. Reply with JSON only: {"name":"","strength":"","form":"tablet|capsule|syrup|oral-drops|eye|ear|nasal|powder|cream|inhaler|injection|unknown","volume":"","seen":""}. form is eye, ear, or nasal only when those words are printed. oral-drops means drops to swallow. volume is the printed bottle size such as 5 ml, not a guessed dose. Copy only words you can read. If unreadable, leave strings empty. Do not guess from colour or bottle shape.',
               },
               { type: "image_url", image_url: { url: data.image } },
             ],
