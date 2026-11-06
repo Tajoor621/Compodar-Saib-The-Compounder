@@ -117,7 +117,7 @@ export function AssistantScreen() {
           {DISCLAIMER[lang]}
         </p>
         <Button full onClick={onAccept}>
-          {lang === "ur" ? "میں سمجھتا/سمجھتی ہوں اور سوال بھیجنے کی رضامندی دیتا/دیتی ہوں" : "I understand and consent to send submitted questions to the AI provider"}
+          {lang === "ur" ? "میں سمجھتا/سمجھتی ہوں اور سوال کو عوامی ذرائع میں تلاش کرنے اور AI فراہم کنندہ کو بھیجنے کی رضامندی دیتا/دیتی ہوں" : "I understand and consent to search public references and send submitted questions and retrieved passages to the AI provider"}
         </Button>
       </section>
     );
