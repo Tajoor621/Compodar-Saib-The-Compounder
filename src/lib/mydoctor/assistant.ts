@@ -86,20 +86,13 @@ export const VERIFY_REMINDER = {
   ur: "کسی بھی کلینیکل استعمال سے پہلے اس معلومات کی موجودہ رہنما اصول، دوائی لیبل، اور فارماسسٹ یا ماہر سے تصدیق کریں۔ یہ طبی مشورہ نہیں۔",
 };
 
-export function detectIdentifiers(text: string): boolean {
-  const patterns = [
-    /\b\d{2,4}[-\/]\d{1,2}[-\/]\d{1,4}\b/, // dates
-    /\b[A-Z]{1,3}\d{5,10}\b/i, // possible MRN
-    /\b\d{3}-\d{2}-\d{4}\b/, // SSN-like
-    /\b(?:name|patient|mrn|dob)\s*[:=]/i,
-  ];
-  return patterns.some((p) => p.test(text));
-}
+export { detectIdentifiers } from "./safety.ts";
 
 export type ChatMessage = {
   role: "user" | "assistant";
   content: string;
   citations?: string[];
+  sources?: { id: string; title: string; url: string; publisher: string; retrievedAt: string }[];
   timestamp: number;
 };
 
