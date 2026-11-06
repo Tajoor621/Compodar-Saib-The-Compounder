@@ -50,7 +50,7 @@ async function pubmed(query: string): Promise<ClinicalSource[]> {
       id: "PMID-" + id, title, publisher: "PubMed / NCBI",
       url: "https://pubmed.ncbi.nlm.nih.gov/" + id + "/", retrievedAt, kind: "pubmed" as const, passage,
     };
-  }).filter((item): item is ClinicalSource => Boolean(item && item.title && item.passage));
+  }).filter((item) => Boolean(item && item.title && item.passage)) as ClinicalSource[];
 }
 
 async function openFda(query: string): Promise<ClinicalSource[]> {
