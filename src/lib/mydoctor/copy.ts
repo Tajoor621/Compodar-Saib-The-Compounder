@@ -431,7 +431,6 @@ const UI = {
     alreadyAspirin: "Are you already taking aspirin, or a blood thinner, every day?",
     childWeight: "About how much does the child weigh, if you know? A number is enough. No dose will be calculated.",
     heardTitle: "What the specialist heard",
-  },
     identifierBlocked: "Possible personal identifiers were detected. Remove names, dates of birth, phone numbers, email addresses, addresses, and ID numbers before saving this case. Nothing was saved.",
     privacyTitle: "Privacy and data handling",
     privacyStored: "Stored on this device: language and jurisdiction settings; signer name; saved case records, including complaint text, age band, medications, allergies, selected answers, generated drafts, and clinician sign-off notes; assistant chat history; and disclaimer/consent preference. The browser stores these in localStorage. Preview sign-in may also use a short-lived bearer token in sessionStorage.",
@@ -441,7 +440,7 @@ const UI = {
     privacyClearConfirm: "This removes saved cases, assistant history, settings, consent preferences, browser caches, service-worker registrations, and IndexedDB databases for this origin. If sign-in is enabled, the app will also request server-side sign-out. Continue?",
     privacyClearDone: "Local app data was cleared. Any enabled sign-in session was signed out.",
     privacyClearFailed: "Local data may have been cleared, but server sign-out could not be verified. Retry sign-out before sharing this device.",
-
+  },
   ur: {
     mark: "MyDoctor",
     tagline: "آپ کی زبان میں ماہر، آخری بات ڈاکٹر کی۔",
