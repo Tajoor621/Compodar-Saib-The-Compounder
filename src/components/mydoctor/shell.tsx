@@ -32,8 +32,9 @@ export function Shell({
               <HeartPulse className="size-5" aria-hidden="true" />
             </span>
             <span className="min-w-0">
-              <span className="block text-lg font-semibold leading-tight">MyDoctor</span>
-              <span className="block truncate text-sm text-muted">{t(lang, "shortRole")}</span>
+              <span className="block text-base font-semibold leading-tight">Compodar Saib</span>
+              <span className="block truncate text-xs font-semibold text-muted">The Compounder</span>
+              <span className="block truncate text-[11px] text-muted">{t(lang, "shortRole")}</span>
             </span>
           </Link>
           <div className="flex shrink-0 rounded-xl border border-line bg-surface p-1">
