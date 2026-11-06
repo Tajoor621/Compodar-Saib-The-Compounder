@@ -4,9 +4,6 @@ import { useClinic } from "@/lib/mydoctor/store";
 import {
   SPECIALTY_ASSISTANTS,
   KNOWLEDGE_TOPICS,
-  DISCLAIMER,
-  SAFETY_BANNER,
-  VERIFY_REMINDER,
   detectIdentifiers,
   loadChatHistory,
   saveChatHistory,
@@ -16,6 +13,7 @@ import {
   type ChatMessage,
 } from "@/lib/mydoctor/assistant";
 import { askClinicalReference } from "@/lib/ai/answer.server";
+import { t } from "@/lib/mydoctor/copy";
 
 
 export function AssistantScreen() {
@@ -114,7 +112,7 @@ export function AssistantScreen() {
       <section className="flex flex-col gap-6">
         <h1 className="text-3xl font-semibold">{lang === "ur" ? "اعلان" : "Disclaimer"}</h1>
         <p className="rounded-xl border border-line bg-surface p-4 text-sm leading-relaxed">
-          {DISCLAIMER[lang]}
+          {t(lang, "assistantDisclaimer")}
         </p>
         <Button full onClick={onAccept}>
           {lang === "ur" ? "میں سمجھتا/سمجھتی ہوں اور سوال کو عوامی ذرائع میں تلاش کرنے اور AI فراہم کنندہ کو بھیجنے کی رضامندی دیتا/دیتی ہوں" : "I understand and consent to search public references and send submitted questions and retrieved passages to the AI provider"}
@@ -134,7 +132,7 @@ export function AssistantScreen() {
         <h1 className="text-3xl font-semibold leading-tight">
           {lang === "ur" ? "ریفرنس اسسٹنٹ" : "Reference Assistant"}
         </h1>
-        <p className="text-muted text-sm">{SAFETY_BANNER[lang]}</p>
+        <p className="text-muted text-sm">{t(lang, "assistantSafetyBanner")}</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -253,7 +251,7 @@ export function AssistantScreen() {
         </div>
       </div>
 
-      <p className="text-xs text-muted">{VERIFY_REMINDER[lang]}</p>
+      <p className="text-xs text-muted">{t(lang, "assistantVerifyReminder")}</p>
     </section>
   );
 }
