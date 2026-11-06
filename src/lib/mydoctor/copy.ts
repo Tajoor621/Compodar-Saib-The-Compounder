@@ -69,6 +69,15 @@ export const REVIEW_LINE: Record<Lang, Record<SpecialtyId, string>> = {
     pediatrics: "Based on what you've told me, a children's doctor should review this.",
     psychiatry: "Based on what you've told me, a mental health doctor should review this.",
     identifierBlocked: "Possible personal identifiers were detected. Remove names, dates of birth, phone numbers, email addresses, addresses, and ID numbers before saving this case. Nothing was saved.",
+
+    privacyTitle: "Privacy and data handling",
+    privacyStored: "Stored on this device: language and jurisdiction settings; signer name; saved case records, including complaint text, age band, medications, allergies, selected answers, generated drafts, and clinician sign-off notes; assistant chat history; and disclaimer/consent preference. The browser stores these in localStorage. Preview sign-in may also use a short-lived bearer token in sessionStorage.",
+    privacySent: "When you submit an assistant question, the question and retrieved public reference passages are sent to the AI provider configured by the app owner (Groq, Google Gemini, or OpenRouter). The server-side assistant does not intentionally log raw questions or source passages. Do not submit patient identifiers or real patient data.",
+    privacyNever: "The app does not intentionally send saved intake cases to the AI provider. The current assistant request sends only the submitted question and retrieved public sources. Browser offline caches are intended for app assets, not patient-entered text. The app currently has no IndexedDB clinical-data store.",
+    privacyClear: "Clear all local app data",
+    privacyClearConfirm: "This removes saved cases, assistant history, settings, consent preferences, browser caches, service-worker registrations, and IndexedDB databases for this origin. If sign-in is enabled, the app will also request server-side sign-out. Continue?",
+    privacyClearDone: "Local app data was cleared. Any enabled sign-in session was signed out.",
+    privacyClearFailed: "Local data may have been cleared, but server sign-out could not be verified. Retry sign-out before sharing this device.",
   },
   ur: {
     dermatology: "آپ کی بتائی ہوئی باتوں کی بنیاد پر، جلد کے ڈاکٹر کو یہ دیکھنا چاہیے۔",
@@ -754,6 +763,15 @@ const UI = {
     childWeight: "اگر معلوم ہو تو بچے کا وزن تقریباً کتنا ہے؟ عدد کافی ہے۔ خوراک نہیں نکالی جائے گی۔",
     heardTitle: "ماہر نے یہ سنا",
     identifierBlocked: "شناختی معلومات کی نشاندہی ہوئی ہے۔ کیس محفوظ کرنے سے پہلے نام، تاریخ پیدائش، فون، ای میل، پتہ اور شناختی نمبر حذف کریں۔ کچھ بھی محفوظ نہیں کیا گیا۔"
+
+    privacyTitle: "رازداری اور ڈیٹا کا انتظام",
+    privacyStored: "اس ڈیوائس پر محفوظ معلومات: زبان اور ملک/علاقے کی ترتیبات؛ دستخط کنندہ کا نام؛ محفوظ کیس ریکارڈز، جن میں شکایت کا متن، عمر کا گروپ، ادویات، الرجی، منتخب جوابات، تیار کردہ مسودے اور معالج کے دستخطی نوٹس شامل ہیں؛ اسسٹنٹ کی چیٹ ہسٹری؛ اور رضامندی کی ترجیح۔ یہ معلومات براؤزر کے localStorage میں رہتی ہیں۔ پری ویو سائن اِن میں مختصر مدت کا bearer token sessionStorage میں بھی ہو سکتا ہے۔",
+    privacySent: "جب آپ اسسٹنٹ کا سوال بھیجتے ہیں تو سوال اور حاصل کردہ عوامی طبی حوالہ جات اس ایپ کے مالک کے منتخب AI فراہم کنندہ (Groq، Google Gemini یا OpenRouter) کو بھیجے جاتے ہیں۔ سرور اسسٹنٹ خام سوالات یا ماخذ کے اقتباسات کو جان بوجھ کر لاگ نہیں کرتا۔ مریض کی شناخت یا حقیقی مریض کا ڈیٹا نہ بھیجیں۔",
+    privacyNever: "ایپ محفوظ intake کیسز کو جان بوجھ کر AI فراہم کنندہ کو نہیں بھیجتی۔ اسسٹنٹ کی درخواست میں صرف بھیجا گیا سوال اور حاصل کردہ عوامی ذرائع جاتے ہیں۔ آف لائن براؤزر کیش میں ایپ کے اثاثے رکھنے کا مقصد ہے، مریض کا درج کردہ متن نہیں۔ فی الحال ایپ میں طبی ڈیٹا کے لیے IndexedDB اسٹور موجود نہیں۔",
+    privacyClear: "ایپ کا تمام مقامی ڈیٹا صاف کریں",
+    privacyClearConfirm: "اس سے محفوظ کیسز، اسسٹنٹ ہسٹری، ترتیبات، رضامندی کی ترجیحات، براؤزر کیش، سروس ورکر رجسٹریشنز اور اس ویب سائٹ کے IndexedDB ڈیٹا بیس حذف ہو جائیں گے۔ اگر سائن اِن فعال ہے تو سرور سے سائن آؤٹ کی درخواست بھی ہوگی۔ کیا جاری رکھیں؟",
+    privacyClearDone: "ایپ کا مقامی ڈیٹا صاف کر دیا گیا۔ فعال سائن اِن سیشن سے بھی سائن آؤٹ ہو گیا۔",
+    privacyClearFailed: "مقامی ڈیٹا صاف ہو سکتا ہے، لیکن سرور سائن آؤٹ کی تصدیق نہیں ہو سکی۔ اس ڈیوائس کو شیئر کرنے سے پہلے دوبارہ سائن آؤٹ کریں۔",
   },
 } as const;
 
