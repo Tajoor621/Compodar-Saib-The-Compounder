@@ -9,6 +9,7 @@ import { CITIES, nearestCity } from "@/lib/mydoctor/places";
 import { canListen, listenOnce, speak, stopSpeaking } from "@/lib/mydoctor/speech";
 import { useClinic } from "@/lib/mydoctor/store";
 import { DANGER_KEYS, type AgeBand, type RuleId } from "@/lib/mydoctor/types";
+import { detectIdentifiers } from "@/lib/mydoctor/safety";
 
 type Step = "consent" | "person" | "place" | "complaint" | "confirm" | "danger" | "cluster" | "follow" | "reach" | "meds";
 
@@ -158,6 +159,7 @@ export function IntakeFlow() {
   const [heard, setHeard] = useState<string | null>(null);
   const [lowConfidence, setLowConfidence] = useState(false);
   const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [privacyError, setPrivacyError] = useState(false);
   const [slow, setSlow] = useState(false);
   const [medsOk, setMedsOk] = useState(false);
   const [locating, setLocating] = useState(false);
@@ -196,6 +198,12 @@ export function IntakeFlow() {
   }
 
   function submitNow() {
+    const freeText = [intake.complaint, intake.medications, intake.allergies, intake.reportName, intake.asrNote, ...Object.values(intake.cluster)].join(" ");
+    if (detectIdentifiers(freeText)) {
+      setPrivacyError(true);
+      return;
+    }
+    setPrivacyError(false);
     const record = submitCase();
     finish(record ? record.id : null);
   }
@@ -278,6 +286,7 @@ export function IntakeFlow() {
 
   return (
     <div className="flex flex-col gap-6">
+      {privacyError && <p role="alert" className="rounded-xl border border-accent bg-accent/10 p-3 text-sm text-accent">{t(lang, "identifierBlocked")}</p>}
       <div className="h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
         <div
           className="h-full bg-primary"
