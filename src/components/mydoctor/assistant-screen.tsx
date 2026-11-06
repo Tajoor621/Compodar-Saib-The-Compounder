@@ -257,26 +257,3 @@ export function AssistantScreen() {
     </section>
   );
 }
-
-function buildReferenceAnswer(
-  question: string,
-  spec: (typeof SPECIALTY_ASSISTANTS)[number],
-  topic: string,
-  lang: Lang,
-): { text: string; citations: string[] } {
-  const citations = spec.sources.slice(0, 3);
-  const base =
-    lang === "ur"
-      ? `یہ ${spec.nameUr} کے لیے ریفرنس جواب ہے۔ سوال: "${question}"${topic ? ` (موضوع: ${topic})` : ""}۔\n\nموجودہ ڈیٹا سے کوئی مخصوص مریض کی معلومات نہیں نکالی گئی۔`
-      : `Reference answer for ${spec.nameEn}. Question: "${question}"${topic ? ` (topic: ${topic})` : ""}.\n\nNo patient-specific data was retrieved.`;
-
-  const extra =
-    lang === "ur"
-      ? `\n\nہمیشہ موجودہ گائیڈ لائن اور لیبل کی تصدیق کریں۔ یہ تشخیص یا نسخہ نہیں ہے۔`
-      : `\n\nAlways confirm against the current guideline and label. This is not a diagnosis or prescription.`;
-
-  return {
-    text: base + extra + "\n\n" + (lang === "ur" ? VERIFY_REMINDER.ur : VERIFY_REMINDER.en),
-    citations,
-  };
-}
