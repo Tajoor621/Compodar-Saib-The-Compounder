@@ -69,7 +69,7 @@ Retrieval date is attached to each returned source record. A listing or abstract
 - `npm test`
 - `npm run eval`
 
-The release evaluation gates are intentionally blocked until the required clinician-reviewed datasets are present and the measured thresholds pass. See [eval/REPORT.md](eval/REPORT.md).
+The release evaluation gates are intentionally blocked until the required clinician-reviewed datasets are present and the measured thresholds pass. See [eval/REPORT.md](eval/REPORT.md) and [ACCEPTANCE_REPORT.md](ACCEPTANCE_REPORT.md) for the current measured checks and explicit release blockers.
 
 ## Known limitations and pre-deployment work
 
