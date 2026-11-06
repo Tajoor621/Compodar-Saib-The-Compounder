@@ -1,6 +1,6 @@
-# My Doctor
+# Compodar Saib The Compounder
 
-My Doctor is a bilingual (English / Urdu) clinical reference and patient-safety aid. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
+Compodar Saib The Compounder is a bilingual (English / Urdu) clinical reference and patient-safety aid. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
 
 ## Current implementation status
 
@@ -85,4 +85,4 @@ The release evaluation gates are intentionally blocked until the required clinic
 
 ## Disclaimer
 
-My Doctor is an informational reference and triage aid only. It does not diagnose, prescribe, clear a patient, replace emergency services, or replace a licensed healthcare professional. It may be incomplete, inaccurate, outdated, or unavailable. Never delay urgent care or change treatment based on this application.
+Compodar Saib The Compounder is an informational reference and triage aid only. It does not diagnose, prescribe, clear a patient, replace emergency services, or replace a licensed healthcare professional. It may be incomplete, inaccurate, outdated, or unavailable. Never delay urgent care or change treatment based on this application.
