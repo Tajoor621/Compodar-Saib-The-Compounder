@@ -58,7 +58,7 @@ function PrivacyPage() {
     <Shell wide>
       <section className="flex flex-col gap-5">
         <div>
-          <p className="text-sm font-semibold tracking-wide text-primary">MY DOCTOR</p>
+          <p className="text-sm font-semibold tracking-wide text-primary">COMPODAR SAIB THE COMPOUNDER</p>
           <h1 className="mt-2 text-3xl font-semibold">{t(lang, "privacyTitle")}</h1>
         </div>
         <article className="rounded-xl border border-line bg-surface p-4">
