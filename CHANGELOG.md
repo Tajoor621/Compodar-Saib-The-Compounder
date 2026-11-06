@@ -1,6 +1,6 @@
-# Changelog
+# Changelog — Compodar Saib The Compounder
 
-## 2026-11-06 — Grounded AI and safety foundation
+## 2026-11-06 — Compodar Saib The Compounder rebrand and grounded AI foundation
 
 - Added server-only Groq, Gemini, and OpenRouter adapters with configured-provider fallback.
 - Added PubMed E-utilities, openFDA drug-label, and DailyMed discovery retrieval with an in-memory TTL cache.
@@ -13,3 +13,6 @@
 - Added explicit xAI Grok photo-processing consent for the medicine-pack reader.
 - Added the phase-by-phase acceptance report with measured CI outcomes and clinical release blockers.
 - Documented limitations: full DailyMed SPL retrieval, MedlinePlus Connect, WHO/NICE retrieval, streaming, stop control, complete evaluation datasets, clinician review, Vercel deployment, and full privacy controls remain outstanding.
+
+- Rebranded visible application identity, metadata, install-page/PWA fallback name, bilingual copy, exported chat filename, package metadata, and documentation to Compodar Saib The Compounder.
+- Kept the GitHub repository slug and internal `mydoctor` source-module paths stable to avoid breaking the published URL and import graph.
