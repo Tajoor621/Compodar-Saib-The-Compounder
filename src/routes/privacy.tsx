@@ -62,22 +62,20 @@ function PrivacyPage() {
           <h1 className="mt-2 text-3xl font-semibold">{t(lang, "privacyTitle")}</h1>
         </div>
         <article className="rounded-xl border border-line bg-surface p-4">
-          <h2 className="font-semibold">{lang === "ur" ? "ڈیوائس پر محفوظ معلومات" : "Stored on this device"}</h2>
+          <h2 className="font-semibold">{t(lang, "privacyStoredHeading")}</h2>
           <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacyStored")}</p>
         </article>
         <article className="rounded-xl border border-line bg-surface p-4">
-          <h2 className="font-semibold">{lang === "ur" ? "AI کو بھیجی جانے والی معلومات" : "Information sent to AI providers"}</h2>
+          <h2 className="font-semibold">{t(lang, "privacySentHeading")}</h2>
           <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacySent")}</p>
         </article>
         <article className="rounded-xl border border-line bg-surface p-4">
-          <h2 className="font-semibold">{lang === "ur" ? "اہم حدود" : "Important boundaries"}</h2>
+          <h2 className="font-semibold">{t(lang, "privacyBoundaryHeading")}</h2>
           <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacyNever")}</p>
         </article>
         <div className="rounded-xl border border-line p-4">
           <p className="text-sm text-muted">
-            {lang === "ur"
-              ? "شناختی معلومات داخل نہ کریں۔ یہ طبی تشخیص یا نسخہ نہیں۔"
-              : "Do not enter patient identifiers. This is not a diagnosis or prescription."}
+            {t(lang, "privacyDoNotEnter")}
           </p>
           <button
             type="button"
@@ -85,7 +83,7 @@ function PrivacyPage() {
             onClick={() => void clearAllData()}
             className="mt-4 min-h-11 rounded-xl border border-accent px-4 py-2 text-sm font-semibold text-accent disabled:opacity-50"
           >
-            {busy ? (lang === "ur" ? "صاف کیا جا رہا ہے…" : "Clearing…") : t(lang, "privacyClear")}
+            {busy ? t(lang, "privacyClearing") : t(lang, "privacyClear")}
           </button>
           {status === "done" && <p role="status" className="mt-3 text-sm">{t(lang, "privacyClearDone")}</p>}
           {status === "failed" && <p role="alert" className="mt-3 text-sm text-accent">{t(lang, "privacyClearFailed")}</p>}
