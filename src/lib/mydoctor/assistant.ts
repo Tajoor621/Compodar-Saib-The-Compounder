@@ -1,5 +1,3 @@
-import type { Lang } from "./types.ts";
-
 export type SpecialtyAssistant = {
   id: string;
   nameEn: string;
