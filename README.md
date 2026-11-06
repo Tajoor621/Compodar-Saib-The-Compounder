@@ -20,14 +20,39 @@ The AI assistant has a server-side retrieval-augmented answer path in progress:
 
 ## Deployment
 
-The current public project URL is hosted on GitHub Pages. GitHub Pages is static hosting and cannot execute TanStack Start server functions. The server-side AI assistant requires a server runtime. Deploy this application to Vercel using the existing Vercel preset and configure the server environment variables there. A successful Vercel deployment has **not yet been verified**.
+**GitHub Pages cannot host this application runtime.** The app is a TanStack Start server application with server functions, authentication, database access and AI endpoints. The GitHub Pages deployment currently runs Jekyll, which publishes repository documentation rather than building this application. A green Pages deployment is therefore not proof that the app is running.
+
+The repository is configured for the Vercel Nitro output preset. The checked-in `vercel.json` explicitly installs development dependencies (required by Vite/TypeScript) and runs the production build. The Vite/Nitro build emits Vercel's Build Output API at `.vercel/output`; **do not set a custom Output Directory** that overrides this output.
+
+### Vercel project settings
+
+Import `Tajoor621/Compodar-Saib-The-Compounder` into Vercel and use:
+
+| Setting | Value |
+|---|---|
+| Root Directory | `./` |
+| Framework Preset | Other (use the repository's Nitro/Vercel preset) |
+| Install Command | `npm install --no-audit --no-fund` |
+| Build Command | `npm run build` |
+| Output Directory | Leave unset; Nitro generates `.vercel/output` |
+| Node.js | 22.x |
+
+A successful Vercel production deployment and live browser verification have **not yet been confirmed**. The existing `github.io` address will continue to serve the GitHub Pages artifact; it does not automatically become a Vercel deployment. Use the Vercel-assigned domain (or a custom domain configured in Vercel) as the application URL.
 
 ### Environment variables
 
-Set these in the Vercel project settings; never commit them and never create a `.env` file.
+Configure the following in Vercel Project Settings → Environment Variables for Production and Preview as appropriate. Never commit secrets, put secrets in `VITE_*` variables, or create a committed `.env` file.
 
 | Variable | Purpose |
 |---|---|
+| `VITE_AUTH_ENABLED` | Set to `true` for deployed authentication; this is a build-time client flag |
+| `BETTER_AUTH_URL` | Exact public HTTPS origin of the deployed app |
+| `BETTER_AUTH_SECRET` | Long, random server-only Better Auth signing secret |
+| `DATABASE_URL` | Persistent PostgreSQL connection string; required for durable production users/sessions |
+| `GROK_AUTH_ISSUER` | Auth broker issuer; defaults to `https://auth.grok.me` |
+| `GROK_AUTH_CLIENT_ID` | Per-app OAuth broker client ID provisioned for the production callback URL |
+| `GROK_AUTH_CLIENT_SECRET` | Matching server-only OAuth broker client secret |
+| `GROK_PROJECT_ID` | Deployment project identifier used to distinguish deployed runtime from workspace preview |
 | `AI_PROVIDER` | Primary provider: `groq`, `gemini`, or `openrouter` |
 | `GROQ_API_KEY` | Groq server-side key |
 | `GROQ_MODEL` | Optional Groq model override |
@@ -37,8 +62,9 @@ Set these in the Vercel project settings; never commit them and never create a `
 | `OPENROUTER_MODEL` | Optional OpenRouter model override |
 | `XAI_API_KEY` | Optional server-side xAI key for medicine-pack photo reading; photo consent is required |
 | `APP_URL` | Public app URL for OpenRouter attribution |
+| `VITE_PUBLIC_HOSTNAME` | Optional public hostname used for share-card URLs; hostname only, no scheme |
 
-At least one provider key is required. Keys must be configured as server environment variables and must not use a `VITE_` prefix.
+At least one AI provider key is required for AI answers. Production authentication additionally requires a persistent PostgreSQL database, a stable Better Auth secret, and an OAuth broker client provisioned for the deployed callback URL. The embedded PGLite fallback is in-memory and must not be treated as durable production storage. Never use the preview-only OAuth client for a production callback.
 
 ## Privacy and safety
 
