@@ -4,8 +4,16 @@
 
 - Report date: 2026-11-06
 - Branch: main
-- Verified CI run: https://github.com/Tajoor621/My-Doctor/actions/runs/42205611977
+- Verified CI run: https://github.com/Tajoor621/My-Doctor/actions/runs/42214033810
 - Current deployment status: Vercel deployment NOT VERIFIED. The supplied public URL is GitHub Pages, which cannot execute TanStack Start server functions.
+
+## Application identity update
+
+- Official application name: **Compodar Saib The Compounder**.
+- Updated browser title and description, Open Graph site title, visible header, privacy-page brand, English/Urdu brand copy, PWA fallback name, installation-page identity, assistant-history export filename, package name, README, model card, changelog, and acceptance report.
+- PWA manifest uses the full official name and the compact launcher label **Compodar Saib**.
+- GitHub repository slug `My-Doctor` is intentionally retained so the existing public URL and repository links remain stable. The `src/lib/mydoctor` and `src/components/mydoctor` directories are internal source-module namespaces; they are not user-facing branding and are retained to avoid a risky import-path migration during this identity change.
+- GitHub Pages build/deployment for the branding revision: https://github.com/Tajoor621/My-Doctor/actions/runs/42214033924 (PASS).
 
 ## Phase-by-phase result
 
@@ -21,7 +29,7 @@
 
 ## Verified CI results
 
-From CI run 42205611977:
+From CI run 42214033810 (branding revision):
 
 | Check | Result |
 |---|---|
@@ -29,12 +37,12 @@ From CI run 42205611977:
 | Typecheck | PASS |
 | Lint | PASS |
 | Focused clinical and safety tests | PASS — 164 tests, 164 passed, 0 failed |
-| Full repository test suite | FAIL — 197 tests, 181 passed, 16 failed |
+| Full repository test suite | FAIL — 198 tests, 182 passed, 16 failed |
 | Clinical evaluation release gate | FAIL — all four required datasets missing |
 | Dependency audit | PASS — 0 vulnerabilities reported |
 | Production-mode compile | PASS |
 
-The 16 full-suite failures are in existing repository scaffolding tests: missing .grok/skills/og/SKILL.md, .grok/skills/og/references, and .grok/app-env.json, plus dependent platform-chrome and wrapper tests. They have not been waived or counted as passing.
+The 16 full-suite failures remain unresolved. At least four are directly attributable to absent .grok/skills/og/SKILL.md and .grok/app-env.json scaffolding; the remaining failures are in PWA metadata and app-environment harness assumptions and have not yet been fully triaged. None has been waived or counted as passing.
 
 ## Privacy and external processing
 
