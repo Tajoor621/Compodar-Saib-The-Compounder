@@ -1,4 +1,4 @@
-# My Doctor — Acceptance report
+# Compodar Saib The Compounder — Acceptance report
 
 **Decision: RELEASE BLOCKED.** This repository has a working server-side AI foundation and privacy/safety improvements, but it does not meet the clinical evaluation, complete retrieval, clinician-review, or deployment requirements. Do not use it for clinical decisions or deploy it as a clinical product.
 
