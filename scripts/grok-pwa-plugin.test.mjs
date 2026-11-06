@@ -518,7 +518,7 @@ test("renders the manifest with the per-app name", () => {
 test("uses the Compodar Saib brand on non-Grok deployment hosts", () => {
   const manifest = JSON.parse(renderWebManifest("tajoor621.github.io"));
   assert.equal(manifest.name, "Compodar Saib The Compounder");
-  assert.equal(manifest.short_name, "Compodar Saib The Compounder");
+  assert.equal(manifest.short_name, "Compodar Saib");
 });
 
 // Tripwires: the deployed-app path only works if Nitro scans server/ — an
