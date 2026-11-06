@@ -15,6 +15,7 @@ export function PharmacyScreen() {
   const [photoBusy, setPhotoBusy] = useState(false);
   const [photoSeen, setPhotoSeen] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const [photoConsent, setPhotoConsent] = useState(false);
   const result = useMemo(() => resolveMedicine(query), [query]);
   const hits = result.named;
   const reading = result.reading;
@@ -53,13 +54,18 @@ export function PharmacyScreen() {
           </button>
         ))}
       </div>
-      <label className="flex min-h-11 cursor-pointer items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold">
+      <label className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3 text-sm">
+        <input type="checkbox" className="mt-1 size-5" checked={photoConsent} onChange={(event) => setPhotoConsent(event.target.checked)} />
+        <span>{t(lang, "pharmPhotoConsent")}</span>
+      </label>
+      <label className={`flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold ${photoConsent ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
         {t(lang, "pharmPhoto")}
         <input
           type="file"
           accept="image/*"
           capture="environment"
           className="sr-only"
+          disabled={!photoConsent}
           onChange={(event) => {
             const file = event.target.files?.[0];
             event.target.value = "";
