@@ -7,7 +7,7 @@ My Doctor is a bilingual (English / Urdu) clinical reference and patient-safety 
 The AI assistant has a server-side retrieval-augmented answer path in progress:
 
 - Provider adapters: Groq, Google Gemini (AI Studio), and OpenRouter.
-- Primary provider selection: \`AI_PROVIDER\`; fallback attempts other configured providers.
+- Primary provider selection: `AI_PROVIDER`; fallback attempts other configured providers.
 - Current retrieval integrations: PubMed / NCBI E-utilities, openFDA drug labels, and DailyMed drug-name discovery.
 - Retrieval cache: in-memory, 15-minute TTL.
 - Answer generation uses retrieved passages only and requires source-ID citations.
@@ -24,25 +24,27 @@ The current public project URL is hosted on GitHub Pages. GitHub Pages is static
 
 ### Environment variables
 
-Set these in the Vercel project settings; never commit them and never create a \`.env\` file.
+Set these in the Vercel project settings; never commit them and never create a `.env` file.
 
 | Variable | Purpose |
 |---|---|
-| \`AI_PROVIDER\` | Primary provider: \`groq\`, \`gemini\`, or \`openrouter\` |
-| \`GROQ_API_KEY\` | Groq server-side key |
-| \`GROQ_MODEL\` | Optional Groq model override |
-| \`GEMINI_API_KEY\` | Google AI Studio server-side key |
-| \`GEMINI_MODEL\` | Optional Gemini model override |
-| \`OPENROUTER_API_KEY\` | OpenRouter server-side key |
-| \`OPENROUTER_MODEL\` | Optional OpenRouter model override |
-| \`APP_URL\` | Public app URL for OpenRouter attribution |
+| `AI_PROVIDER` | Primary provider: `groq`, `gemini`, or `openrouter` |
+| `GROQ_API_KEY` | Groq server-side key |
+| `GROQ_MODEL` | Optional Groq model override |
+| `GEMINI_API_KEY` | Google AI Studio server-side key |
+| `GEMINI_MODEL` | Optional Gemini model override |
+| `OPENROUTER_API_KEY` | OpenRouter server-side key |
+| `OPENROUTER_MODEL` | Optional OpenRouter model override |
+| `XAI_API_KEY` | Optional server-side xAI key for medicine-pack photo reading; photo consent is required |
+| `APP_URL` | Public app URL for OpenRouter attribution |
 
-At least one provider key is required. Keys must be configured as server environment variables and must not use a \`VITE_\` prefix.
+At least one provider key is required. Keys must be configured as server environment variables and must not use a `VITE_` prefix.
 
 ## Privacy and safety
 
 - Never enter names, dates of birth, phone numbers, email addresses, addresses, national identifiers, medical record numbers, or patient photos.
 - A submitted question is used as a search query with public references (PubMed/NCBI, openFDA, and DailyMed where applicable); the question and retrieved passages are then sent to the configured model provider for processing.
+- Medicine-pack photos are sent to xAI (Grok) only after the explicit photo-consent checkbox is selected; never upload patient scans or clinical images.
 - The privacy page provides a clear-all control for localStorage, IndexedDB, browser Cache Storage and service-worker registrations; when Better Auth is enabled it also requests server-side sign-out. The app currently has no IndexedDB clinical-data store. If server sign-out cannot be confirmed, the page reports failure.
 - Do not use real patient data. No patient identifiers should be submitted, even where a detector fails to recognize them.
 - AI output is not a prescription or diagnosis. Verify every clinical decision against the current local label and current guideline with a licensed professional.
@@ -62,10 +64,10 @@ Retrieval date is attached to each returned source record. A listing or abstract
 
 ## Quality and release
 
-- \`npm run typecheck\`
-- \`npm run lint\`
-- \`npm test\`
-- \`npm run eval\`
+- `npm run typecheck`
+- `npm run lint`
+- `npm test`
+- `npm run eval`
 
 The release evaluation gates are intentionally blocked until the required clinician-reviewed datasets are present and the measured thresholds pass. See [eval/REPORT.md](eval/REPORT.md).
 
