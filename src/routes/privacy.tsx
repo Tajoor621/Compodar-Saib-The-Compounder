@@ -70,7 +70,7 @@ function PrivacyPage() {
           <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacySent")}</p>
         </article>
         <article className="rounded-xl border border-line bg-surface p-4">
-          <h2 className="font-semibold">{lang === "ur" ? "تصویر کی پراسیسنگ" : "Photo processing"}</h2>
+          <h2 className="font-semibold">{t(lang, "privacyPhotoHeading")}</h2>
           <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacyPhoto")}</p>
         </article>
         <article className="rounded-xl border border-line bg-surface p-4">
