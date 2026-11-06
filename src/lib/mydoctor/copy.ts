@@ -440,6 +440,11 @@ const UI = {
     privacyClearConfirm: "This removes saved cases, assistant history, settings, consent preferences, browser caches, service-worker registrations, and IndexedDB databases for this origin. If sign-in is enabled, the app will also request server-side sign-out. Continue?",
     privacyClearDone: "Local app data was cleared. Any enabled sign-in session was signed out.",
     privacyClearFailed: "Local data may have been cleared, but server sign-out could not be verified. Retry sign-out before sharing this device.",
+    privacyStoredHeading: "Stored on this device",
+    privacySentHeading: "Information sent to AI providers",
+    privacyBoundaryHeading: "Important boundaries",
+    privacyDoNotEnter: "Do not enter patient identifiers. This is not a diagnosis or prescription.",
+    privacyClearing: "Clearing…",
   },
   ur: {
     mark: "MyDoctor",
@@ -771,6 +776,11 @@ const UI = {
     privacyClearConfirm: "اس سے محفوظ کیسز، اسسٹنٹ ہسٹری، ترتیبات، رضامندی کی ترجیحات، براؤزر کیش، سروس ورکر رجسٹریشنز اور اس ویب سائٹ کے IndexedDB ڈیٹا بیس حذف ہو جائیں گے۔ اگر سائن اِن فعال ہے تو سرور سے سائن آؤٹ کی درخواست بھی ہوگی۔ کیا جاری رکھیں؟",
     privacyClearDone: "ایپ کا مقامی ڈیٹا صاف کر دیا گیا۔ فعال سائن اِن سیشن سے بھی سائن آؤٹ ہو گیا۔",
     privacyClearFailed: "مقامی ڈیٹا صاف ہو سکتا ہے، لیکن سرور سائن آؤٹ کی تصدیق نہیں ہو سکی۔ اس ڈیوائس کو شیئر کرنے سے پہلے دوبارہ سائن آؤٹ کریں۔",
+    privacyStoredHeading: "ڈیوائس پر محفوظ معلومات",
+    privacySentHeading: "AI فراہم کنندگان کو بھیجی جانے والی معلومات",
+    privacyBoundaryHeading: "اہم حدود",
+    privacyDoNotEnter: "مریض کی شناخت شامل نہ کریں۔ یہ تشخیص یا نسخہ نہیں۔",
+    privacyClearing: "صاف کیا جا رہا ہے…",
   },
 } as const;
 
