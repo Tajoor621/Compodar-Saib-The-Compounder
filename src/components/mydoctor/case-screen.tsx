@@ -17,7 +17,7 @@ export function CaseScreen({ caseId }: { caseId: string }) {
         <h1 className="text-3xl font-semibold">{t(lang, "packet")}</h1>
         <p className="text-muted">{t(lang, "deskEmpty")}</p>
         <Link to="/" className="font-semibold text-primary">
-          MyDoctor
+          Compodar Saib The Compounder
         </Link>
       </section>
     );
