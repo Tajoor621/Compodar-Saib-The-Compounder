@@ -18,7 +18,7 @@ const patterns: RegExp[] = [
 ];
 
 export function detectIdentifiers(value: string): boolean {
-  const text = value.normalize("NFKC").replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
+  const digitMap = "01234567890123456789";\n  const text = value.normalize("NFKC").replace(/[٠-٩۰-۹]/g, (digit) => {\n    const code = digit.charCodeAt(0);\n    return digitMap[code >= 0x06f0 ? code - 0x06f0 + 10 : code - 0x0660];\n  });
   return patterns.some((pattern) => pattern.test(text));
 }
 
