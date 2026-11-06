@@ -67,7 +67,7 @@ export const REVIEW_LINE: Record<Lang, Record<SpecialtyId, string>> = {
     cardiology: "Based on what you've told me, a heart doctor should review this.",
     general_internal_medicine: "Based on what you've told me, a general doctor should review this.",
     pediatrics: "Based on what you've told me, a children's doctor should review this.",
-    psychiatry: "Based on what you've told me, a mental health doctor should review this.",,
+    psychiatry: "Based on what you've told me, a mental health doctor should review this.",
     identifierBlocked: "Possible personal identifiers were detected. Remove names, dates of birth, phone numbers, email addresses, addresses, and ID numbers before saving this case. Nothing was saved.",
   },
   ur: {
