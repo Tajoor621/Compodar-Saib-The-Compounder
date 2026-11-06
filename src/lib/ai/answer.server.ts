@@ -22,7 +22,17 @@ export const askClinicalReference = createServerFn({ method: "POST" })
   .inputValidator(inputSchema)
   .handler(async ({ data }): Promise<ClinicalAnswer> => {
     const question = data.question;
-    // Do not log question text, request bodies, source passages, or identifiers.
+    if (detectIdentifiers(question)) {
+      return {
+        status: "insufficient_sources",
+        answer: data.language === "ur"
+          ? "شناختی یا ذاتی معلومات کی نشاندہی ہوئی ہے۔ براہِ کرم نام، فون، تاریخ پیدائش، ای میل، پتہ یا شناختی نمبر حذف کریں۔ سوال کسی AI فراہم کنندہ کو نہیں بھیجا گیا۔"
+          : "Possible personal identifiers were detected. Remove names, phone numbers, dates of birth, email addresses, addresses, or ID numbers. The question was not sent to an AI provider.",
+        sources: [],
+      };
+    }
+    const safeQuestion = neutralizePromptInjection(question);
+    // Never log question text, request bodies, source passages, or identifiers.
     try {
       const sources = await retrieveClinicalSources(safeQuestion);
       if (!sources.length) return insufficient(data.language, "insufficient_sources");
