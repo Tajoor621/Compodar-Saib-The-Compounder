@@ -172,7 +172,7 @@ async function readPhoto(
   try {
     const image = await shrinkPhoto(file);
     setPhoto(image);
-    const sight = await readPackPhoto({ data: { image } });
+    const sight = await readPackPhoto({ data: { image, consent: true } });
     if (!sight.ok) {
       setPhotoError(sight.error);
       return;
