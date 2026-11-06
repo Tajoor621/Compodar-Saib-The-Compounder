@@ -1,7 +1,7 @@
 import type { ClinicalSource, ModelProvider } from "./types.ts";
 
 type ProviderResult = { text: string; provider: ModelProvider };
-const providerOrder: ModelProvider[] = ["groq", "gemini", "openrouter"];
+function providerOrder(): ModelProvider[] {\n  const preferred = (process.env.AI_PROVIDER ?? "groq").toLowerCase();\n  const first: ModelProvider = preferred === "gemini" ? "gemini" : preferred === "openrouter" ? "openrouter" : "groq";\n  return [first, ...(["groq", "gemini", "openrouter"] as ModelProvider[]).filter((provider) => provider !== first)];\n}
 
 function env(name: string): string | undefined {
   const value = process.env[name]?.trim();
@@ -72,7 +72,7 @@ function validate(text: string, sources: ClinicalSource[]): boolean {
 }
 
 export async function generateGroundedAnswer(question: string, sources: ClinicalSource[], language: "en" | "ur"): Promise<ProviderResult | null> {
-  const configuredProviders = providerOrder.filter(configured);
+  const configuredProviders = providerOrder().filter(configured);
   if (!configuredProviders.length) throw new Error("no_provider_key");
   if (!sources.length) return null;
   let lastError: unknown;
