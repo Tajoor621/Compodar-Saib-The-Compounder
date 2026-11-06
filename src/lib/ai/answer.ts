@@ -19,7 +19,7 @@ const insufficient = (language: "en" | "ur", status: ClinicalAnswer["status"]): 
 });
 
 export const askClinicalReference = createServerFn({ method: "POST" })
-  .inputValidator(inputSchema)
+  .validator((input) => inputSchema.parse(input))
   .handler(async ({ data }): Promise<ClinicalAnswer> => {
     const question = data.question;
     if (detectIdentifiers(question)) {
