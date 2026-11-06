@@ -12,12 +12,13 @@ export type PackSight = {
 const FORMS = new Set(["tablet", "capsule", "syrup", "oral-drops", "eye", "ear", "nasal", "powder", "cream", "inhaler", "injection", "unknown"]);
 
 export const readPackPhoto = createServerFn({ method: "POST" })
-  .validator((input: { image: string }) => {
+  .validator((input: { image: string; consent: boolean }) => {
+    if (input.consent !== true) throw new Error("Explicit photo processing consent is required");
     if (!input || typeof input.image !== "string" || !input.image.startsWith("data:image/")) {
       throw new Error("Photo must be an image");
     }
     if (input.image.length > 1_800_000) throw new Error("Photo is too large");
-    return { image: input.image };
+    return { image: input.image, consent: true as const };
   })
   .handler(async ({ data }): Promise<PackSight | { ok: false; error: string }> => {
     const apiKey = process.env.XAI_API_KEY;
