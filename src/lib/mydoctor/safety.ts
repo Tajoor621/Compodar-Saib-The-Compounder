@@ -11,6 +11,7 @@ const patterns: RegExp[] = [
   /\b(?:\+?\d[\s().-]*){10,15}\b/,
   /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,
   /\b(?:street|st\.|road|rd\.|avenue|ave\.|lane|block|flat|apartment|apt\.?|house\s*(?:no|number)|building)\s+[\w#/-]+/i,
+  /\b\d{1,5}\s+[A-Z0-9][\w.-]*(?:\s+(?:street|st\.?|road|rd\.?|avenue|ave\.?|lane|ln\.?|drive|dr\.?|boulevard|blvd\.?))\b/i,
   /\b(?:address|home\s*address|residential\s*address)\s*[:=]/i,
   /\b(?:Mr|Mrs|Ms|Miss|Dr|Doctor)\.?\s+[A-Z][a-z]{1,}(?:\s+[A-Z][a-z]{1,}){0,2}\b/,
   /\b(?:patient|name|full\s*name)\s*[:=]\s*[A-Z][a-z]{1,}(?:\s+[A-Z][a-z]{1,}){0,2}\b/i,
@@ -18,7 +19,11 @@ const patterns: RegExp[] = [
 ];
 
 export function detectIdentifiers(value: string): boolean {
-  const digitMap = "01234567890123456789";\n  const text = value.normalize("NFKC").replace(/[٠-٩۰-۹]/g, (digit) => {\n    const code = digit.charCodeAt(0);\n    return digitMap[code >= 0x06f0 ? code - 0x06f0 + 10 : code - 0x0660];\n  });
+  const digitMap = "01234567890123456789";
+  const text = value.normalize("NFKC").replace(/[٠-٩۰-۹]/g, (digit) => {
+    const code = digit.charCodeAt(0);
+    return digitMap[code >= 0x06f0 ? code - 0x06f0 + 10 : code - 0x0660];
+  });
   return patterns.some((pattern) => pattern.test(text));
 }
 
