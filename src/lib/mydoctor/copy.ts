@@ -752,7 +752,8 @@ const UI = {
     eyeInvolved: "کیا آنکھیں، پلکیں، یا ہونٹ شامل ہیں؟",
     alreadyAspirin: "کیا آپ پہلے سے ہر روز اسپرین، یا خون پتلی کرنے والی دوا، لے رہے ہیں؟",
     childWeight: "اگر معلوم ہو تو بچے کا وزن تقریباً کتنا ہے؟ عدد کافی ہے۔ خوراک نہیں نکالی جائے گی۔",
-    heardTitle: "ماہر نے یہ سنا",
+    heardTitle: "ماہر نے یہ سنا",,
+    identifierBlocked: "شناختی معلومات کی نشاندہی ہوئی ہے۔ کیس محفوظ کرنے سے پہلے نام، تاریخ پیدائش، فون، ای میل، پتہ اور شناختی نمبر حذف کریں۔ کچھ بھی محفوظ نہیں کیا گیا۔"
   },
 } as const;
 
@@ -874,7 +875,6 @@ export const SCENARIOS: {
     blurb: "A safety rule. Confirming it shows emergency help, not a diagnosis.",
     blurbUr: "حفاظتی قاعدہ۔ تصدیق ایمرجنسی مدد دکھاتی ہے، تشخیص نہیں۔",
     duration: "hours",
-    complaint: "I have a plan to kill myself tonight",,
-    identifierBlocked: "شناختی معلومات کی نشاندہی ہوئی ہے۔ کیس محفوظ کرنے سے پہلے نام، تاریخ پیدائش، فون، ای میل، پتہ اور شناختی نمبر حذف کریں۔ کچھ بھی محفوظ نہیں کیا گیا۔"
+    complaint: "I have a plan to kill myself tonight",
   },
 ];
