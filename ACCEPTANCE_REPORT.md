@@ -4,7 +4,7 @@
 
 - Report date: 2026-11-06
 - Branch: main
-- Verified CI run: https://github.com/Tajoor621/My-Doctor/actions/runs/42214033810
+- Verified CI run: https://github.com/Tajoor621/Compodar-Saib-The-Compounder/actions/runs/42214215576
 - Current deployment status: Vercel deployment NOT VERIFIED. The supplied public URL is GitHub Pages, which cannot execute TanStack Start server functions.
 
 ## Application identity update
@@ -12,8 +12,8 @@
 - Official application name: **Compodar Saib The Compounder**.
 - Updated browser title and description, Open Graph site title, visible header, privacy-page brand, English/Urdu brand copy, PWA fallback name, installation-page identity, assistant-history export filename, package name, README, model card, changelog, and acceptance report.
 - PWA manifest uses the full official name and the compact launcher label **Compodar Saib**.
-- GitHub repository slug `My-Doctor` is intentionally retained so the existing public URL and repository links remain stable. The `src/lib/mydoctor` and `src/components/mydoctor` directories are internal source-module namespaces; they are not user-facing branding and are retained to avoid a risky import-path migration during this identity change.
-- GitHub Pages build/deployment for the branding revision: https://github.com/Tajoor621/My-Doctor/actions/runs/42214033924 (PASS).
+- The GitHub repository has since been renamed to `Compodar-Saib-The-Compounder`. The `src/lib/mydoctor` and `src/components/mydoctor` directories remain internal source-module namespaces; they are not user-facing branding. They are intentionally retained until a coordinated import-path migration is separately tested.
+- GitHub Pages build/deployment for the branding revision: https://github.com/Tajoor621/Compodar-Saib-The-Compounder/actions/runs/42214215434 (PASS).
 
 ## Phase-by-phase result
 
@@ -29,7 +29,7 @@
 
 ## Verified CI results
 
-From CI run 42214033810 (branding revision):
+From CI run 42214215576 (renamed-repository main revision):
 
 | Check | Result |
 |---|---|
