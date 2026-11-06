@@ -86,7 +86,7 @@ export function AssistantScreen() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "mydoctor-assistant-history.json";
+    a.download = "compodar-saib-assistant-history.json";
     a.click();
     URL.revokeObjectURL(url);
   }
