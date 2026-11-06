@@ -25,14 +25,20 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Typecheck
+        if: always()
         run: npm run typecheck
       - name: Lint
+        if: always()
         run: npm run lint
       - name: Unit and safety tests
+        if: always()
         run: npm test
       - name: Clinical evaluation release gate
+        if: always()
         run: node scripts/eval/run.mjs
       - name: Dependency security audit
+        if: always()
         run: npm audit --audit-level=high
       - name: Production-mode compile
+        if: always()
         run: npm run build:dev
