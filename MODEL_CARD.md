@@ -1,4 +1,4 @@
-# Model card — My Doctor
+# Model card — Compodar Saib The Compounder
 
 ## Intended use
 
