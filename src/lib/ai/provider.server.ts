@@ -80,12 +80,13 @@ export async function generateGroundedAnswer(question: string, sources: Clinical
   if (!configuredProviders.length) throw new Error("no_provider_key");
   if (!sources.length) return null;
   let lastError: unknown;
+  let citationFailure = false;
   for (const provider of configuredProviders) {
     try {
       let result = await callProvider(provider, question, sources, language);
       if (!validate(result.text, sources)) {
         result = await callProvider(provider, question, sources, language);
-        if (!validate(result.text, sources)) throw new Error("citation_validation_failed");
+        if (!validate(result.text, sources)) { citationFailure = true; throw new Error("citation_validation_failed"); }
       }
       return result;
     } catch (error) {
@@ -93,5 +94,6 @@ export async function generateGroundedAnswer(question: string, sources: Clinical
     }
   }
   if (lastError instanceof Error && lastError.message === "no_provider_key") throw lastError;
+  if (citationFailure) throw new Error("citation_validation_failed");
   throw new Error("all_providers_failed");
 }
