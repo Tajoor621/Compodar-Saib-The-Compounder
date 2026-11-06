@@ -27,21 +27,28 @@ async function pubmed(query: string): Promise<ClinicalSource[]> {
   const summary = await getJson(summaryUrl.toString());
   const fetchUrl = new URL("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi");
   fetchUrl.search = new URLSearchParams({ db: "pubmed", id: ids.join(","), retmode: "xml" }).toString();
-  const xmlResponse = await fetch(fetchUrl.toString(), { signal: AbortSignal.timeout(9000), headers: { "user-agent": "MyDoctorClinicalReference/1.0" } });
+  const xmlResponse = await fetch(fetchUrl.toString(), {
+    signal: AbortSignal.timeout(9000),
+    headers: { "user-agent": "MyDoctorClinicalReference/1.0" },
+  });
   if (!xmlResponse.ok) throw new Error("pubmed_abstract_fetch_failed");
   const xml = await xmlResponse.text();
   const retrievedAt = new Date().toISOString();
-  const decode = (value: string) => value.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  const decode = (value: string) => value
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
   return ids.map((id) => {
     const item = summary?.result?.[id];
     if (!item) return null;
-    const article = xml.match(new RegExp(`<PubmedArticle>[\\s\\S]*?<PMID[^>]*>${id}</PMID>[\\s\\S]*?</PubmedArticle>`))?.[0] ?? "";
-    const abstract = [...article.matchAll(/<AbstractText[^>]*>([\\s\\S]*?)<\\/AbstractText>/g)].map((match) => decode(match[1].replace(/<[^>]+>/g, " "))).join(" ");
+    const articlePattern = new RegExp("<PubmedArticle>[\\s\\S]*?<PMID[^>]*>" + id + "</PMID>[\\s\\S]*?</PubmedArticle>");
+    const article = xml.match(articlePattern)?.[0] ?? "";
+    const abstract = [...article.matchAll(/<AbstractText[^>]*>([\s\S]*?)<\/AbstractText>/g)]
+      .map((match) => decode(match[1].replace(/<[^>]+>/g, " "))).join(" ");
     const title = compact(item.title, 300);
     const passage = compact([item.title, abstract].filter(Boolean).join(". "), 4500);
     return {
-      id: `PMID-${id}`, title, publisher: "PubMed / NCBI",
-      url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`, retrievedAt, kind: "pubmed" as const, passage,
+      id: "PMID-" + id, title, publisher: "PubMed / NCBI",
+      url: "https://pubmed.ncbi.nlm.nih.gov/" + id + "/", retrievedAt, kind: "pubmed" as const, passage,
     };
   }).filter((item): item is ClinicalSource => Boolean(item && item.title && item.passage));
 }
