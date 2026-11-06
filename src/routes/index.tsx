@@ -54,6 +54,12 @@ function Home() {
             >
               {t(lang, "desk")}
             </Link>
+            <Link
+              to="/assistant"
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
+            >
+              {lang === "ur" ? "AI اسسٹنٹ" : "AI Assistant"}
+            </Link>
           </div>
         </section>
 
