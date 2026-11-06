@@ -12,7 +12,7 @@ import {
   acceptDisclaimer,
   type ChatMessage,
 } from "@/lib/mydoctor/assistant";
-import { askClinicalReference } from "@/lib/ai/answer.server";
+import { askClinicalReference } from "@/lib/ai/answer";
 import { t } from "@/lib/mydoctor/copy";
 
 
