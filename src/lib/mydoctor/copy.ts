@@ -67,7 +67,8 @@ export const REVIEW_LINE: Record<Lang, Record<SpecialtyId, string>> = {
     cardiology: "Based on what you've told me, a heart doctor should review this.",
     general_internal_medicine: "Based on what you've told me, a general doctor should review this.",
     pediatrics: "Based on what you've told me, a children's doctor should review this.",
-    psychiatry: "Based on what you've told me, a mental health doctor should review this.",
+    psychiatry: "Based on what you've told me, a mental health doctor should review this.",,
+    identifierBlocked: "Possible personal identifiers were detected. Remove names, dates of birth, phone numbers, email addresses, addresses, and ID numbers before saving this case. Nothing was saved.",
   },
   ur: {
     dermatology: "آپ کی بتائی ہوئی باتوں کی بنیاد پر، جلد کے ڈاکٹر کو یہ دیکھنا چاہیے۔",
@@ -873,6 +874,7 @@ export const SCENARIOS: {
     blurb: "A safety rule. Confirming it shows emergency help, not a diagnosis.",
     blurbUr: "حفاظتی قاعدہ۔ تصدیق ایمرجنسی مدد دکھاتی ہے، تشخیص نہیں۔",
     duration: "hours",
-    complaint: "I have a plan to kill myself tonight",
+    complaint: "I have a plan to kill myself tonight",,
+    identifierBlocked: "شناختی معلومات کی نشاندہی ہوئی ہے۔ کیس محفوظ کرنے سے پہلے نام، تاریخ پیدائش، فون، ای میل، پتہ اور شناختی نمبر حذف کریں۔ کچھ بھی محفوظ نہیں کیا گیا۔"
   },
 ];
