@@ -44,4 +44,4 @@ jobs:
         run: npm audit --audit-level=high
       - name: Production-mode compile
         if: always()
-        run: npm run build:dev
+        run: npm run build
