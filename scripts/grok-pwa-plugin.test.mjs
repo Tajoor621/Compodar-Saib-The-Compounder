@@ -515,6 +515,12 @@ test("renders the manifest with the per-app name", () => {
   assert.equal(manifest.icons[0].src, "/__grok/icon-180.png");
 });
 
+test("uses the Compodar Saib brand on non-Grok deployment hosts", () => {
+  const manifest = JSON.parse(renderWebManifest("tajoor621.github.io"));
+  assert.equal(manifest.name, "Compodar Saib The Compounder");
+  assert.equal(manifest.short_name, "Compodar Saib The Compounder");
+});
+
 // Tripwires: the deployed-app path only works if Nitro scans server/ — an
 // accidental edit that drops serverDir or the middleware file would otherwise
 // fail silently (published apps would just render the app for ?install=1).
