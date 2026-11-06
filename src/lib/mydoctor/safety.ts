@@ -29,6 +29,7 @@ export function detectIdentifiers(value: string): boolean {
 
 const injectionPatterns = [
   /ignore\s+(?:all\s+)?(?:previous|prior|above)\s+instructions?/gi,
+  /disregard\s+(?:all\s+)?(?:above|previous|prior)\s+(?:safety\s+)?(?:constraints|rules|instructions)/gi,
   /disregard\s+(?:the\s+)?(?:system|developer|safety|previous)\s+(?:prompt|instructions?)/gi,
   /override\s+(?:the\s+)?(?:system|developer|safety)\s+(?:prompt|rules?)/gi,
   /reveal\s+(?:the\s+)?(?:system|developer)\s+prompt/gi,
