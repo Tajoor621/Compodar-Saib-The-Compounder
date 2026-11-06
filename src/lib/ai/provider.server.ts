@@ -68,7 +68,7 @@ function validate(text: string, sources: ClinicalSource[]): boolean {
   const citations = [...text.matchAll(/\[([A-Z0-9_-]+)\]/g)].map((match) => match[1]);
   if (citations.some((id) => !ids.has(id))) return false;
   if (sources.length && !citations.length) return false;
-  const doseLike = /\b\d+(?:\.\d+)?\s?(?:mg|mcg|μg|µg|g|ml|mL|units?|IU)\b/gi;
+  const doseLike = /\b\d+(?:\.\d+)?\s?(?:mg|milligrams?|mcg|μg|µg|micrograms?|g|grams?|ml|mL|milliliters?|units?|IU)\b/gi;
   for (const match of text.matchAll(doseLike)) {
     if (!sources.some((source) => source.kind !== "pubmed" && source.passage.toLowerCase().includes(match[0].toLowerCase()))) return false;
   }
