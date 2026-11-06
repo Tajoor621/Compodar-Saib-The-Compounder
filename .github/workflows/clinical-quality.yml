@@ -1,0 +1,38 @@
+name: Clinical quality and security gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Unit and safety tests
+        run: npm test
+      - name: Clinical evaluation release gate
+        run: node scripts/eval/run.mjs
+      - name: Dependency security audit
+        run: npm audit --audit-level=high
+      - name: Production-mode compile
+        run: npm run build:dev
