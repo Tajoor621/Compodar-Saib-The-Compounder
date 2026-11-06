@@ -15,4 +15,4 @@
 - Documented limitations: full DailyMed SPL retrieval, MedlinePlus Connect, WHO/NICE retrieval, streaming, stop control, complete evaluation datasets, clinician review, Vercel deployment, and full privacy controls remain outstanding.
 
 - Rebranded visible application identity, metadata, install-page/PWA fallback name, bilingual copy, exported chat filename, package metadata, and documentation to Compodar Saib The Compounder.
-- Kept the GitHub repository slug and internal `mydoctor` source-module paths stable to avoid breaking the published URL and import graph.
+- The GitHub repository was subsequently renamed to `Compodar-Saib-The-Compounder`. Internal `mydoctor` source-module paths remain as private implementation namespaces; no runtime imports depend on the former repository slug.
