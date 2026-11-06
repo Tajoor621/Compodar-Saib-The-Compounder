@@ -117,7 +117,7 @@ export function AssistantScreen() {
           {DISCLAIMER[lang]}
         </p>
         <Button full onClick={onAccept}>
-          {lang === "ur" ? "میں سمجھتا/سمجھتی ہوں — جاری رکھیں" : "I understand — continue"}
+          {lang === "ur" ? "میں سمجھتا/سمجھتی ہوں اور سوال بھیجنے کی رضامندی دیتا/دیتی ہوں" : "I understand and consent to send submitted questions to the AI provider"}
         </Button>
       </section>
     );
@@ -171,7 +171,7 @@ export function AssistantScreen() {
 
       {current && (
         <p className="text-xs text-muted">
-          {lang === "ur" ? "ذرائع:" : "Sources:"} {current.sources.join(", ")}
+          {lang === "ur" ? "ممکنہ ماخذ کے مجموعے (ابھی بازیافت نہیں ہوئے):" : "Potential source families (not yet retrieved):"} {current.sources.join(", ")}
         </p>
       )}
 
