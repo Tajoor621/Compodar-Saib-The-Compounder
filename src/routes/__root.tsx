@@ -3,7 +3,7 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "MyDoctor";
+const APP_NAME = "Compodar Saib The Compounder";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -14,7 +14,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "MyDoctor prepares a specialist review. A licensed doctor gives the final word. Not a diagnosis and not a prescription.",
+          "Compodar Saib The Compounder is a bilingual clinical reference and patient-safety aid. It is not a diagnosis, prescription, or substitute for a licensed clinician.",
       },
       { name: "theme-color", content: "#1B5E4F" },
     ],
