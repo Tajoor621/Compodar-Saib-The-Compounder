@@ -1,7 +1,11 @@
 import type { ClinicalSource, ModelProvider } from "./types.ts";
 
 type ProviderResult = { text: string; provider: ModelProvider };
-function providerOrder(): ModelProvider[] {\n  const preferred = (process.env.AI_PROVIDER ?? "groq").toLowerCase();\n  const first: ModelProvider = preferred === "gemini" ? "gemini" : preferred === "openrouter" ? "openrouter" : "groq";\n  return [first, ...(["groq", "gemini", "openrouter"] as ModelProvider[]).filter((provider) => provider !== first)];\n}
+function providerOrder(): ModelProvider[] {
+  const preferred = (process.env.AI_PROVIDER ?? "groq").toLowerCase();
+  const first: ModelProvider = preferred === "gemini" ? "gemini" : preferred === "openrouter" ? "openrouter" : "groq";
+  return [first, ...(["groq", "gemini", "openrouter"] as ModelProvider[]).filter((provider) => provider !== first)];
+}
 
 function env(name: string): string | undefined {
   const value = process.env[name]?.trim();
