@@ -43,6 +43,12 @@ function Home() {
               {t(lang, "start")}
             </Button>
             <Link
+              to="/drug-info"
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-primary/40 bg-surface px-4 font-semibold text-primary"
+            >
+              {lang === "ur" ? "کلینیکل دوائی معلومات" : "Clinical drug information"}
+            </Link>
+            <Link
               to="/pharmacy"
               className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
             >

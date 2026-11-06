@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { t } from "@/lib/mydoctor/copy";
 import { useClinic } from "@/lib/mydoctor/store";
 import {
   SPECIALTY_ASSISTANTS,
@@ -16,6 +15,8 @@ import {
   acceptDisclaimer,
   type ChatMessage,
 } from "@/lib/mydoctor/assistant";
+import { answerDrugInfo, briefToText } from "@/lib/mydoctor/drug-info";
+import type { Lang } from "@/lib/mydoctor/types";
 
 export function AssistantScreen() {
   const lang = useClinic((state) => state.lang);
@@ -58,12 +59,14 @@ export function AssistantScreen() {
     // Local retrieval-style response (no external API key required).
     // In production wire this to a free-tier model + PubMed/openFDA retrieval.
     const spec = SPECIALTY_ASSISTANTS.find((s) => s.id === specialty) ?? SPECIALTY_ASSISTANTS[0];
-    const prompt = lang === "ur" ? spec.systemPromptUr : spec.systemPromptEn;
     const topicLabel = topic
-      ? KNOWLEDGE_TOPICS.find((t) => t.id === topic)?.[lang === "ur" ? "ur" : "en"] ?? ""
+      ? KNOWLEDGE_TOPICS.find((item) => item.id === topic)?.[lang === "ur" ? "ur" : "en"] ?? ""
       : "";
 
-    const answer = buildReferenceAnswer(text, spec, topicLabel, lang);
+    const answer =
+      spec.id === "pharmacy"
+        ? { text: briefToText(answerDrugInfo(text), lang), citations: spec.sources.slice(0, 3) }
+        : buildReferenceAnswer(text, spec, topicLabel, lang);
     const assistantMsg: ChatMessage = {
       role: "assistant",
       content: answer.text,

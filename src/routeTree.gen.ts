@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as DeskRouteImport } from './routes/desk'
+import { Route as DrugInfoRouteImport } from './routes/drug-info'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as CaseCaseIdRouteImport } from './routes/case.$caseId'
@@ -22,9 +24,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DeskRoute = DeskRouteImport.update({
   id: '/desk',
   path: '/desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DrugInfoRoute = DrugInfoRouteImport.update({
+  id: '/drug-info',
+  path: '/drug-info',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IntakeRoute = IntakeRouteImport.update({
@@ -55,7 +67,9 @@ const DeskCaseIdRoute = DeskCaseIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/desk': typeof DeskRouteWithChildren
+  '/drug-info': typeof DrugInfoRoute
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/case/$caseId': typeof CaseCaseIdRoute
@@ -64,6 +78,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
+  '/drug-info': typeof DrugInfoRoute
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/case/$caseId': typeof CaseCaseIdRoute
@@ -73,7 +89,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/desk': typeof DeskRouteWithChildren
+  '/drug-info': typeof DrugInfoRoute
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/case/$caseId': typeof CaseCaseIdRoute
@@ -84,7 +102,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assistant'
     | '/desk'
+    | '/drug-info'
     | '/intake'
     | '/pharmacy'
     | '/case/$caseId'
@@ -92,11 +112,20 @@ export interface FileRouteTypes {
     | '/desk/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/intake' | '/pharmacy' | '/case/$caseId' | '/desk/$caseId' | '/desk'
+    | '/'
+    | '/assistant'
+    | '/drug-info'
+    | '/intake'
+    | '/pharmacy'
+    | '/case/$caseId'
+    | '/desk/$caseId'
+    | '/desk'
   id:
     | '__root__'
     | '/'
+    | '/assistant'
     | '/desk'
+    | '/drug-info'
     | '/intake'
     | '/pharmacy'
     | '/case/$caseId'
@@ -106,7 +135,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssistantRoute: typeof AssistantRoute
   DeskRoute: typeof DeskRouteWithChildren
+  DrugInfoRoute: typeof DrugInfoRoute
   IntakeRoute: typeof IntakeRoute
   PharmacyRoute: typeof PharmacyRoute
   CaseCaseIdRoute: typeof CaseCaseIdRoute
@@ -121,11 +152,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/desk': {
       id: '/desk'
       path: '/desk'
       fullPath: '/desk'
       preLoaderRoute: typeof DeskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/drug-info': {
+      id: '/drug-info'
+      path: '/drug-info'
+      fullPath: '/drug-info'
+      preLoaderRoute: typeof DrugInfoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/intake': {
@@ -180,7 +225,9 @@ const DeskRouteWithChildren = DeskRoute._addFileChildren(DeskRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssistantRoute: AssistantRoute,
   DeskRoute: DeskRouteWithChildren,
+  DrugInfoRoute: DrugInfoRoute,
   IntakeRoute: IntakeRoute,
   PharmacyRoute: PharmacyRoute,
   CaseCaseIdRoute: CaseCaseIdRoute,
