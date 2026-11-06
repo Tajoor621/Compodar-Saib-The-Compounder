@@ -3,6 +3,7 @@ import { z } from "zod";
 import { retrieveClinicalSources } from "../retrieval/index.ts";
 import { generateGroundedAnswer } from "./provider.server.ts";
 import type { ClinicalAnswer } from "./types.ts";
+import { detectIdentifiers, neutralizePromptInjection } from "../mydoctor/safety.ts";
 
 const inputSchema = z.object({
   question: z.string().trim().min(3).max(1600),
@@ -23,9 +24,9 @@ export const askClinicalReference = createServerFn({ method: "POST" })
     const question = data.question;
     // Do not log question text, request bodies, source passages, or identifiers.
     try {
-      const sources = await retrieveClinicalSources(question);
+      const sources = await retrieveClinicalSources(safeQuestion);
       if (!sources.length) return insufficient(data.language, "insufficient_sources");
-      const generated = await generateGroundedAnswer(question, sources, data.language);
+      const generated = await generateGroundedAnswer(safeQuestion, sources, data.language);
       if (!generated) return insufficient(data.language, "insufficient_sources");
       return {
         status: "ok",
