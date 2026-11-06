@@ -15,8 +15,8 @@ import {
   acceptDisclaimer,
   type ChatMessage,
 } from "@/lib/mydoctor/assistant";
-import { answerDrugInfo, briefToText } from "@/lib/mydoctor/drug-info";
-import type { Lang } from "@/lib/mydoctor/types";
+import { askClinicalReference } from "@/lib/ai/answer.server";
+
 
 export function AssistantScreen() {
   const lang = useClinic((state) => state.lang);
@@ -55,28 +55,32 @@ export function AssistantScreen() {
     setMessages(next);
     setInput("");
     setBusy(true);
-
-    // Local retrieval-style response (no external API key required).
-    // In production wire this to a free-tier model + PubMed/openFDA retrieval.
-    const spec = SPECIALTY_ASSISTANTS.find((s) => s.id === specialty) ?? SPECIALTY_ASSISTANTS[0];
-    const topicLabel = topic
-      ? KNOWLEDGE_TOPICS.find((item) => item.id === topic)?.[lang === "ur" ? "ur" : "en"] ?? ""
-      : "";
-
-    const answer =
-      spec.id === "pharmacy"
-        ? { text: briefToText(answerDrugInfo(text), lang), citations: spec.sources.slice(0, 3) }
-        : buildReferenceAnswer(text, spec, topicLabel, lang);
-    const assistantMsg: ChatMessage = {
-      role: "assistant",
-      content: answer.text,
-      citations: answer.citations,
-      timestamp: Date.now(),
-    };
-    const updated = [...next, assistantMsg];
-    setMessages(updated);
-    saveChatHistory(updated);
-    setBusy(false);
+    try {
+      const result = await askClinicalReference({ data: { question: text, language: lang } });
+      const assistantMsg: ChatMessage = {
+        role: "assistant",
+        content: result.answer,
+        citations: result.sources.map((source) => source.id),
+        sources: result.sources,
+        timestamp: Date.now(),
+      };
+      const updated = [...next, assistantMsg];
+      setMessages(updated);
+      saveChatHistory(updated);
+    } catch {
+      const failed: ChatMessage = {
+        role: "assistant",
+        content: lang === "ur"
+          ? "درخواست مکمل نہیں ہو سکی۔ کوئی غیر مصدقہ جواب نہیں دیا گیا۔ براہِ کرم دوبارہ کوشش کریں۔"
+          : "The request could not be completed. No unverified answer was provided. Please try again.",
+        timestamp: Date.now(),
+      };
+      const updated = [...next, failed];
+      setMessages(updated);
+      saveChatHistory(updated);
+    } finally {
+      setBusy(false);
+    }
   }
 
   function exportHistory() {
@@ -188,9 +192,14 @@ export function AssistantScreen() {
           >
             <p className="whitespace-pre-wrap">{m.content}</p>
             {m.citations && m.citations.length > 0 && (
-              <p className="mt-2 text-xs text-muted">
-                {lang === "ur" ? "حوالے:" : "Citations:"} {m.citations.join("; ")}
-              </p>
+              <div className="mt-2 flex flex-col gap-1 text-xs text-muted">
+                <p>{lang === "ur" ? "حوالہ شناخت:" : "Source IDs:"} {m.citations.join("; ")}</p>
+                {m.sources?.map((source) => (
+                  <a key={source.id} href={source.url} target="_blank" rel="noreferrer" className="underline underline-offset-2">
+                    {source.id} · {source.title} ({source.publisher}) · {source.retrievedAt.slice(0, 10)}
+                  </a>
+                ))}
+              </div>
             )}
           </div>
         ))}
@@ -221,7 +230,7 @@ export function AssistantScreen() {
         />
         <div className="flex flex-wrap gap-2">
           <Button onClick={() => void send()} disabled={busy || !input.trim()}>
-            {busy ? (lang === "ur" ? "…" : "…") : lang === "ur" ? "بھیجیں" : "Send"}
+            {busy ? (lang === "ur" ? "ذرائع کی جانچ…" : "Checking sources…") : lang === "ur" ? "بھیجیں" : "Send"}
           </Button>
           <Button variant="outline" onClick={() => { clearChatHistory(); setMessages([]); }}>
             {lang === "ur" ? "صاف کریں" : "Clear"}
