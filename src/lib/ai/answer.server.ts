@@ -46,6 +46,7 @@ export const askClinicalReference = createServerFn({ method: "POST" })
       };
     } catch (error) {
       const code = error instanceof Error ? error.message : "unknown";
+      if (code === "citation_validation_failed") return insufficient(data.language, "insufficient_sources");
       if (code === "no_provider_key") {
         return { ...insufficient(data.language, "configuration_error"), answer: data.language === "ur"
           ? "AI فراہم کنندہ کی سرور کنفیگریشن موجود نہیں۔ کوئی طبی جواب تیار نہیں کیا گیا۔"
