@@ -68,16 +68,7 @@ export const REVIEW_LINE: Record<Lang, Record<SpecialtyId, string>> = {
     general_internal_medicine: "Based on what you've told me, a general doctor should review this.",
     pediatrics: "Based on what you've told me, a children's doctor should review this.",
     psychiatry: "Based on what you've told me, a mental health doctor should review this.",
-    identifierBlocked: "Possible personal identifiers were detected. Remove names, dates of birth, phone numbers, email addresses, addresses, and ID numbers before saving this case. Nothing was saved.",
 
-    privacyTitle: "Privacy and data handling",
-    privacyStored: "Stored on this device: language and jurisdiction settings; signer name; saved case records, including complaint text, age band, medications, allergies, selected answers, generated drafts, and clinician sign-off notes; assistant chat history; and disclaimer/consent preference. The browser stores these in localStorage. Preview sign-in may also use a short-lived bearer token in sessionStorage.",
-    privacySent: "When you submit an assistant question, the question and retrieved public reference passages are sent to the AI provider configured by the app owner (Groq, Google Gemini, or OpenRouter). The server-side assistant does not intentionally log raw questions or source passages. Do not submit patient identifiers or real patient data.",
-    privacyNever: "The app does not intentionally send saved intake cases to the AI provider. The current assistant request sends only the submitted question and retrieved public sources. Browser offline caches are intended for app assets, not patient-entered text. The app currently has no IndexedDB clinical-data store.",
-    privacyClear: "Clear all local app data",
-    privacyClearConfirm: "This removes saved cases, assistant history, settings, consent preferences, browser caches, service-worker registrations, and IndexedDB databases for this origin. If sign-in is enabled, the app will also request server-side sign-out. Continue?",
-    privacyClearDone: "Local app data was cleared. Any enabled sign-in session was signed out.",
-    privacyClearFailed: "Local data may have been cleared, but server sign-out could not be verified. Retry sign-out before sharing this device.",
   },
   ur: {
     dermatology: "آپ کی بتائی ہوئی باتوں کی بنیاد پر، جلد کے ڈاکٹر کو یہ دیکھنا چاہیے۔",
@@ -441,6 +432,16 @@ const UI = {
     childWeight: "About how much does the child weigh, if you know? A number is enough. No dose will be calculated.",
     heardTitle: "What the specialist heard",
   },
+    identifierBlocked: "Possible personal identifiers were detected. Remove names, dates of birth, phone numbers, email addresses, addresses, and ID numbers before saving this case. Nothing was saved.",
+    privacyTitle: "Privacy and data handling",
+    privacyStored: "Stored on this device: language and jurisdiction settings; signer name; saved case records, including complaint text, age band, medications, allergies, selected answers, generated drafts, and clinician sign-off notes; assistant chat history; and disclaimer/consent preference. The browser stores these in localStorage. Preview sign-in may also use a short-lived bearer token in sessionStorage.",
+    privacySent: "When you submit an assistant question, the question and retrieved public reference passages are sent to the AI provider configured by the app owner (Groq, Google Gemini, or OpenRouter). The server-side assistant does not intentionally log raw questions or source passages. Do not submit patient identifiers or real patient data.",
+    privacyNever: "The app does not intentionally send saved intake cases to the AI provider. The current assistant request sends only the submitted question and retrieved public sources. Browser offline caches are intended for app assets, not patient-entered text. The app currently has no IndexedDB clinical-data store.",
+    privacyClear: "Clear all local app data",
+    privacyClearConfirm: "This removes saved cases, assistant history, settings, consent preferences, browser caches, service-worker registrations, and IndexedDB databases for this origin. If sign-in is enabled, the app will also request server-side sign-out. Continue?",
+    privacyClearDone: "Local app data was cleared. Any enabled sign-in session was signed out.",
+    privacyClearFailed: "Local data may have been cleared, but server sign-out could not be verified. Retry sign-out before sharing this device.",
+
   ur: {
     mark: "MyDoctor",
     tagline: "آپ کی زبان میں ماہر، آخری بات ڈاکٹر کی۔",
