@@ -73,10 +73,14 @@ async function callOpenAiCompatible(base: string, key: string, model: string, qu
 
 async function callProvider(provider: ModelProvider, question: string, sources: ClinicalSource[], language: "en" | "ur"): Promise<ProviderResult> {
   if (provider === "groq") {
-    return { provider, text: await callOpenAiCompatible("https://api.groq.com/openai/v1", env("GROQ_API_KEY")!, env("GROQ_MODEL") ?? "llama-3.3-70b-versatile", question, sources, language) };
+    // Prefer free-tier compatible model
+    const model = env("GROQ_MODEL") ?? "llama-3.3-70b-versatile";
+    return { provider, text: await callOpenAiCompatible("https://api.groq.com/openai/v1", env("GROQ_API_KEY")!, model, question, sources, language) };
   }
   if (provider === "openrouter") {
-    return { provider, text: await callOpenAiCompatible("https://openrouter.ai/api/v1", env("OPENROUTER_API_KEY")!, env("OPENROUTER_MODEL") ?? "meta-llama/llama-3.3-70b-instruct:free", question, sources, language, { "HTTP-Referer": env("APP_URL") ?? "https://tajoor621.github.io/Compodar-Saib-The-Compounder", "X-Title": "Compodar Saib The Compounder" }) };
+    // Default to free model for $0 workflow
+    const model = env("OPENROUTER_MODEL") ?? "meta-llama/llama-3.3-70b-instruct:free";
+    return { provider, text: await callOpenAiCompatible("https://openrouter.ai/api/v1", env("OPENROUTER_API_KEY")!, model, question, sources, language, { "HTTP-Referer": env("APP_URL") ?? "https://tajoor621.github.io/Compodar-Saib-The-Compounder", "X-Title": "Compodar Saib The Compounder" }) };
   }
   const key = env("GEMINI_API_KEY")!;
   const model = env("GEMINI_MODEL") ?? "gemini-2.5-flash";
