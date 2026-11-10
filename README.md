@@ -1,10 +1,10 @@
 # Compodar Saib The Compounder
 
-Compodar Saib The Compounder is a bilingual (English / Urdu) clinical reference and patient-safety aid. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
+Compodar Saib The Compounder is a bilingual (English / Urdu) clinical reference and patient-safety aid designed for users in Pakistan and the Gulf Cooperation Council (GCC) states. It combines the knowledge of a senior physician, clinical pharmacist familiar with local markets, pathologist, and home-remedies information desk. It provides evidence-based information, triage guidance, and practical suggestions. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
 
 ## Current implementation status
 
-The AI assistant has a server-side retrieval-augmented answer path in progress:
+The AI assistant has a server-side retrieval-augmented answer path:
 
 - Provider adapters: Groq, Google Gemini (AI Studio), and OpenRouter.
 - Primary provider selection: `AI_PROVIDER`; fallback attempts other configured providers.
@@ -13,10 +13,12 @@ The AI assistant has a server-side retrieval-augmented answer path in progress:
 - Answer generation uses retrieved passages only and requires source-ID citations.
 - Citation IDs are checked against the retrieved set. Numeric dose expressions are rejected unless the exact expression occurs in a retrieved non-PubMed label passage.
 - Questions containing detected identifiers are blocked before provider submission.
+- Strengthened system prompt incorporates regional disease awareness (dengue, malaria, typhoid, hepatitis, TB in Pakistan; heat illness, diabetes, vitamin D in the Gulf), structured clinical response format (summary, likely causes, red flags, next steps, pharmacy notes, disclaimer), emergency triage guidance with local emergency numbers, clinical pharmacist and pathologist roles, labeled home remedies, and strict safety rules.
+- Specialty assistants (general, cardiology, oncology, radiology teaching, pediatrics, clinical pharmacy) have been updated with aligned regional and structured guidance.
 - Questions and retrieved passages are sent to the configured AI provider only when the user submits a question. They are not written to server logs by this feature.
 - Chat history and disclaimer preference are stored in browser local storage on the user's device.
 
-**Important limitations:** DailyMed currently supplies a product/SPL discovery record, not the full SPL label text. MedlinePlus Connect and WHO/NICE page retrieval are not yet integrated. The assistant is not streaming tokens and does not yet provide a stop-generation control. The clinical evaluation corpus and clinician sign-offs are not complete. The product is not approved for clinical deployment.
+**Important limitations:** DailyMed currently supplies a product/SPL discovery record, not the full SPL label text. MedlinePlus Connect and WHO/NICE page retrieval are not yet integrated. The assistant is not streaming tokens and does not yet provide a stop-generation control. The clinical evaluation corpus and clinician sign-offs are not complete. The product is not approved for clinical deployment. Regional formulary coverage and verified local brand lists remain incomplete and must be confirmed with DRAP, SFDA, MOHAP or the relevant regulator.
 
 ## Deployment
 
@@ -78,11 +80,11 @@ At least one AI provider key is required for AI answers. Production authenticati
 - The privacy page provides a clear-all control for localStorage, IndexedDB, browser Cache Storage and service-worker registrations; when Better Auth is enabled it also requests server-side sign-out. The app currently has no IndexedDB clinical-data store. If server sign-out cannot be confirmed, the page reports failure.
 - Do not use real patient data. No patient identifiers should be submitted, even where a detector fails to recognize them.
 - AI output is not a prescription or diagnosis. Verify every clinical decision against the current local label and current guideline with a licensed professional.
-- Emergency symptoms require local emergency services; do not wait for an AI response.
+- Emergency symptoms require local emergency services; do not wait for an AI response. Confirm emergency numbers locally (Pakistan 1122/115, Saudi Arabia 997/911, UAE 998/999, Qatar 999, Kuwait 112, Bahrain 999, Oman 9999).
 
 ## Supported languages and jurisdictions
 
-The user interface and assistant response selection support English and Urdu. Clinical localization, verified country-specific crisis contacts, and regional formulary coverage for Pakistan and Gulf countries are incomplete and must not be assumed to be comprehensive.
+The user interface and assistant response selection support English and Urdu. Clinical localization, verified country-specific crisis contacts, and regional formulary coverage for Pakistan and Gulf countries are incomplete and must not be assumed to be comprehensive. Always verify medicine registration, availability, and pricing with DRAP (Pakistan) or the relevant GCC regulator (SFDA, MOHAP, etc.).
 
 ## Clinical sources
 
@@ -115,4 +117,4 @@ The release evaluation gates are intentionally blocked until the required clinic
 
 ## Disclaimer
 
-Compodar Saib The Compounder is an informational reference and triage aid only. It does not diagnose, prescribe, clear a patient, replace emergency services, or replace a licensed healthcare professional. It may be incomplete, inaccurate, outdated, or unavailable. Never delay urgent care or change treatment based on this application.
+Compodar Saib The Compounder is an informational reference and triage aid only. It does not diagnose, prescribe, clear a patient, replace emergency services, or replace a licensed healthcare professional. It may be incomplete, inaccurate, outdated, or unavailable. Never delay urgent care or change treatment based on this application. Always verify with current official sources and a qualified clinician.
