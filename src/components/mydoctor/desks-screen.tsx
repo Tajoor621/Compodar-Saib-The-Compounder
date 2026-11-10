@@ -224,7 +224,11 @@ export function DesksScreen() {
             ? "سوال ایک ایک کر کے۔ یہ تشخیص نہیں۔ ایمرجنسی میں مقامی ایمرجنسی کو کال کریں۔ ڈاکٹر کی جگہ نہیں۔"
             : "Questions come one at a time. This is not a diagnosis. In an emergency, contact local emergency services. It does not replace a doctor."}
         </p>
-        <p className="text-sm text-muted">{t(lang, "identifierBlocked")}</p>
+        <p className="text-sm text-muted">
+          {lang === "ur"
+            ? "نام، تاریخ پیدائش، یا ریکارڈ نمبر نہ لکھیں۔ رشتہ استعمال کریں، جیسے میں یا والدہ۔"
+            : "Do not type names, birth dates, or record numbers. Use a relation such as Me or Mother."}
+        </p>
       </div>
 
       {!started && !viewing && (
