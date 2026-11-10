@@ -17,6 +17,10 @@ export type PackSight = {
     | "unknown";
   volume: string;
   seen: string;
+  activeIngredients?: string;
+  indications?: string;
+  warnings?: string;
+  sideEffects?: string;
 };
 
 export function queryFromSight(sight: PackSight): string {
