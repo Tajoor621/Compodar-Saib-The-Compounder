@@ -258,13 +258,21 @@ export function CaseScreen({ caseId }: { caseId: string }) {
           {view.brandNote && <p className="mt-2 text-sm text-muted">{t(record.lang, "brandNote")}</p>}
         </section>
       )}
-      <Link
-        to="/desk/$caseId"
-        params={{ caseId: record.id }}
-        className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
-      >
-        {t(lang, "openDesk")}
-      </Link>
+      <div className="flex flex-wrap gap-2">
+        <Link
+          to="/desk/$caseId"
+          params={{ caseId: record.id }}
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
+        >
+          {t(lang, "openDesk")}
+        </Link>
+        <Link
+          to="/reference"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
+        >
+          {t(lang, "referenceDesk")}
+        </Link>
+      </div>
     </article>
   );
 }

@@ -16,6 +16,7 @@ import { Route as DrugInfoRouteImport } from './routes/drug-info'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReferenceRouteImport } from './routes/reference'
 import { Route as CaseCaseIdRouteImport } from './routes/case.$caseId'
 import { Route as DeskIndexRouteImport } from './routes/desk.index'
 import { Route as DeskCaseIdRouteImport } from './routes/desk.$caseId'
@@ -55,6 +56,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReferenceRoute = ReferenceRouteImport.update({
+  id: '/reference',
+  path: '/reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CaseCaseIdRoute = CaseCaseIdRouteImport.update({
   id: '/case/$caseId',
   path: '/case/$caseId',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/privacy': typeof PrivacyRoute
+  '/reference': typeof ReferenceRoute
   '/case/$caseId': typeof CaseCaseIdRoute
   '/desk/$caseId': typeof DeskCaseIdRoute
   '/desk/': typeof DeskIndexRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/privacy': typeof PrivacyRoute
+  '/reference': typeof ReferenceRoute
   '/case/$caseId': typeof CaseCaseIdRoute
   '/desk/$caseId': typeof DeskCaseIdRoute
   '/desk': typeof DeskIndexRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/privacy': typeof PrivacyRoute
+  '/reference': typeof ReferenceRoute
   '/case/$caseId': typeof CaseCaseIdRoute
   '/desk/$caseId': typeof DeskCaseIdRoute
   '/desk/': typeof DeskIndexRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/intake'
     | '/pharmacy'
     | '/privacy'
+    | '/reference'
     | '/case/$caseId'
     | '/desk/$caseId'
     | '/desk/'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/intake'
     | '/pharmacy'
     | '/privacy'
+    | '/reference'
     | '/case/$caseId'
     | '/desk/$caseId'
     | '/desk'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/intake'
     | '/pharmacy'
     | '/privacy'
+    | '/reference'
     | '/case/$caseId'
     | '/desk/$caseId'
     | '/desk/'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   IntakeRoute: typeof IntakeRoute
   PharmacyRoute: typeof PharmacyRoute
   PrivacyRoute: typeof PrivacyRoute
+  ReferenceRoute: typeof ReferenceRoute
   CaseCaseIdRoute: typeof CaseCaseIdRoute
 }
 
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reference': {
+      id: '/reference'
+      path: '/reference'
+      fullPath: '/reference'
+      preLoaderRoute: typeof ReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/case/$caseId': {
       id: '/case/$caseId'
       path: '/case/$caseId'
@@ -251,6 +271,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntakeRoute: IntakeRoute,
   PharmacyRoute: PharmacyRoute,
   PrivacyRoute: PrivacyRoute,
+  ReferenceRoute: ReferenceRoute,
   CaseCaseIdRoute: CaseCaseIdRoute,
 }
 export const routeTree = rootRouteImport

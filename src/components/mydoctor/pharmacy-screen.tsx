@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { t } from "@/lib/mydoctor/copy";
 import { chemistFor, seenForm } from "@/lib/mydoctor/forms";
@@ -26,6 +27,9 @@ export function PharmacyScreen() {
         <p className="text-sm font-semibold tracking-wide text-primary">{t(lang, "onDevice")}</p>
         <h1 className="text-3xl font-semibold leading-tight">{t(lang, "pharmTitle")}</h1>
         <p className="text-muted">{t(lang, "pharmLead")}</p>
+        <Link to="/reference" className="text-sm font-semibold text-primary">
+          {t(lang, "referenceDesk")}
+        </Link>
       </div>
       <label className="flex flex-col gap-2">
         <span className="text-sm font-semibold">{t(lang, "pharmSearch")}</span>

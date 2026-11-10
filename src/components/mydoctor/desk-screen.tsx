@@ -44,6 +44,9 @@ export function DeskList() {
         <h1 className="text-3xl font-semibold">{t(lang, "deskTitle")}</h1>
         <p className="text-muted">{t(lang, "deskIntro")}</p>
         <p className="text-sm text-muted">{t(lang, "queueLead")}</p>
+        <Link to="/reference" className="text-sm font-semibold text-primary">
+          {t(lang, "referenceDesk")}
+        </Link>
       </header>
       {order.length === 0 && <p className="rounded-xl border border-line bg-surface p-4">{t(lang, "deskEmpty")}</p>}
       <ul className="flex flex-col gap-3">
@@ -129,9 +132,14 @@ export function DeskCase({ caseId }: { caseId: string }) {
 
   return (
     <article className="flex flex-col gap-5">
-      <Link to="/desk" className="text-sm font-semibold text-primary">
-        {t(lang, "back")}
-      </Link>
+      <div className="flex flex-wrap gap-4">
+        <Link to="/desk" className="text-sm font-semibold text-primary">
+          {t(lang, "back")}
+        </Link>
+        <Link to="/reference" className="text-sm font-semibold text-primary">
+          {t(lang, "referenceDesk")}
+        </Link>
+      </div>
       <header className="flex flex-col gap-2">
         <p className={`w-fit rounded-lg px-2 py-1 text-sm font-semibold ${tone(record.routing.urgency)}`}>
           {record.routing.urgency}

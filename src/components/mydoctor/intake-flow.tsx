@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Mic, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -287,6 +287,9 @@ export function IntakeFlow() {
   return (
     <div className="flex flex-col gap-6">
       {privacyError && <p role="alert" className="rounded-xl border border-accent bg-accent/10 p-3 text-sm text-accent">{t(lang, "identifierBlocked")}</p>}
+      <Link to="/reference" className="text-sm font-semibold text-primary">
+        {t(lang, "referenceDesk")}
+      </Link>
       <div className="h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
         <div
           className="h-full bg-primary"

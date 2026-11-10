@@ -1,5 +1,14 @@
 # Changelog — Compodar Saib The Compounder
 
+## 2026-11-10 — On-device reference desk
+
+- Added a reference desk that answers only by quoting shelf cards and intake safety-check notes already stored in the app.
+- Keyword retrieval stays in the browser. If a note does not match, the desk says so and does not guess.
+- Dosing answers require a quoted card line and a reminder to confirm the amount with the current label or a pharmacist. Child questions do not print a numeric dose unless age and weight are given and the number is inside that quote.
+- Questions that look like names, birth dates, record numbers, or other identifiers are warned and are not searched or saved.
+- Reference history is kept in this browser, with clear, export, and import. The existing assistant disclaimer is reused when it was already accepted.
+- Imaging interpretation, image generation, subscriptions, and any new hosted model call were not added.
+
 ## 2026-11-06 — Compodar Saib The Compounder rebrand and grounded AI foundation
 
 - Added server-only Groq, Gemini, and OpenRouter adapters with configured-provider fallback.

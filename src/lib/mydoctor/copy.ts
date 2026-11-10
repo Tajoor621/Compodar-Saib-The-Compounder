@@ -451,6 +451,10 @@ const UI = {
     privacyBoundaryHeading: "Important boundaries",
     privacyDoNotEnter: "Do not enter patient identifiers. This is not a diagnosis or prescription.",
     privacyClearing: "Clearing…",
+    referenceDesk: "Reference desk",
+    privacyReferenceHeading: "Reference desk on this device",
+    privacyReference:
+      "Reference-desk questions and the quoted answers stay in this browser on this device. They are not sent to a server or a hosted model. Clear them on the reference desk, or export and import them as a file. The button below also erases them.",
   },
   ur: {
     mark: "Compodar Saib",
@@ -793,6 +797,10 @@ const UI = {
     privacyBoundaryHeading: "اہم حدود",
     privacyDoNotEnter: "مریض کی شناخت شامل نہ کریں۔ یہ تشخیص یا نسخہ نہیں۔",
     privacyClearing: "صاف کیا جا رہا ہے…",
+    referenceDesk: "حوالہ ڈیسک",
+    privacyReferenceHeading: "اسی ڈیوائس پر حوالہ ڈیسک",
+    privacyReference:
+      "حوالہ ڈیسک کے سوال اور نقل شدہ جواب اسی ڈیوائس کے براؤزر میں رہتے ہیں۔ وہ کسی سرور یا ہوسٹڈ ماڈل کو نہیں بھیجے جاتے۔ انہیں حوالہ ڈیسک پر صاف کریں، یا فائل کے طور پر برآمد اور درآمد کریں۔ نیچے والا بٹن انہیں بھی مٹا دیتا ہے۔",
   },
 } as const;
 

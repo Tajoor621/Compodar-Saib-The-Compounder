@@ -77,6 +77,10 @@ function PrivacyPage() {
           <h2 className="font-semibold">{t(lang, "privacyBoundaryHeading")}</h2>
           <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacyNever")}</p>
         </article>
+        <article className="rounded-xl border border-line bg-surface p-4">
+          <h2 className="font-semibold">{t(lang, "privacyReferenceHeading")}</h2>
+          <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacyReference")}</p>
+        </article>
         <div className="rounded-xl border border-line p-4">
           <p className="text-sm text-muted">
             {t(lang, "privacyDoNotEnter")}
