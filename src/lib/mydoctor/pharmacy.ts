@@ -1175,3 +1175,54 @@ export function resolveMedicine(query: string): { named: Monograph[]; reading: M
 export function medicineById(id: string): Monograph | undefined {
   return LIBRARY.find((row) => row.id === id);
 }
+
+const FORM_TOKEN =
+  /^(tablet|tablets|tab|tabs|capsule|capsules|cap|caps|syrup|syrups|suspension|elixir|drop|drops|eyedrop|eyedrops|injection|injections|injectable|syringe|syringes|cream|creams|ointment|gel|inhaler|inhalers|spray|sprays|nasal|oral|eye|ear|powder|sachet|sachets|pen|pens|vial|vials|ampoule|ampoules|mg|mcg|ml|g|iu)$/i;
+
+function nameTokens(query: string): string[] {
+  return askName(query)
+    .split(/\s+/)
+    .map((word) => word.trim())
+    .filter((word) => word.length >= 3 && !FORM_TOKEN.test(word) && !/^\d/.test(word));
+}
+
+export type PharmacyMatch = { row: Monograph; score: number };
+
+export type PharmacyLookup = {
+  matches: PharmacyMatch[];
+  reading: Monograph | null;
+  kind: "named" | "class" | "miss";
+};
+
+function bestScore(query: string, row: Monograph): number {
+  const q = norm(query);
+  return Math.max(...namesOf(row).map((name) => scoreName(q, norm(name))));
+}
+
+/** Name lookup for the pharmacist desk. A generic "read the pack" card is a miss, not a monograph. */
+export function lookupPharmacy(query: string): PharmacyLookup {
+  const asked = askName(query);
+  if (norm(asked).length < 2) return { matches: [], reading: null, kind: "miss" };
+  const tokens = nameTokens(query);
+  const probes = [...new Set(tokens.length > 0 ? [asked, ...tokens] : [])];
+  const bag = new Map<string, PharmacyMatch>();
+  for (const probe of probes) {
+    for (const row of searchMedicines(probe, 8)) {
+      const score = bestScore(probe, row);
+      const prev = bag.get(row.id);
+      if (!prev || score > prev.score) bag.set(row.id, { row, score });
+    }
+  }
+  const matches = [...bag.values()]
+    .filter((item) => item.score >= 55)
+    .sort((a, b) => b.score - a.score || a.row.inn.localeCompare(b.row.inn));
+  if (matches.length > 0) return { matches, reading: null, kind: "named" };
+  const resolved = resolveMedicine(query);
+  if (resolved.named.length > 0) {
+    return { matches: resolved.named.map((row) => ({ row, score: 80 })), reading: null, kind: "named" };
+  }
+  if (resolved.reading && resolved.reading.group !== "Reading this pack" && resolved.reading.atc !== "pack") {
+    return { matches: [], reading: resolved.reading, kind: "class" };
+  }
+  return { matches: [], reading: null, kind: "miss" };
+}

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { LIBRARY, resolveMedicine, searchMedicines } from "./pharmacy.ts";
+import { LIBRARY, lookupPharmacy, resolveMedicine, searchMedicines } from "./pharmacy.ts";
 import { chemistFor, seenForm } from "./forms.ts";
 
 describe("offline pharmacist library", () => {
@@ -72,6 +72,25 @@ describe("offline pharmacist library", () => {
     const cipro = resolveMedicine("Novidat eye drops");
     assert.equal(cipro.named[0]?.id, "ciprofloxacin");
     assert.match(chemistFor(cipro.named[0]!, "Novidat eye drops 5ml").panels[0]?.bodyEn ?? "", /lower lid/);
+  });
+
+  it("looks up a name even when a form word comes first, and refuses an unknown name", () => {
+    const adrenaline = lookupPharmacy("injection adrenaline");
+    assert.equal(adrenaline.kind, "named");
+    assert.equal(adrenaline.matches[0]?.row.id, "adrenaline");
+    const syringe = lookupPharmacy("syringe");
+    assert.equal(syringe.kind, "miss");
+    assert.equal(syringe.reading, null);
+    const unknown = lookupPharmacy("xyzunknown medicine");
+    assert.equal(unknown.kind, "miss");
+    const statins = lookupPharmacy("statin");
+    assert.equal(statins.kind, "named");
+    assert.ok(statins.matches.length >= 2);
+    const named = lookupPharmacy("Panadol tablet");
+    assert.equal(named.matches[0]?.row.id, "paracetamol");
+    const family = lookupPharmacy("linagliptin 5 mg");
+    assert.equal(family.kind, "class");
+    assert.match(family.reading?.group ?? "", /DPP-4/);
   });
 
   it("keeps a professional card complete and does not claim a cure", () => {

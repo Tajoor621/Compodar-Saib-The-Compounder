@@ -2,13 +2,29 @@ import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { t } from "@/lib/mydoctor/copy";
 import { chemistFor, seenForm } from "@/lib/mydoctor/forms";
-import { libraryStamp, resolveMedicine, type Monograph } from "@/lib/mydoctor/pharmacy";
+import { libraryStamp, lookupPharmacy, type Monograph } from "@/lib/mydoctor/pharmacy";
 import { queryFromSight, readPackPhoto } from "@/lib/mydoctor/read-pack";
+import { detectIdentifiers } from "@/lib/mydoctor/safety";
 import { useClinic } from "@/lib/mydoctor/store";
 import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 import type { Lang } from "@/lib/mydoctor/types";
 
 const CHIPS = ["Panadol", "Nexium", "Gravinate", "Augmentin", "Septran", "Concor"];
+
+const FORM_PHRASE: Record<string, string> = {
+  tablet: "tablet",
+  capsule: "capsule",
+  syrup: "syrup",
+  "oral-drops": "oral drops",
+  eye: "eye drops",
+  ear: "ear drops",
+  nasal: "nasal spray",
+  powder: "powder",
+  cream: "cream",
+  inhaler: "inhaler",
+  injection: "injection syringe",
+  "drop-unspecified": "drops",
+};
 
 export function PharmacyScreen() {
   const lang = useClinic((state) => state.lang);
@@ -18,9 +34,16 @@ export function PharmacyScreen() {
   const [photoSeen, setPhotoSeen] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [photoConsent, setPhotoConsent] = useState(false);
-  const result = useMemo(() => resolveMedicine(query), [query]);
-  const hits = result.named;
-  const reading = result.reading;
+  const [pickedId, setPickedId] = useState<string | null>(null);
+  const [formPick, setFormPick] = useState<string | null>(null);
+  const blocked = query.trim().length > 0 && detectIdentifiers(query);
+  const lookup = useMemo(() => (blocked ? null : lookupPharmacy(query)), [blocked, query]);
+  const matches = lookup?.matches ?? [];
+  const exact = matches[0]?.score === 100;
+  const chosen =
+    matches.find((item) => item.row.id === pickedId)?.row ??
+    (matches.length === 1 || exact ? matches[0]?.row : undefined);
+  const formQuery = formPick ? `${query} ${FORM_PHRASE[formPick] ?? formPick}` : query;
 
   return (
     <section className="flex flex-col gap-5">
@@ -39,6 +62,8 @@ export function PharmacyScreen() {
           onChange={(event) => {
             setQuery(event.target.value);
             setPhotoSeen(null);
+            setPickedId(null);
+            setFormPick(null);
           }}
           placeholder={t(lang, "pharmHint")}
           className="min-h-11 rounded-xl border border-line bg-surface px-4 text-lg text-ink outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
@@ -53,12 +78,57 @@ export function PharmacyScreen() {
             onClick={() => {
               setQuery(chip);
               setPhotoSeen(null);
+              setPickedId(null);
+              setFormPick(null);
             }}
           >
             {chip}
           </button>
         ))}
       </div>
+      {blocked && (
+        <p className="rounded-xl border border-accent bg-accent/10 p-4 text-sm" role="alert">
+          {t(lang, "identifierBlocked")}
+        </p>
+      )}
+      {!blocked && query.trim().length >= 2 && lookup?.kind === "miss" && (
+        <p className="rounded-xl border border-line bg-surface p-4 text-sm">{t(lang, "pharmMiss")}</p>
+      )}
+      {!blocked && lookup?.kind === "named" && matches.length > 1 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-semibold">{t(lang, "pharmPick")}</p>
+          <div className="flex flex-col gap-2">
+            {matches.map((item) => (
+              <button
+                key={item.row.id}
+                type="button"
+                className={`min-h-11 rounded-xl border px-4 py-3 text-start ${chosen?.id === item.row.id ? "border-primary bg-primary/10" : "border-line bg-surface"}`}
+                onClick={() => {
+                  setPickedId(item.row.id);
+                  setFormPick(null);
+                }}
+              >
+                <span className="block font-semibold">{item.row.inn}</span>
+                <span className="mt-1 block text-sm text-muted">
+                  {lang === "ur" ? item.row.groupUr : item.row.group}
+                  {" · "}
+                  {item.row.form}
+                  {" · "}
+                  {item.row.brands
+                    .slice(0, 3)
+                    .map((brand) => brand.brand)
+                    .join(", ")}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {chosen && <Card row={chosen} lang={lang} query={formQuery} onForm={setFormPick} formPick={formPick} />}
+      {!blocked && lookup?.kind === "class" && lookup.reading && (
+        <Card row={lookup.reading} lang={lang} query={formQuery} onForm={setFormPick} formPick={formPick} classNote />
+      )}
+
       <label className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3 text-sm">
         <input type="checkbox" className="mt-1 size-5" checked={photoConsent} onChange={(event) => setPhotoConsent(event.target.checked)} />
         <span>{isStaticPages() ? STATIC_HOST_COPY.photoConsent[lang] : t(lang, "pharmPhotoConsent")}</span>
@@ -75,7 +145,11 @@ export function PharmacyScreen() {
             const file = event.target.files?.[0];
             event.target.value = "";
             if (!file) return;
-            void readPhoto(file, lang, setPhoto, setPhotoBusy, setPhotoSeen, setPhotoError, setQuery);
+            void readPhoto(file, lang, setPhoto, setPhotoBusy, setPhotoSeen, setPhotoError, (value) => {
+              setQuery(value);
+              setPickedId(null);
+              setFormPick(null);
+            });
           }}
         />
       </label>
@@ -88,17 +162,26 @@ export function PharmacyScreen() {
         </figure>
       )}
       {!photo && <p className="text-sm text-muted">{t(lang, "pharmPhotoNote")}</p>}
-      {hits.length > 1 && <p className="rounded-xl border border-line bg-surface p-4 text-sm">{t(lang, "pharmFormula")}</p>}
-      {hits.map((row) => (
-        <Card key={row.id} row={row} lang={lang} query={query} />
-      ))}
-      {reading && <Card row={reading} lang={lang} query={query} />}
       <p className="text-sm text-muted">{libraryStamp()}</p>
     </section>
   );
 }
 
-function Card({ row, lang, query }: { row: Monograph; lang: Lang; query: string }) {
+function Card({
+  row,
+  lang,
+  query,
+  onForm,
+  formPick,
+  classNote = false,
+}: {
+  row: Monograph;
+  lang: Lang;
+  query: string;
+  onForm: (form: string) => void;
+  formPick: string | null;
+  classNote?: boolean;
+}) {
   const text = (en: string, ur: string) => (lang === "ur" ? ur : en);
   const chemist = chemistFor(row, query);
   const described = seenForm(query).form;
@@ -121,7 +204,26 @@ function Card({ row, lang, query }: { row: Monograph; lang: Lang; query: string 
       <header>
         <h2 className="text-2xl font-semibold">{row.inn}</h2>
         <p className="text-sm text-muted">{text(row.group, row.groupUr)}</p>
+        <p className="mt-1 text-sm text-muted">{row.form}</p>
+        <p className="mt-2 text-xs font-semibold text-primary">
+          {classNote ? t(lang, "pharmClass") : `${t(lang, "pharmSource")} · ${row.id}`}
+        </p>
       </header>
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-semibold">{t(lang, "pharmForms")}</p>
+        <div className="flex flex-wrap gap-2">
+          {chemist.panels.map((panel) => (
+            <button
+              key={panel.id}
+              type="button"
+              className={`min-h-11 rounded-xl border px-3 text-sm font-semibold ${formPick === panel.id || (!formPick && described === panel.id) ? "border-primary bg-primary/10" : "border-line bg-bg"}`}
+              onClick={() => onForm(panel.id)}
+            >
+              {text(panel.titleEn, panel.titleUr)}
+            </button>
+          ))}
+        </div>
+      </div>
       {lead.map(([label, body]) => (
         <section key={label}>
           <h3 className="text-base font-semibold">{label}</h3>
@@ -157,6 +259,8 @@ function Card({ row, lang, query }: { row: Monograph; lang: Lang; query: string 
           <p className="mt-1 text-sm">{body}</p>
         </section>
       ))}
+      <p className="rounded-xl border border-line bg-bg p-3 text-sm">{t(lang, "pharmCheck")}</p>
+      <p className="text-sm font-semibold">{t(lang, "pharmVerify")}</p>
       <p className="text-sm font-semibold">{t(lang, "pharmNotRx")}</p>
     </article>
   );

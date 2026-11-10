@@ -76,7 +76,7 @@ export function seenForm(query: string): { form: PackForm | null; volume: string
   if (/nasal|nostril|\bnose\b|ناک|سپرے|spray/.test(q) && !/inhaler/.test(q)) return { form: "nasal", volume };
   if (/inhaler|puffer|nebule|انہیلر/.test(q)) return { form: "inhaler", volume };
   if (/cream|ointment|gel\b|کریم|مرہم/.test(q)) return { form: "cream", volume };
-  if (/injection|\bpen\b|vial|انجکشن/.test(q)) return { form: "injection", volume };
+  if (/injection|\bpen\b|vial|syringe|انجکشن|سرنج/.test(q)) return { form: "injection", volume };
   if (/oral drop|paediatric drop|infant drop|منہ کے قطر/.test(q)) return { form: "oral-drops", volume };
   if (/syrup|suspension|شربت/.test(q)) return { form: "syrup", volume };
   if (/powder|sachet|granule|پاؤڈر/.test(q)) return { form: "powder", volume };
