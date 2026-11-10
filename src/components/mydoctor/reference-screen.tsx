@@ -115,9 +115,6 @@ export function ReferenceScreen() {
   if (!accepted) {
     return (
       <section className="flex flex-col gap-6">
-        <p className="text-sm font-semibold tracking-wide text-primary">
-          {ur ? "اسی ڈیوائس پر" : "On this device"}
-        </p>
         <h1 className="text-3xl font-semibold">{ur ? "شروع سے پہلے" : "Before we begin"}</h1>
         <p className="rounded-xl border border-line bg-surface p-4 text-sm leading-relaxed">
           {REFERENCE_DISCLAIMER[lang]}
@@ -144,16 +141,13 @@ export function ReferenceScreen() {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-semibold tracking-wide text-primary">
-          {ur ? "اسی ڈیوائس پر" : "On this device"}
-        </p>
         <h1 className="text-3xl font-semibold leading-tight">
           {ur ? "حوالہ ڈیسک" : "Reference desk"}
         </h1>
         <p className="text-sm text-muted">
           {ur
-            ? "یہ ڈیسک صرف مقامی نوٹس نقل کرتا ہے۔ اندازہ نہیں لگاتا۔ ہاتھ والا پیک کارڈ پر فوقیت رکھتا ہے۔"
-            : "This desk only quotes local notes. It does not guess. The pack in hand overrides the card."}
+            ? "یہ ڈیسک اس ایپ کے نوٹس نقل کرتا ہے۔ اندازہ نہیں لگاتا۔ ہاتھ والا پیک کارڈ پر فوقیت رکھتا ہے۔"
+            : "This desk quotes the notes in this app. It does not guess. The pack in hand overrides the card."}
         </p>
       </div>
 

@@ -90,8 +90,8 @@ export const REFERENCE_ASSISTANTS: readonly ReferenceAssistant[] = [
     id: "all",
     nameEn: "All local notes",
     nameUr: "تمام مقامی نوٹس",
-    detailEn: "Shelf cards and the intake safety-check wording stored on this device.",
-    detailUr: "شیلف کارڈ اور انٹیک کی حفاظتی جانچ کے الفاظ، جو اسی ڈیوائس پر محفوظ ہیں۔",
+    detailEn: "Shelf cards and the intake safety-check wording in this app.",
+    detailUr: "اس ایپ کے شیلف کارڈ اور انٹیک کی حفاظتی جانچ کے الفاظ۔",
     topics: null,
   },
   {

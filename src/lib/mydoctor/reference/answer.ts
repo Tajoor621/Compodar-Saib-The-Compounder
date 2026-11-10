@@ -14,13 +14,13 @@ export const DOSE_CONFIRM = {
 } as const;
 
 const STANCE = {
-  en: "Guidance from notes stored on this device, not a diagnosis or a prescription. The pack in hand overrides the card.",
-  ur: "یہ اسی ڈیوائس پر محفوظ نوٹس سے رہنمائی ہے، تشخیص یا نسخہ نہیں۔ ہاتھ والا پیک کارڈ پر فوقیت رکھتا ہے۔",
+  en: "Guidance from the notes in this app, not a diagnosis or a prescription. The pack in hand overrides the card.",
+  ur: "یہ اس ایپ کے نوٹس سے رہنمائی ہے، تشخیص یا نسخہ نہیں۔ ہاتھ والا پیک کارڈ پر فوقیت رکھتا ہے۔",
 } as const;
 
 const NOT_FOUND = {
-  en: "Nothing in the on-device notes matches this question. Compodar Saib will not guess.",
-  ur: "اس سوال سے ملتا ہوا کوئی نوٹ اس ڈیوائس پر نہیں۔ Compodar Saib اندازہ نہیں لگائے گا۔",
+  en: "Nothing in the notes in this app matches this question. Compodar Saib will not guess.",
+  ur: "اس سوال سے ملتا ہوا کوئی نوٹ اس ایپ میں نہیں۔ Compodar Saib اندازہ نہیں لگائے گا۔",
 } as const;
 
 const DOSE_WITHHELD = {

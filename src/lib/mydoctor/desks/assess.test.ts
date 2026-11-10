@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { assessDesk, DESKS, suggestDesk } from "./assess.ts";
 import { NOTE_COUNT } from "./notes.ts";
-import { exportReports, memoryBucket, profileHasIdentifiers, saveProfiles, saveReports, loadReports } from "./store.ts";
+import { exportPortable, exportReports, memoryBucket, mergePortable, parsePortable, profileHasIdentifiers, saveProfiles, saveReports, loadReports } from "./store.ts";
 import type { DeskReport } from "./types.ts";
 
 const base = {
@@ -137,4 +137,26 @@ test("profiles reject identifiers and reports export", () => {
   const parsed = JSON.parse(raw) as DeskReport[];
   assert.equal(parsed[0]?.id, "r1");
   assert.doesNotMatch(raw, /\d+\s*mg/i);
+  const portable = exportPortable(
+    [
+      {
+        id: "p1",
+        relation: "mother",
+        nickname: "Mother",
+        ageBand: "65+",
+        sex: "female",
+        conditions: "",
+        medicines: "",
+        allergies: "",
+        pastTreatments: "",
+      },
+    ],
+    [report],
+  );
+  const file = parsePortable(portable);
+  assert.ok(file);
+  const merged = mergePortable([], [], file);
+  assert.equal(merged.profiles[0]?.relation, "mother");
+  assert.equal(merged.reports[0]?.id, "r1");
+  assert.equal(parsePortable("[]"), null);
 });

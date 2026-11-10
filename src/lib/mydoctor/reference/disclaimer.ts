@@ -26,13 +26,13 @@ export function acceptReferenceDisclaimer(bucket?: Bucket): void {
 }
 
 export const REFERENCE_DISCLAIMER = {
-  en: "Compodar Saib's reference desk quotes notes stored on this device. It is guidance, not a diagnosis, a prescription, a medical device, or a substitute for a licensed clinician. If the notes do not cover a question, the desk says so and does not guess. The pack in hand overrides the card. Do not enter names, birth dates, record numbers, or other identifiers. Questions stay in this browser. They are not sent to a server or a hosted model.",
-  ur: "Compodar Saib کا حوالہ ڈیسک اسی ڈیوائس پر محفوظ نوٹس نقل کرتا ہے۔ یہ رہنمائی ہے، تشخیص، نسخہ، طبی ڈیوائس، یا لائسنس یافتہ معالج کا متبادل نہیں۔ اگر نوٹس سوال کو نہ ڈھانپیں تو ڈیسک یہی کہے گا اور اندازہ نہیں لگائے گا۔ ہاتھ والا پیک کارڈ پر فوقیت رکھتا ہے۔ نام، تاریخ پیدائش، ریکارڈ نمبر، یا دیگر شناخت درج نہ کریں۔ سوال اسی براؤزر میں رہتے ہیں۔ وہ کسی سرور یا ہوسٹڈ ماڈل کو نہیں بھیجے جاتے۔",
+  en: "Compodar Saib's reference desk quotes the notes in this app. It is guidance, not a diagnosis, a prescription, a medical device, or a substitute for a licensed clinician. If the notes do not cover a question, the desk says so and does not guess. The pack in hand overrides the card. Do not enter names, birth dates, record numbers, or other identifiers. Saved questions stay in this browser unless you export them. They are not sent to a hosted model.",
+  ur: "Compodar Saib کا حوالہ ڈیسک اس ایپ کے نوٹس نقل کرتا ہے۔ یہ رہنمائی ہے، تشخیص، نسخہ، طبی ڈیوائس، یا لائسنس یافتہ معالج کا متبادل نہیں۔ اگر نوٹس سوال کو نہ ڈھانپیں تو ڈیسک یہی کہے گا اور اندازہ نہیں لگائے گا۔ ہاتھ والا پیک کارڈ پر فوقیت رکھتا ہے۔ نام، تاریخ پیدائش، ریکارڈ نمبر، یا دیگر شناخت درج نہ کریں۔ محفوظ سوال اسی براؤزر میں رہتے ہیں جب تک آپ انہیں برآمد نہ کریں۔ وہ کسی ہوسٹڈ ماڈل کو نہیں بھیجے جاتے۔",
 } as const;
 
 export const REFERENCE_DISCLAIMER_ACCEPT = {
-  en: "I understand. This is guidance on this device, and a clinician gives the final word.",
-  ur: "میں سمجھتا/سمجھتی ہوں۔ یہ اسی ڈیوائس پر رہنمائی ہے، اور آخری بات معالج کی ہے۔",
+  en: "I understand. This is guidance, and a clinician gives the final word.",
+  ur: "میں سمجھتا/سمجھتی ہوں۔ یہ رہنمائی ہے، اور آخری بات معالج کی ہے۔",
 } as const;
 
 export const REFERENCE_IDENTIFIER_BANNER = {

@@ -9,7 +9,10 @@ import {
   profileHasIdentifiers,
   saveProfiles,
   saveReports,
+  exportPortable,
   exportReports,
+  mergePortable,
+  parsePortable,
 } from "@/lib/mydoctor/desks/store";
 import type { Assessment, DeskId, DeskProfile, DeskReport, Relation, Sex } from "@/lib/mydoctor/desks/types";
 import { useClinic } from "@/lib/mydoctor/store";
@@ -217,7 +220,6 @@ export function DesksScreen() {
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-semibold tracking-wide text-primary">{lang === "ur" ? "اسی ڈیوائس پر" : "On this device"}</p>
         <h1 className="text-3xl font-semibold leading-tight">{lang === "ur" ? "ماہر ڈیسک" : "Specialist desks"}</h1>
         <p className="text-sm text-muted">
           {lang === "ur"
@@ -269,9 +271,15 @@ export function DesksScreen() {
           <History
             lang={lang}
             reports={reports}
+            profiles={profiles}
             onOpen={setOpenReport}
             onDelete={(id) => persistReports(reports.filter((item) => item.id !== id))}
             onClear={() => persistReports([])}
+            onImport={(file) => {
+              const merged = mergePortable(profiles, reports, file);
+              persistProfiles(merged.profiles);
+              persistReports(merged.reports);
+            }}
           />
         </>
       )}
@@ -501,17 +509,22 @@ function Profiles({
 function History({
   lang,
   reports,
+  profiles,
   onOpen,
   onDelete,
   onClear,
+  onImport,
 }: {
   lang: Lang;
   reports: DeskReport[];
+  profiles: DeskProfile[];
   onOpen: (id: string) => void;
   onDelete: (id: string) => void;
   onClear: () => void;
+  onImport: (file: NonNullable<ReturnType<typeof parsePortable>>) => void;
 }) {
   const ur = lang === "ur";
+  const [importError, setImportError] = useState(false);
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-xl font-semibold">{ur ? "پچھلی رپورٹیں" : "Past reports"}</h2>
@@ -525,14 +538,46 @@ function History({
           <Button variant="outline" onClick={() => onDelete(report.id)}>{ur ? "مٹائیں" : "Delete"}</Button>
         </div>
       ))}
-      {reports.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => download(exportReports(reports), "compodar-saib-desk-reports.json")}>
-            {ur ? "سب برآمد کریں" : "Export all"}
-          </Button>
-          <Button variant="ghost" onClick={onClear}>{ur ? "سب صاف کریں" : "Clear all"}</Button>
-        </div>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" onClick={() => download(exportPortable(profiles, reports), "compodar-saib-portable.json")}>
+          {ur ? "فائل برآمد کریں" : "Export file"}
+        </Button>
+        <label className="inline-flex min-h-11 cursor-pointer items-center rounded-xl border border-line bg-surface px-4 text-sm font-semibold">
+          {ur ? "فائل درآمد کریں" : "Import file"}
+          <input
+            type="file"
+            accept="application/json"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = () => {
+                const parsed = parsePortable(String(reader.result ?? ""));
+                if (!parsed) {
+                  setImportError(true);
+                  return;
+                }
+                setImportError(false);
+                onImport(parsed);
+              };
+              reader.readAsText(file);
+            }}
+          />
+        </label>
+        {reports.length > 0 && <Button variant="ghost" onClick={onClear}>{ur ? "سب صاف کریں" : "Clear all"}</Button>}
+      </div>
+      {importError && (
+        <p className="text-sm text-accent" role="alert">
+          {ur ? "یہ فائل پروفائل اور رپورٹ نہیں لگی۔" : "That file is not a profiles and reports export."}
+        </p>
       )}
+      <p className="text-xs text-muted">
+        {ur
+          ? "فائل دوسرے براؤزر یا ڈیوائس پر لے جا کر درآمد کی جا سکتی ہے۔ سائن اِن والی ہم آہنگی سرور والی اشاعت پر رہتی ہے۔"
+          : "The file can be imported in another browser or on another device. Sign-in sync stays on the server build."}
+      </p>
     </div>
   );
 }

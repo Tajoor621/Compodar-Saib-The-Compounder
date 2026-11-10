@@ -110,3 +110,54 @@ export function saveReports(reports: DeskReport[], bucket?: Bucket): void {
 export function exportReports(reports: DeskReport[]): string {
   return JSON.stringify(reports, null, 2);
 }
+
+export const PORTABLE_KIND = "compodar-saib-portable";
+
+export type PortableFile = {
+  kind: typeof PORTABLE_KIND;
+  version: 1;
+  profiles: DeskProfile[];
+  reports: DeskReport[];
+};
+
+export function exportPortable(profiles: DeskProfile[], reports: DeskReport[]): string {
+  const file: PortableFile = {
+    kind: PORTABLE_KIND,
+    version: 1,
+    profiles: profiles.filter((profile) => !profileHasIdentifiers(profile)),
+    reports,
+  };
+  return JSON.stringify(file, null, 2);
+}
+
+export function parsePortable(raw: string): PortableFile | null {
+  try {
+    const parsed = JSON.parse(raw) as Partial<PortableFile>;
+    if (parsed.kind !== PORTABLE_KIND || parsed.version !== 1) return null;
+    if (!Array.isArray(parsed.profiles) || !Array.isArray(parsed.reports)) return null;
+    const profiles = parsed.profiles.map(asProfile).filter((row): row is DeskProfile => Boolean(row));
+    const reports = parsed.reports.filter(
+      (row) => row && typeof row === "object" && typeof (row as DeskReport).id === "string" && !detectIdentifiers((row as DeskReport).complaint ?? ""),
+    ) as DeskReport[];
+    return { kind: PORTABLE_KIND, version: 1, profiles, reports };
+  } catch {
+    return null;
+  }
+}
+
+export function mergePortable(currentProfiles: DeskProfile[], currentReports: DeskReport[], incoming: PortableFile): {
+  profiles: DeskProfile[];
+  reports: DeskReport[];
+} {
+  const profiles = [...currentProfiles];
+  for (const profile of incoming.profiles) {
+    const index = profiles.findIndex((item) => item.id === profile.id);
+    if (index >= 0) profiles[index] = profile;
+    else profiles.push(profile);
+  }
+  const reports = [...incoming.reports];
+  for (const report of currentReports) {
+    if (!reports.some((item) => item.id === report.id)) reports.push(report);
+  }
+  return { profiles: profiles.slice(0, 12), reports: reports.slice(0, 40) };
+}

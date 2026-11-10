@@ -52,7 +52,6 @@ export function PharmacyScreen() {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-semibold tracking-wide text-primary">{t(lang, "onDevice")}</p>
         <h1 className="text-3xl font-semibold leading-tight">{t(lang, "pharmTitle")}</h1>
         <p className="text-muted">{t(lang, "pharmLead")}</p>
         <Link to="/reference" className="text-sm font-semibold text-primary">

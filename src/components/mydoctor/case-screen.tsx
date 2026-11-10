@@ -64,7 +64,6 @@ export function CaseScreen({ caseId }: { caseId: string }) {
         </section>
       ) : (
         <section className="flex flex-col gap-4">
-          <p className="text-sm font-semibold tracking-wide text-primary">{t(lang, "onDevice")}</p>
           <h1 className="text-3xl font-semibold leading-tight">{view.paragraphs[0]}</h1>
           {view.paragraphs.slice(1).map((paragraph) => (
             <p key={paragraph} className="text-lg">
