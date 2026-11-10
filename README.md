@@ -2,6 +2,17 @@
 
 Compodar Saib The Compounder is a bilingual (English / Urdu) clinical reference and patient-safety aid designed for users in Pakistan and the Gulf Cooperation Council (GCC) states. It combines the knowledge of a senior physician, clinical pharmacist familiar with local markets, pathologist, and home-remedies information desk. It provides evidence-based information, triage guidance, and practical suggestions. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
 
+## $0 Free Workflow
+
+The app is designed for a zero-cost workflow:
+
+- **Local monographs & drug information**: Fully offline, no API required.
+- **Pack scanning**: Uses Groq free-tier vision models (default `qwen/qwen3.8-27b`). Set `GROQ_API_KEY` (free, no credit card). Optional `GROQ_VISION_MODEL` override.
+- **AI clinical answers**: Prefers free models. Default OpenRouter free model (`...:free`) or Groq free tier. Set `GROQ_API_KEY` and/or `OPENROUTER_API_KEY`.
+- **Hosting**: GitHub Pages (static client) is free. Server functions on Vercel free tier.
+
+Only free-tier keys are needed for full AI features. Paid keys remain optional for higher limits.
+
 ## Current implementation status
 
 The AI assistant has a server-side retrieval-augmented answer path:
@@ -15,11 +26,11 @@ The AI assistant has a server-side retrieval-augmented answer path:
 - Questions containing detected identifiers are blocked before provider submission.
 - Strengthened system prompt incorporates regional disease awareness (dengue, malaria, typhoid, hepatitis, TB in Pakistan; heat illness, diabetes, vitamin D in the Gulf), structured clinical response format (summary, likely causes, red flags, next steps, pharmacy notes, disclaimer), emergency triage guidance with local emergency numbers, clinical pharmacist and pathologist roles, labeled home remedies, and strict safety rules.
 - Specialty assistants (general, cardiology, oncology, radiology teaching, pediatrics, clinical pharmacy) have been updated with aligned regional and structured guidance.
-- Enhanced medicine-pack photo reader (xAI/Grok vision) now extracts medicine name, strength, form, active ingredients, visible indications, warnings, and side effects from packaging. Results feed into local monographs and the clinical reference desk for accurate, source-grounded details on each medicine. Explicit photo consent is required. Patient scans and clinical images are refused.
+- Medicine-pack photo reader now uses **Groq free vision** (Qwen models) by default. Extracts medicine name, strength, form, active ingredients, visible indications, warnings, and side effects. Explicit photo consent is required. Patient scans and clinical images are refused. Falls back to typed name entry if unavailable.
 - Questions and retrieved passages are sent to the configured AI provider only when the user submits a question. They are not written to server logs by this feature.
 - Chat history and disclaimer preference are stored in browser local storage on the user's device.
 
-**Important limitations:** DailyMed currently supplies a product/SPL discovery record, not the full SPL label text. MedlinePlus Connect and WHO/NICE page retrieval are not yet integrated. The assistant is not streaming tokens and does not yet provide a stop-generation control. The clinical evaluation corpus and clinician sign-offs are not complete. The product is not approved for clinical deployment. Regional formulary coverage and verified local brand lists remain incomplete and must be confirmed with DRAP, SFDA, MOHAP or the relevant regulator. Pack scanning accuracy depends on image quality and readable text; always verify against the physical pack and official label.
+**Important limitations:** DailyMed currently supplies a product/SPL discovery record, not the full SPL label text. MedlinePlus Connect and WHO/NICE page retrieval are not yet integrated. The assistant is not streaming tokens and does not yet provide a stop-generation control. The clinical evaluation corpus and clinician sign-offs are not complete. The product is not approved for clinical deployment. Regional formulary coverage and verified local brand lists remain incomplete and must be confirmed with DRAP, SFDA, MOHAP or the relevant regulator. Pack scanning accuracy depends on image quality and readable text; always verify against the physical pack and official label. Free-tier rate limits apply.
 
 ## Deployment
 
@@ -61,23 +72,23 @@ Configure the following in Vercel Project Settings → Environment Variables for
 | `GROK_AUTH_CLIENT_SECRET` | Matching server-only OAuth broker client secret |
 | `GROK_PROJECT_ID` | Deployment project identifier used to distinguish deployed runtime from workspace preview |
 | `AI_PROVIDER` | Primary provider: `groq`, `gemini`, or `openrouter` |
-| `GROQ_API_KEY` | Groq server-side key |
-| `GROQ_MODEL` | Optional Groq model override |
-| `GEMINI_API_KEY` | Google AI Studio server-side key |
+| `GROQ_API_KEY` | Groq server-side key (free tier recommended for $0) |
+| `GROQ_MODEL` | Optional Groq model override (free-tier models preferred) |
+| `GROQ_VISION_MODEL` | Optional Groq vision model for pack scanning (default free Qwen) |
+| `GEMINI_API_KEY` | Google AI Studio server-side key (free tier available) |
 | `GEMINI_MODEL` | Optional Gemini model override |
 | `OPENROUTER_API_KEY` | OpenRouter server-side key |
-| `OPENROUTER_MODEL` | Optional OpenRouter model override |
-| `XAI_API_KEY` | Optional server-side xAI key for medicine-pack photo reading; photo consent is required |
+| `OPENROUTER_MODEL` | Optional OpenRouter model override (default free `:free` model) |
 | `APP_URL` | Public app URL for OpenRouter attribution |
 | `VITE_PUBLIC_HOSTNAME` | Optional public hostname used for share-card URLs; hostname only, no scheme |
 
-At least one AI provider key is required for AI answers. Production authentication additionally requires a persistent PostgreSQL database, a stable Better Auth secret, and an OAuth broker client provisioned for the deployed callback URL. The embedded PGLite fallback is in-memory and must not be treated as durable production storage. Never use the preview-only OAuth client for a production callback.
+At least one AI provider key is required for AI answers and pack scanning. Free-tier keys are sufficient. Production authentication additionally requires a persistent PostgreSQL database, a stable Better Auth secret, and an OAuth broker client provisioned for the deployed callback URL. The embedded PGLite fallback is in-memory and must not be treated as durable production storage. Never use the preview-only OAuth client for a production callback.
 
 ## Privacy and safety
 
 - Never enter names, dates of birth, phone numbers, email addresses, addresses, national identifiers, medical record numbers, or patient photos.
 - A submitted question is used as a search query with public references (PubMed/NCBI, openFDA, and DailyMed where applicable); the question and retrieved passages are then sent to the configured model provider for processing.
-- Medicine-pack photos are sent to xAI (Grok) only after the explicit photo-consent checkbox is selected; never upload patient scans or clinical images.
+- Medicine-pack photos are sent to the configured free-tier vision provider (Groq by default) only after the explicit photo-consent checkbox is selected; never upload patient scans or clinical images.
 - The privacy page provides a clear-all control for localStorage, IndexedDB, browser Cache Storage and service-worker registrations; when Better Auth is enabled it also requests server-side sign-out. The app currently has no IndexedDB clinical-data store. If server sign-out cannot be confirmed, the page reports failure.
 - Do not use real patient data. No patient identifiers should be submitted, even where a detector fails to recognize them.
 - AI output is not a prescription or diagnosis. Verify every clinical decision against the current local label and current guideline with a licensed professional.
