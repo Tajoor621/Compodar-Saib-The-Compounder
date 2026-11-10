@@ -16,14 +16,17 @@ export const readPackPhoto = createServerFn({ method: "POST" })
     return { image: input.image, consent: true as const };
   })
   .handler(async ({ data }): Promise<PackSight | { ok: false; error: string }> => {
-    const apiKey = process.env.XAI_API_KEY;
+    // Prefer free Groq vision for $0 workflow
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) return { ok: false, error: "The pack reader is not available. Type the name printed on the box." };
-    const res = await fetch("https://api.x.ai/v1/chat/completions", {
+    const model = process.env.GROQ_VISION_MODEL ?? "qwen/qwen3.8-27b";
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "grok-4.5",
+        model,
         max_tokens: 600,
+        temperature: 0.1,
         messages: [
           {
             role: "user",
