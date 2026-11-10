@@ -8,6 +8,7 @@ export const PAGES_ROUTES = [
   "drug-info",
   "assistant",
   "reference",
+  "desks",
   "privacy",
   "case",
 ];

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { t } from "@/lib/mydoctor/copy";
 import { chemistFor, seenForm } from "@/lib/mydoctor/forms";
 import { libraryStamp, lookupPharmacy, type Monograph } from "@/lib/mydoctor/pharmacy";
@@ -36,6 +36,10 @@ export function PharmacyScreen() {
   const [photoConsent, setPhotoConsent] = useState(false);
   const [pickedId, setPickedId] = useState<string | null>(null);
   const [formPick, setFormPick] = useState<string | null>(null);
+  useEffect(() => {
+    const preset = new URLSearchParams(window.location.search).get("q");
+    if (preset) setQuery(preset);
+  }, []);
   const blocked = query.trim().length > 0 && detectIdentifiers(query);
   const lookup = useMemo(() => (blocked ? null : lookupPharmacy(query)), [blocked, query]);
   const matches = lookup?.matches ?? [];

@@ -67,6 +67,12 @@ function Home() {
               {lang === "ur" ? "AI اسسٹنٹ" : "AI Assistant"}
             </Link>
             <Link
+              to="/desks"
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
+            >
+              {lang === "ur" ? "ماہر ڈیسک" : "Specialist desks"}
+            </Link>
+            <Link
               to="/reference"
               className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
             >
