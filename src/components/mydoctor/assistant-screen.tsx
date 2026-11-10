@@ -14,6 +14,7 @@ import {
 } from "@/lib/mydoctor/assistant";
 import { askClinicalReference } from "@/lib/ai/answer";
 import { t } from "@/lib/mydoctor/copy";
+import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 
 
 export function AssistantScreen() {
@@ -112,10 +113,14 @@ export function AssistantScreen() {
       <section className="flex flex-col gap-6">
         <h1 className="text-3xl font-semibold">{lang === "ur" ? "اعلان" : "Disclaimer"}</h1>
         <p className="rounded-xl border border-line bg-surface p-4 text-sm leading-relaxed">
-          {t(lang, "assistantDisclaimer")}
+          {isStaticPages() ? STATIC_HOST_COPY.assistantDisclaimer[lang] : t(lang, "assistantDisclaimer")}
         </p>
         <Button full onClick={onAccept}>
-          {lang === "ur" ? "میں سمجھتا/سمجھتی ہوں اور سوال کو عوامی ذرائع میں تلاش کرنے اور AI فراہم کنندہ کو بھیجنے کی رضامندی دیتا/دیتی ہوں" : "I understand and consent to search public references and send submitted questions and retrieved passages to the AI provider"}
+          {isStaticPages()
+            ? STATIC_HOST_COPY.assistantAccept[lang]
+            : lang === "ur"
+              ? "میں سمجھتا/سمجھتی ہوں اور سوال کو عوامی ذرائع میں تلاش کرنے اور AI فراہم کنندہ کو بھیجنے کی رضامندی دیتا/دیتی ہوں"
+              : "I understand and consent to search public references and send submitted questions and retrieved passages to the AI provider"}
         </Button>
       </section>
     );
@@ -132,7 +137,9 @@ export function AssistantScreen() {
         <h1 className="text-3xl font-semibold leading-tight">
           {lang === "ur" ? "ریفرنس اسسٹنٹ" : "Reference Assistant"}
         </h1>
-        <p className="text-muted text-sm">{t(lang, "assistantSafetyBanner")}</p>
+        <p className="text-muted text-sm">
+          {isStaticPages() ? STATIC_HOST_COPY.assistantBanner[lang] : t(lang, "assistantSafetyBanner")}
+        </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">

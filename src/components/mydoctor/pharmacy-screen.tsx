@@ -5,6 +5,7 @@ import { chemistFor, seenForm } from "@/lib/mydoctor/forms";
 import { libraryStamp, resolveMedicine, type Monograph } from "@/lib/mydoctor/pharmacy";
 import { queryFromSight, readPackPhoto } from "@/lib/mydoctor/read-pack";
 import { useClinic } from "@/lib/mydoctor/store";
+import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 import type { Lang } from "@/lib/mydoctor/types";
 
 const CHIPS = ["Panadol", "Nexium", "Gravinate", "Augmentin", "Septran", "Concor"];
@@ -60,7 +61,7 @@ export function PharmacyScreen() {
       </div>
       <label className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3 text-sm">
         <input type="checkbox" className="mt-1 size-5" checked={photoConsent} onChange={(event) => setPhotoConsent(event.target.checked)} />
-        <span>{t(lang, "pharmPhotoConsent")}</span>
+        <span>{isStaticPages() ? STATIC_HOST_COPY.photoConsent[lang] : t(lang, "pharmPhotoConsent")}</span>
       </label>
       <label className={`flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold ${photoConsent ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
         {t(lang, "pharmPhoto")}

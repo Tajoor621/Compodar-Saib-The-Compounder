@@ -20,7 +20,11 @@ The AI assistant has a server-side retrieval-augmented answer path in progress:
 
 ## Deployment
 
-**GitHub Pages cannot host this application runtime.** The app is a TanStack Start server application with server functions, authentication, database access and AI endpoints. The GitHub Pages deployment currently runs Jekyll, which publishes repository documentation rather than building this application. A green Pages deployment is therefore not proof that the app is running.
+The public website is [https://tajoor621.github.io/Compodar-Saib-The-Compounder/](https://tajoor621.github.io/Compodar-Saib-The-Compounder/). A push to `main` builds the full client app and publishes it there. Opening that address loads the working desk: home, intake, the clinician desk, case view, pharmacy, drug information, the reference desk, and English / Urdu. It is not a rendered copy of this README.
+
+GitHub Pages is static hosting. The site is built with `npm run build:pages` at base path `/Compodar-Saib-The-Compounder/`, and unknown paths fall back to the same app shell so a refresh on a client route still opens the desk. Questions, cases, and reference history stay in the browser. The reference desk quotes the notes stored in the app. Guidance is not a prescription, and the pack in hand overrides the card.
+
+Hosted model answers, pack-photo upload, sign-in, and the database need the server runtime. Those screens stay in the public UI. On the static site they explain that the question or photo was not sent, instead of failing blank. The server runtime remains the Vercel Nitro build (`npm run build`).
 
 The repository is configured for the Vercel Nitro output preset. The checked-in `vercel.json` explicitly installs development dependencies (required by Vite/TypeScript) and runs the production build. The Vite/Nitro build emits Vercel's Build Output API at `.vercel/output`; **do not set a custom Output Directory** that overrides this output.
 
@@ -37,7 +41,7 @@ Import `Tajoor621/Compodar-Saib-The-Compounder` into Vercel and use:
 | Output Directory | Leave unset; Nitro generates `.vercel/output` |
 | Node.js | 22.x |
 
-A successful Vercel production deployment and live browser verification have **not yet been confirmed**. The existing `github.io` address will continue to serve the GitHub Pages artifact; it does not automatically become a Vercel deployment. Use the Vercel-assigned domain (or a custom domain configured in Vercel) as the application URL.
+Use the Vercel-assigned domain when you need the server runtime (hosted assistant, pack-photo reading, sign-in, and the database). The github.io address is the public static app and does not become a Vercel deployment by itself. A successful Vercel production deployment still depends on the project settings below and the server environment variables.
 
 ### Environment variables
 

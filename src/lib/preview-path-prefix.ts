@@ -34,6 +34,13 @@ export function prefixRewrite(prefix: string): LocationRewrite {
   };
 }
 
+/** Vite `base` (`/repo/` or `/`) as a TanStack Router basepath, or none at the domain root. */
+export function routerBasepath(baseUrl: string | undefined): string | undefined {
+  if (!baseUrl || baseUrl === "/" || baseUrl === "./") return undefined;
+  const withSlash = baseUrl.startsWith("/") ? baseUrl : `/${baseUrl}`;
+  return withSlash.endsWith("/") ? withSlash.slice(0, -1) : withSlash;
+}
+
 export function previewPathRewrite(): LocationRewrite | undefined {
   if (typeof window === "undefined") return undefined;
   const prefix = previewPathPrefix(window.location.hostname, window.location.pathname);

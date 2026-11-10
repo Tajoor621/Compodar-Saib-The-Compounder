@@ -45,3 +45,6 @@ jobs:
       - name: Production-mode compile
         if: always()
         run: npm run build
+      - name: GitHub Pages static build
+        if: always()
+        run: npm run build:pages

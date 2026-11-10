@@ -1,5 +1,11 @@
 # Changelog — Compodar Saib The Compounder
 
+## 2026-11-10 — Public GitHub Pages site
+
+- A push to `main` builds the full client app and publishes it at `https://tajoor621.github.io/Compodar-Saib-The-Compounder/`, replacing the Jekyll README page.
+- The static site includes home, intake, the clinician desk, case view, pharmacy, drug information, the reference desk, and English / Urdu. Client routes survive a refresh.
+- Hosted model calls, pack-photo upload, sign-in, and the database stay on the Vercel/Nitro build. On the public static site those actions say they were not sent, and the rest of the desk still works.
+
 ## 2026-11-10 — On-device reference desk
 
 - Added a reference desk that answers only by quoting shelf cards and intake safety-check notes already stored in the app.

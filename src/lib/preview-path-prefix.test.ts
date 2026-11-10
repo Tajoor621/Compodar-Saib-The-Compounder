@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { prefixRewrite, previewPathPrefix } from "./preview-path-prefix.ts";
+import { prefixRewrite, previewPathPrefix, routerBasepath } from "./preview-path-prefix.ts";
 
 const PORT = "/hds-up68yqz8egcm-6014-7b575";
 
@@ -17,6 +17,14 @@ describe("previewPathPrefix", () => {
     assert.equal(previewPathPrefix("preview.grokgsac.com", "/about"), undefined);
     assert.equal(previewPathPrefix("preview.grokgsac.com", "/hds-abc-web-x1/"), undefined);
     assert.equal(previewPathPrefix("preview.grokgsac.com", `${PORT}.js`), undefined);
+  });
+});
+
+describe("routerBasepath", () => {
+  it("uses the GitHub Pages project prefix and ignores the domain root", () => {
+    assert.equal(routerBasepath("/Compodar-Saib-The-Compounder/"), "/Compodar-Saib-The-Compounder");
+    assert.equal(routerBasepath("/"), undefined);
+    assert.equal(routerBasepath(undefined), undefined);
   });
 });
 

@@ -4,6 +4,8 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Compodar Saib The Compounder";
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+const staticPages = import.meta.env.VITE_STATIC_PAGES === "true";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -19,7 +21,7 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#1B5E4F" },
     ],
     links: [
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "icon", type: "image/svg+xml", href: asset("favicon.svg") },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -27,22 +29,30 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap",
       },
-      { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
+      { rel: "manifest", href: asset(staticPages ? "manifest.webmanifest" : "__grok/manifest.webmanifest") },
+      { rel: "apple-touch-icon", href: asset("__grok/icon-180.png") },
     ],
   }),
-  component: () => (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <HeadContent />
-      </head>
-      <body>
+  component: function RootDocument() {
+    const app = (
+      <>
         <PreviewHostBridge />
         <AuthProvider>
           <Outlet />
         </AuthProvider>
-        <Scripts />
-      </body>
-    </html>
-  ),
+      </>
+    );
+    if (staticPages) return app;
+    return (
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <HeadContent />
+        </head>
+        <body>
+          {app}
+          <Scripts />
+        </body>
+      </html>
+    );
+  },
 });

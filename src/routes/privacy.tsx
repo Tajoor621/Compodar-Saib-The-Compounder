@@ -4,6 +4,7 @@ import { Shell } from "@/components/mydoctor/shell";
 import { authEnabled, signOut } from "@/lib/auth/client";
 import { useClinic } from "@/lib/mydoctor/store";
 import { t } from "@/lib/mydoctor/copy";
+import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 
 export const Route = createFileRoute("/privacy")({ component: PrivacyPage });
 
@@ -67,11 +68,15 @@ function PrivacyPage() {
         </article>
         <article className="rounded-xl border border-line bg-surface p-4">
           <h2 className="font-semibold">{t(lang, "privacySentHeading")}</h2>
-          <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacySent")}</p>
+          <p className="mt-2 text-sm leading-relaxed">
+            {isStaticPages() ? STATIC_HOST_COPY.privacySent[lang] : t(lang, "privacySent")}
+          </p>
         </article>
         <article className="rounded-xl border border-line bg-surface p-4">
           <h2 className="font-semibold">{t(lang, "privacyPhotoHeading")}</h2>
-          <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacyPhoto")}</p>
+          <p className="mt-2 text-sm leading-relaxed">
+            {isStaticPages() ? STATIC_HOST_COPY.privacyPhoto[lang] : t(lang, "privacyPhoto")}
+          </p>
         </article>
         <article className="rounded-xl border border-line bg-surface p-4">
           <h2 className="font-semibold">{t(lang, "privacyBoundaryHeading")}</h2>

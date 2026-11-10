@@ -6,7 +6,7 @@
 - Current main head after lockfile synchronization: `4dd992e4ef2f235bdcadc20277061dd2ee339015`
 - Branch: main
 - Verified CI run: https://github.com/Tajoor621/Compodar-Saib-The-Compounder/actions/runs/42299066689
-- Current deployment status: Vercel deployment NOT VERIFIED. The supplied public URL is still a GitHub Pages/Jekyll deployment, which cannot execute TanStack Start server functions. `vercel.json` now installs build dependencies and runs `npm run build`; Vercel account/project setup and production environment variables remain external prerequisites.
+- Current deployment status: the public site is the static GitHub Pages app at `https://tajoor621.github.io/Compodar-Saib-The-Compounder/`. It serves the full client desk, not the README. Hosted model calls, pack-photo upload, sign-in, and the database still require the Vercel/Nitro server (`npm run build`). Vercel production verification remains an external project-settings step. `vercel.json` installs build dependencies and runs `npm run build`.
 
 ## Application identity update
 

@@ -1,13 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
+import { queryFromSight, type PackSight } from "./read-pack-query.ts";
 
-export type PackSight = {
-  ok: true;
-  name: string;
-  strength: string;
-  form: "tablet" | "capsule" | "syrup" | "oral-drops" | "eye" | "ear" | "nasal" | "powder" | "cream" | "inhaler" | "injection" | "unknown";
-  volume: string;
-  seen: string;
-};
+export type { PackSight } from "./read-pack-query.ts";
+export { queryFromSight };
 
 const FORMS = new Set(["tablet", "capsule", "syrup", "oral-drops", "eye", "ear", "nasal", "powder", "cream", "inhaler", "injection", "unknown"]);
 
@@ -57,19 +52,3 @@ export const readPackPhoto = createServerFn({ method: "POST" })
       return { ok: false, error: "The pack photo could not be read. Type the name on the box." };
     }
   });
-
-export function queryFromSight(sight: PackSight): string {
-  const formWord =
-    sight.form === "eye"
-      ? "eye drops"
-      : sight.form === "ear"
-        ? "ear drops"
-        : sight.form === "nasal"
-          ? "nasal spray"
-          : sight.form === "oral-drops"
-            ? "oral drops"
-            : sight.form === "unknown"
-              ? ""
-              : sight.form;
-  return [sight.name, sight.strength, formWord, sight.volume].filter(Boolean).join(" ");
-}
