@@ -1,0 +1,17 @@
+{
+  "name": "Compodar Saib The Compounder",
+  "short_name": "Compodar Saib",
+  "id": "/Compodar-Saib-The-Compounder/",
+  "start_url": "/Compodar-Saib-The-Compounder/",
+  "scope": "/Compodar-Saib-The-Compounder/",
+  "display": "standalone",
+  "background_color": "#f3efe6",
+  "theme_color": "#1B5E4F",
+  "icons": [
+    {
+      "src": "/Compodar-Saib-The-Compounder/__grok/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

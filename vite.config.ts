@@ -171,6 +171,10 @@ export default defineConfig(({ command, isPreview }) => ({
       ? [
           nitro({
             preset: "vercel",
+            // The public GitHub Pages shell lives at ./index.html. Nitro would
+            // otherwise treat that file as the server renderer and replace the
+            // TanStack Start document.
+            renderer: false,
             // Auto-registers server/middleware/* (the PWA install page +
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.

@@ -22,7 +22,7 @@ The AI assistant has a server-side retrieval-augmented answer path in progress:
 
 The public website is [https://tajoor621.github.io/Compodar-Saib-The-Compounder/](https://tajoor621.github.io/Compodar-Saib-The-Compounder/). A push to `main` builds the full client app and publishes it there. Opening that address loads the working desk: home, intake, the clinician desk, case view, pharmacy, drug information, the reference desk, and English / Urdu. It is not a rendered copy of this README.
 
-GitHub Pages is static hosting. The site is built with `npm run build:pages` at base path `/Compodar-Saib-The-Compounder/`, and unknown paths fall back to the same app shell so a refresh on a client route still opens the desk. Questions, cases, and reference history stay in the browser. The reference desk quotes the notes stored in the app. Guidance is not a prescription, and the pack in hand overrides the card.
+GitHub Pages for this repository publishes the `main` branch. `npm run build:pages` writes the static app into the branch (`index.html`, `404.html`, and `assets/`) at base path `/Compodar-Saib-The-Compounder/`. A refresh on a client route loads that same shell. Questions, cases, and reference history stay in the browser. The reference desk quotes the notes stored in the app. Guidance is not a prescription, and the pack in hand overrides the card. The Vercel build ignores that shell (`renderer: false`) and keeps the TanStack Start server.
 
 Hosted model answers, pack-photo upload, sign-in, and the database need the server runtime. Those screens stay in the public UI. On the static site they explain that the question or photo was not sent, instead of failing blank. The server runtime remains the Vercel Nitro build (`npm run build`).
 

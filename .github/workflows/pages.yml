@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip pages]')
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -40,3 +41,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Publish the site into the branch Pages already serves
+        run: |
+          if git diff --quiet -- index.html 404.html .nojekyll manifest.webmanifest favicon.svg assets __grok/icon-180.png intake pharmacy desk drug-info assistant reference privacy case; then
+            echo "Published files already match this build."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html 404.html .nojekyll manifest.webmanifest favicon.svg assets __grok/icon-180.png intake pharmacy desk drug-info assistant reference privacy case
+          git commit -m "chore: publish the public site [skip pages]"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
