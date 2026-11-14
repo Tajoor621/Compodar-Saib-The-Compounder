@@ -62,7 +62,7 @@ async function verifyOtherScreens(page, base) {
   await open("drug-info/", "Clinical drug information");
   await page.getByLabel("Generic or brand").fill("paracetamol");
   await page.getByRole("button", { name: "Show drug information" }).click();
-  await page.getByRole("heading", { name: /^paracetamol$/i }).waitFor();
+  await page.getByRole("heading", { name: /^paracetamol\b/i }).waitFor();
 
   await open("assistant/", "Before we begin");
   await page.getByRole("button", { name: /I understand/ }).click();
