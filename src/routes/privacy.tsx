@@ -1,56 +1,37 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shell } from "@/components/mydoctor/shell";
 import { authEnabled, signOut } from "@/lib/auth/client";
+import { clearLocalAppData } from "@/lib/mydoctor/local-storage";
 import { useClinic } from "@/lib/mydoctor/store";
 import { t } from "@/lib/mydoctor/copy";
 import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 
-export const Route = createFileRoute("/privacy")({ component: PrivacyPage });
-
-async function eraseIndexedDatabases(): Promise<void> {
-  if (typeof indexedDB === "undefined") return;
-  const factory = indexedDB as IDBFactory & { databases?: () => Promise<Array<{ name?: string }>> };
-  if (!factory.databases) return;
-  const databases = await factory.databases();
-  await Promise.all(databases.map((database) => new Promise<void>((resolve, reject) => {
-    if (!database.name) return resolve();
-    const request = indexedDB.deleteDatabase(database.name);
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error ?? new Error("IndexedDB deletion failed"));
-    request.onblocked = () => reject(new Error("IndexedDB deletion blocked"));
-  })));
-}
+export const Route = createFileRoute("/privacy")({
+  validateSearch: (search: Record<string, unknown>): { cleared?: true } =>
+    search.cleared === 1 || search.cleared === "1" ? { cleared: true } : {},
+  component: PrivacyPage,
+});
 
 function PrivacyPage() {
   const lang = useClinic((state) => state.lang);
   const [busy, setBusy] = useState(false);
-  const [status, setStatus] = useState<"idle" | "done" | "failed">("idle");
+  const { cleared } = Route.useSearch();
+  const [status, setStatus] = useState<"idle" | "done" | "failed">(cleared ? "done" : "idle");
 
   async function clearAllData() {
     if (!window.confirm(t(lang, "privacyClearConfirm"))) return;
     setBusy(true);
     setStatus("idle");
     try {
-      window.localStorage.clear();
-      await eraseIndexedDatabases();
-      if ("caches" in window) {
-        const names = await window.caches.keys();
-        await Promise.all(names.map((name) => window.caches.delete(name)));
-      }
-      if ("serviceWorker" in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.map((registration) => registration.unregister()));
-      }
-      if (authEnabled) {
-        await signOut("/");
-        return;
-      }
-      window.sessionStorage.clear();
-      setStatus("done");
-      window.location.assign("/");
+      clearLocalAppData();
+      const url = new URL(window.location.href);
+      url.searchParams.set("cleared", "1");
+      if (authEnabled) await signOut(url.href);
+      else window.location.replace(url);
     } catch {
       setStatus("failed");
+    } finally {
       setBusy(false);
     }
   }
@@ -59,7 +40,9 @@ function PrivacyPage() {
     <Shell wide>
       <section className="flex flex-col gap-5">
         <div>
-          <p className="text-sm font-semibold tracking-wide text-primary">COMPODAR SAIB THE COMPOUNDER</p>
+          <p className="text-sm font-semibold tracking-wide text-primary">
+            COMPODAR SAIB THE COMPOUNDER
+          </p>
           <h1 className="mt-2 text-3xl font-semibold">{t(lang, "privacyTitle")}</h1>
         </div>
         <article className="rounded-xl border border-line bg-surface p-4">
@@ -87,9 +70,7 @@ function PrivacyPage() {
           <p className="mt-2 text-sm leading-relaxed">{t(lang, "privacyReference")}</p>
         </article>
         <div className="rounded-xl border border-line p-4">
-          <p className="text-sm text-muted">
-            {t(lang, "privacyDoNotEnter")}
-          </p>
+          <p className="text-sm text-muted">{t(lang, "privacyDoNotEnter")}</p>
           <button
             type="button"
             disabled={busy}
@@ -98,8 +79,23 @@ function PrivacyPage() {
           >
             {busy ? t(lang, "privacyClearing") : t(lang, "privacyClear")}
           </button>
-          {status === "done" && <p role="status" className="mt-3 text-sm">{t(lang, "privacyClearDone")}</p>}
-          {status === "failed" && <p role="alert" className="mt-3 text-sm text-accent">{t(lang, "privacyClearFailed")}</p>}
+          {status === "done" && (
+            <div className="mt-3 text-sm">
+              <p role="status">{t(lang, "privacyClearDone")}</p>
+              <Link
+                to="/"
+                reloadDocument
+                className="inline-flex min-h-11 items-center font-semibold text-primary underline"
+              >
+                {lang === "ur" ? "ابتدائی صفحے پر جائیں" : "Return to home"}
+              </Link>
+            </div>
+          )}
+          {status === "failed" && (
+            <p role="alert" className="mt-3 text-sm text-accent">
+              {t(lang, "privacyClearFailed")}
+            </p>
+          )}
         </div>
       </section>
     </Shell>

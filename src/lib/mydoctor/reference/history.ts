@@ -1,7 +1,9 @@
 import { detectIdentifiers } from "../safety.ts";
 import type { ReferenceMessage, ReferenceQuote, ReferenceStatus } from "./types.ts";
 
-export const REFERENCE_HISTORY_KEY = "mydoctor-reference-history";
+import { appStorage, REFERENCE_HISTORY_KEY, type Bucket } from "../local-storage.ts";
+
+export { memoryBucket, REFERENCE_HISTORY_KEY, type Bucket } from "../local-storage.ts";
 
 const STATUSES = new Set<ReferenceStatus>([
   "cited",
@@ -12,58 +14,8 @@ const STATUSES = new Set<ReferenceStatus>([
   "dose_withheld",
 ]);
 
-export type Bucket = {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-};
-
-const memory = new Map<string, string>();
-
-export function memoryBucket(): Bucket {
-  const map = new Map<string, string>();
-  return {
-    getItem: (key) => map.get(key) ?? null,
-    setItem: (key, value) => map.set(key, value),
-    removeItem: (key) => map.delete(key),
-  };
-}
-
-export function browserBucket(): Bucket {
-  if (typeof localStorage === "undefined") {
-    return {
-      getItem: (key) => memory.get(key) ?? null,
-      setItem: (key, value) => memory.set(key, value),
-      removeItem: (key) => memory.delete(key),
-    };
-  }
-  return {
-    getItem: (key) => {
-      try {
-        return localStorage.getItem(key);
-      } catch {
-        return memory.get(key) ?? null;
-      }
-    },
-    setItem: (key, value) => {
-      try {
-        localStorage.setItem(key, value);
-      } catch {
-        memory.set(key, value);
-      }
-    },
-    removeItem: (key) => {
-      try {
-        localStorage.removeItem(key);
-      } catch {
-        memory.delete(key);
-      }
-    },
-  };
-}
-
 function bucketOrDefault(bucket?: Bucket): Bucket {
-  return bucket ?? browserBucket();
+  return bucket ?? appStorage;
 }
 
 function asQuote(value: unknown): ReferenceQuote | null {
@@ -131,7 +83,11 @@ export function saveReferenceHistory(messages: ReferenceMessage[], bucket?: Buck
 }
 
 export function clearReferenceHistory(bucket?: Bucket): void {
-  bucketOrDefault(bucket).removeItem(REFERENCE_HISTORY_KEY);
+  try {
+    bucketOrDefault(bucket).removeItem(REFERENCE_HISTORY_KEY);
+  } catch {
+    saveReferenceHistory([], bucket);
+  }
 }
 
 export function exportReferenceHistory(messages: ReferenceMessage[]): string {

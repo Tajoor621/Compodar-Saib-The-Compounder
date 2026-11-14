@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Made the public assistant answer from the same offline references as the Reference desk, and corrected server pack-photo consent to identify Groq.
+- Scoped local data removal to Compodar Saib and fixed the post-clear route for GitHub Pages. Validated saved report and chat formats before loading imports.
+- Extended browser checks across intake and case recovery, specialist desks, reference assistant, pharmacy, drug information and privacy.
+
 - Added bilingual community care with a danger-sign check, South Asian emergency contacts, village and district service search, and four sourced care guides.
 - Detailed intake accepts a country when the town is unlisted and uses that location for emergency contacts. Missing and unsupported locations use local-help guidance without a guessed number or medicine brand.
 - Patient-facing chest symptom results direct people to clinical assessment and emergency care and remove automatic aspirin suggestions.

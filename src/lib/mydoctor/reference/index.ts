@@ -15,7 +15,6 @@ export {
   REFERENCE_IDENTIFIER_BANNER,
 } from "./disclaimer.ts";
 export {
-  browserBucket,
   clearReferenceHistory,
   exportReferenceHistory,
   loadReferenceHistory,

@@ -132,39 +132,45 @@ export function PharmacyScreen() {
         <Card row={lookup.reading} lang={lang} query={formQuery} onForm={setFormPick} formPick={formPick} classNote />
       )}
 
-      <label className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3 text-sm">
-        <input type="checkbox" className="mt-1 size-5" checked={photoConsent} onChange={(event) => setPhotoConsent(event.target.checked)} />
-        <span>{isStaticPages() ? STATIC_HOST_COPY.photoConsent[lang] : t(lang, "pharmPhotoConsent")}</span>
-      </label>
-      <label className={`flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold ${photoConsent ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
-        {t(lang, "pharmPhoto")}
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          className="sr-only"
-          disabled={!photoConsent}
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            event.target.value = "";
-            if (!file) return;
-            void readPhoto(file, lang, setPhoto, setPhotoBusy, setPhotoSeen, setPhotoError, (value) => {
-              setQuery(value);
-              setPickedId(null);
-              setFormPick(null);
-            });
-          }}
-        />
-      </label>
-      {photoBusy && <p className="text-sm text-muted">{t(lang, "pharmPhotoReading")}</p>}
-      {photoError && <p className="rounded-xl border border-line bg-surface p-4 text-sm">{photoError}</p>}
-      {photo && (
-        <figure className="flex flex-col gap-2">
-          <img src={photo} alt="" className="max-h-64 w-full rounded-xl border border-line object-contain bg-surface" />
-          <figcaption className="text-sm text-muted">{photoSeen ? `${t(lang, "pharmPhotoSeen")}: ${photoSeen}` : t(lang, "pharmPhotoNote")}</figcaption>
-        </figure>
+      {isStaticPages() ? (
+        <p className="text-sm text-muted">{STATIC_HOST_COPY.photoConsent[lang]}</p>
+      ) : (
+        <>
+          <label className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3 text-sm">
+            <input type="checkbox" className="mt-1 size-5" checked={photoConsent} onChange={(event) => setPhotoConsent(event.target.checked)} />
+            <span>{t(lang, "pharmPhotoConsent")}</span>
+          </label>
+          <label className={`flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold ${photoConsent ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
+            {t(lang, "pharmPhoto")}
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="sr-only"
+              disabled={!photoConsent || photoBusy}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                event.target.value = "";
+                if (!file) return;
+                void readPhoto(file, lang, setPhoto, setPhotoBusy, setPhotoSeen, setPhotoError, (value) => {
+                  setQuery(value);
+                  setPickedId(null);
+                  setFormPick(null);
+                });
+              }}
+            />
+          </label>
+          {photoBusy && <p className="text-sm text-muted">{t(lang, "pharmPhotoReading")}</p>}
+          {photoError && <p className="rounded-xl border border-line bg-surface p-4 text-sm">{photoError}</p>}
+          {photo && (
+            <figure className="flex flex-col gap-2">
+              <img src={photo} alt="" className="max-h-64 w-full rounded-xl border border-line object-contain bg-surface" />
+              <figcaption className="text-sm text-muted">{photoSeen ? `${t(lang, "pharmPhotoSeen")}: ${photoSeen}` : t(lang, "pharmPhotoNote")}</figcaption>
+            </figure>
+          )}
+          {!photo && <p className="text-sm text-muted">{t(lang, "pharmPhotoNote")}</p>}
+        </>
       )}
-      {!photo && <p className="text-sm text-muted">{t(lang, "pharmPhotoNote")}</p>}
       <p className="text-sm text-muted">{libraryStamp()}</p>
     </section>
   );

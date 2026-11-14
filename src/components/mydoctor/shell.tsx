@@ -20,8 +20,11 @@ export function Shell({
   useEffect(() => {
     document.documentElement.lang = lang === "ur" ? "ur" : "en";
     document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
-    void rehydrateClinic();
   }, [lang]);
+
+  useEffect(() => {
+    void rehydrateClinic();
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg text-ink">

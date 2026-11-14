@@ -3,6 +3,7 @@ import { ClipboardCheck, HeartPulse, Shield, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Shell } from "@/components/mydoctor/shell";
 import { SCENARIOS, t, type CopyKey } from "@/lib/mydoctor/copy";
+import { isStaticPages } from "@/lib/static-pages";
 import { useClinic } from "@/lib/mydoctor/store";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -77,7 +78,9 @@ function Home() {
               to="/assistant"
               className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
             >
-              {lang === "ur" ? "AI اسسٹنٹ" : "AI Assistant"}
+              {isStaticPages()
+                ? (lang === "ur" ? "آف لائن حوالہ اسسٹنٹ" : "Offline reference assistant")
+                : (lang === "ur" ? "AI اسسٹنٹ" : "AI Assistant")}
             </Link>
             <Link
               to="/desks"

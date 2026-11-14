@@ -91,7 +91,12 @@ export function ReferenceScreen() {
   }
 
   function importHistory(file: File) {
+    if (file.size > 2_000_000) {
+      setImportError(true);
+      return;
+    }
     const reader = new FileReader();
+    reader.onerror = () => setImportError(true);
     reader.onload = () => {
       const parsed = parseReferenceHistory(String(reader.result ?? ""));
       if (!parsed) {
