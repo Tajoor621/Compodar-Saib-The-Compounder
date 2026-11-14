@@ -1,6 +1,22 @@
 # Compodar Saib The Compounder
 
+## Community care
+
+Open **Community care** from the home page for a short danger-sign check, local emergency numbers and guides for fever in dengue or malaria areas, diarrhoea, heat illness and suspected snakebite. The check and care guides are available in English and Urdu. The country selector prioritises South Asia. Afghanistan's listed number is specific to Kabul, and Rescue 1122 and Nepal's 102 depend on local coverage.
+
+On GitHub Pages, the browser downloads the app on the first online visit. Once the service worker finishes caching it, the check, guides and listed numbers can open without internet. Telephone calls depend on available phone service. Maps, external references and telemedicine need connectivity. The map search sends the typed locality to Google only when opened. The quick check keeps answers and locality in the current page.
+
+The community check provides care navigation and general first-aid information. A clinician confirms diagnoses and recommends treatment. The repository's clinical evaluation remains subject to clinician-reviewed datasets and sign-off.
+
 Compodar Saib The Compounder is a bilingual (English / Urdu) clinical reference and patient-safety aid designed for users in Pakistan and the Gulf Cooperation Council (GCC) states. It combines the knowledge of a senior physician, clinical pharmacist familiar with local markets, pathologist, and home-remedies information desk. It provides evidence-based information, triage guidance, and practical suggestions. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
+
+## Pakistan Pharmacist Desk
+
+Look up the brand, generic name or printed form. The desk keeps sourced product identities separate from generic monographs and retailer listings. For example, Mac-F tablets, Mac-F Plus tablets and Mac-F syrup have distinct records, and Cipocain is listed as ear drops.
+
+GitHub Pages searches an indexed snapshot of public product links from SehatMedi and Medishop.pk. The date is shown next to the catalogue results. The first online visit caches the index for offline use. Search links open each retailer’s current catalogue. The separate DRAP links open its registered drugs, provisional health and OTC listings, price index, and recalls. Retailer listings do not establish registration, official price, or stock at a local pharmacy.
+
+On the server build, **Check retailer listings in the app** submits the product name to the two stores’ predictive search and shows their reported price and stock where available. To update the static retailer links, run `npm run refresh:pakistan-pharmacy` and commit the refreshed `public/pakistan-pharmacy/catalog.json`. The refresh preserves the prior snapshot when a source fails.
 
 ## $0 Free Workflow
 
@@ -38,7 +54,7 @@ The public website is [https://tajoor621.github.io/Compodar-Saib-The-Compounder/
 
 GitHub Pages for this repository publishes the `main` branch. `npm run build:pages` writes the static app into the branch (`index.html`, `404.html`, and `assets/`) at base path `/Compodar-Saib-The-Compounder/`. A refresh on a client route loads that same shell. Questions, cases, and reference history stay in the browser. The reference desk quotes the notes stored in the app. Guidance is not a prescription, and the pack in hand overrides the card. The Vercel build ignores that shell (`renderer: false`) and keeps the TanStack Start server.
 
-Hosted model answers, pack-photo upload, sign-in, and the database need the server runtime. Those screens stay in the public UI. On the static site they explain that the question or photo was not sent, instead of failing blank. The server runtime remains the Vercel Nitro build (`npm run build`).
+Hosted model answers, pack-photo upload, sign-in, and the database need the server runtime. Those screens stay in the public UI. On the static site, the assistant answers from the bundled reference notes and the pharmacy supports typed pack names. The server runtime remains the Vercel Nitro build (`npm run build`).
 
 The repository is configured for the Vercel Nitro output preset. The checked-in `vercel.json` explicitly installs development dependencies (required by Vite/TypeScript) and runs the production build. The Vite/Nitro build emits Vercel's Build Output API at `.vercel/output`; **do not set a custom Output Directory** that overrides this output.
 
@@ -89,7 +105,7 @@ At least one AI provider key is required for AI answers and pack scanning. Free-
 - Never enter names, dates of birth, phone numbers, email addresses, addresses, national identifiers, medical record numbers, or patient photos.
 - A submitted question is used as a search query with public references (PubMed/NCBI, openFDA, and DailyMed where applicable); the question and retrieved passages are then sent to the configured model provider for processing.
 - Medicine-pack photos are sent to the configured free-tier vision provider (Groq by default) only after the explicit photo-consent checkbox is selected; never upload patient scans or clinical images.
-- The privacy page provides a clear-all control for localStorage, IndexedDB, browser Cache Storage and service-worker registrations; when Better Auth is enabled it also requests server-side sign-out. The app currently has no IndexedDB clinical-data store. If server sign-out cannot be confirmed, the page reports failure.
+- The privacy page clears this app’s saved cases, profiles, reports, histories and settings. Offline app files stay available. When Better Auth is enabled, the app also requests server-side sign-out. The app currently has no IndexedDB clinical-data store. If server sign-out cannot be confirmed, the page reports failure.
 - Do not use real patient data. No patient identifiers should be submitted, even where a detector fails to recognize them.
 - AI output is not a prescription or diagnosis. Verify every clinical decision against the current local label and current guideline with a licensed professional.
 - Emergency symptoms require local emergency services; do not wait for an AI response. Confirm emergency numbers locally (Pakistan 1122/115, Saudi Arabia 997/911, UAE 998/999, Qatar 999, Kuwait 112, Bahrain 999, Oman 9999).

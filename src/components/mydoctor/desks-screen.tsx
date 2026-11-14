@@ -1,3 +1,6 @@
+import { FamilyCareLinks } from "@/components/mydoctor/family-care";
+import { Link } from "@tanstack/react-router";
+import { detectIdentifiers } from "@/lib/mydoctor/safety";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { t } from "@/lib/mydoctor/copy";
@@ -69,6 +72,7 @@ export function DesksScreen() {
   const [profileError, setProfileError] = useState(false);
   const [started, setStarted] = useState<DeskId | null>(null);
   const [complaint, setComplaint] = useState("");
+  const complaintHasIdentifiers = detectIdentifiers(complaint);
   const [danger, setDanger] = useState<Partial<Record<DangerKey, boolean>>>({});
   const [follow, setFollow] = useState<Record<string, string>>({});
   const [pregnant, setPregnant] = useState<"yes" | "no" | "unknown" | "na">("na");
@@ -92,12 +96,12 @@ export function DesksScreen() {
   }, [started, profile, complaint]);
 
   function persistProfiles(next: DeskProfile[]) {
-    setProfiles(next);
+    setProfiles(next.slice(0, 12));
     saveProfiles(next);
   }
 
   function persistReports(next: DeskReport[]) {
-    setReports(next);
+    setReports(next.slice(0, 40));
     saveReports(next);
   }
 
@@ -114,7 +118,7 @@ export function DesksScreen() {
   }
 
   function saveProfile() {
-    if (!editing) return;
+    if (!editing || (profiles.length >= 12 && !profiles.some((item) => item.id === editing.id))) return;
     if (profileHasIdentifiers(editing)) {
       setProfileError(true);
       return;
@@ -153,7 +157,7 @@ export function DesksScreen() {
   }
 
   function afterComplaint() {
-    if (!profile || !started) return;
+    if (!profile || !started || complaintHasIdentifiers) return;
     const child = profile.relation === "child" || profile.ageBand === "0-28d" || profile.ageBand === "1m-5y" || profile.ageBand === "6-15";
     const target = started === "gp" ? suggestDesk(complaint, profile.ageBand, child).desk : started;
     const followSteps: Step[] = followFor(target).map((question) => ({ kind: "follow", id: question.id }));
@@ -170,7 +174,7 @@ export function DesksScreen() {
   }
 
   function finish(nextDanger: Partial<Record<DangerKey, boolean>>, nextFollow: Record<string, string>, nextPregnant: "yes" | "no" | "unknown" | "na") {
-    if (!profile || !started) return;
+    if (!profile || !started || complaintHasIdentifiers) return;
     const child = profile.relation === "child" || profile.ageBand === "0-28d" || profile.ageBand === "1m-5y" || profile.ageBand === "6-15";
     const result = assessDesk({
       started,
@@ -232,6 +236,8 @@ export function DesksScreen() {
             : "Do not type names, birth dates, or record numbers. Use a relation such as Me or Mother."}
         </p>
       </div>
+
+      {!started && !viewing && <FamilyCareLinks lang={lang} />}
 
       {!started && !viewing && (
         <>
@@ -305,7 +311,8 @@ export function DesksScreen() {
                   className="min-h-24 rounded-xl border border-line bg-surface px-4 py-3 text-base font-normal"
                 />
               </label>
-              <Button disabled={complaint.trim().length < 2} onClick={afterComplaint}>
+              {complaintHasIdentifiers && <p role="alert">{t(lang, "identifierBlocked")}</p>}
+              <Button disabled={complaint.trim().length < 2 || complaintHasIdentifiers} onClick={afterComplaint}>
                 {lang === "ur" ? "اگلا" : "Next"}
               </Button>
             </>
@@ -552,7 +559,12 @@ function History({
               const file = event.target.files?.[0];
               event.target.value = "";
               if (!file) return;
+              if (file.size > 2_000_000) {
+                setImportError(true);
+                return;
+              }
               const reader = new FileReader();
+              reader.onerror = () => setImportError(true);
               reader.onload = () => {
                 const parsed = parsePortable(String(reader.result ?? ""));
                 if (!parsed) {
@@ -591,12 +603,21 @@ function ReportView({ lang, report, onBack, onDelete }: { lang: Lang; report: De
     <article className="flex flex-col gap-4" id="desk-report">
       <p className="text-sm font-semibold text-primary">{ur ? "ممکنہ اسباب، ڈاکٹر سے بات کے لیے" : "Possible causes to discuss with a doctor"}</p>
       <h2 className="text-2xl font-semibold">{result.emergency ? t(lang, "urgentNow") : ur ? desk.ur : desk.en}</h2>
-      {result.emergency && <p>{emergencyDomain}</p>}
+      {result.emergency && (
+        <>
+          <p>{emergencyDomain}</p>
+          <Link to="/community-care" hash="emergency" className="inline-flex min-h-11 items-center font-semibold text-primary underline">
+            {ur ? "اپنے علاقے کا ایمرجنسی نمبر تلاش کریں" : "Find the emergency number for your current location"}
+          </Link>
+        </>
+      )}
       {!result.emergency && (
         <>
           <p className="font-semibold">{CARE_LABEL[result.care][ur ? "ur" : "en"]}</p>
           {result.childReview && (
-            <p>{ur ? "عمر بچوں کے ڈاکٹر کی طرف اشارہ کرتی ہے۔ یہ سات ڈیسک میں سے نہیں۔" : "Age points to a children's doctor. That review is not one of these seven desks."}</p>
+            <Link to="/family-care" search={{ track: "children" }} className="inline-flex min-h-11 items-center font-semibold text-primary underline">
+              {ur ? "بچوں کی صحت اور مقامی مدد" : "Child health and local care"}
+            </Link>
           )}
           {result.mentalReview && (
             <p>{ur ? "کہانی مزاج کی ہے۔ موجودہ نوٹ ذہنی صحت کے ڈاکٹر کی طرف اشارہ کرتے ہیں۔" : "The story is about mood. The existing notes point to a mental health doctor."}</p>

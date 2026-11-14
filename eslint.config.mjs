@@ -10,6 +10,9 @@ export default tseslint.config(
   {
     ignores: [
       "dist/**",
+      "dist-pages/**",
+      "assets/**",
+      "pages-sw.js",
       ".output/**",
       ".vercel/**",
       ".nitro/**",

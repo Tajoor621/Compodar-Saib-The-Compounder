@@ -1,8 +1,6 @@
-import { browserBucket, type Bucket } from "./history.ts";
+import { appStorage, CHAT_CONSENT_KEY, REFERENCE_DISCLAIMER_KEY, type Bucket } from "../local-storage.ts";
 
-export const REFERENCE_DISCLAIMER_KEY = "mydoctor-reference-disclaimer";
-/** Existing assistant gate. Accepted means the first-launch disclaimer already happened. */
-export const ASSISTANT_DISCLAIMER_KEY = "mydoctor-assistant-disclaimer";
+export { CHAT_CONSENT_KEY as ASSISTANT_DISCLAIMER_KEY, REFERENCE_DISCLAIMER_KEY } from "../local-storage.ts";
 
 function read(bucket: Bucket, key: string): string | null {
   try {
@@ -13,15 +11,15 @@ function read(bucket: Bucket, key: string): string | null {
 }
 
 export function hasReferenceAccess(bucket?: Bucket): boolean {
-  const store = bucket ?? browserBucket();
+  const store = bucket ?? appStorage;
   return (
     read(store, REFERENCE_DISCLAIMER_KEY) === "accepted" ||
-    read(store, ASSISTANT_DISCLAIMER_KEY) === "accepted"
+    read(store, CHAT_CONSENT_KEY) === "accepted"
   );
 }
 
 export function acceptReferenceDisclaimer(bucket?: Bucket): void {
-  const store = bucket ?? browserBucket();
+  const store = bucket ?? appStorage;
   store.setItem(REFERENCE_DISCLAIMER_KEY, "accepted");
 }
 

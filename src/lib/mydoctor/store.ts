@@ -1,3 +1,4 @@
+import { appStorage, CLINIC_KEY } from "./local-storage.ts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { buildDraft } from "./drafts.ts";
@@ -17,7 +18,6 @@ import {
 } from "./types.ts";
 
 type ClinicState = {
-  hydrated: boolean;
   lang: Lang;
   jurisdiction: Jurisdiction;
   signerName: string;
@@ -33,29 +33,6 @@ type ClinicState = {
   submitCase: () => CaseRecord | null;
   signCase: (id: string, verdict: Omit<Verdict, "signedAt" | "signerLabel"> & { signerLabel?: string }) => void;
   erase: () => void;
-  markHydrated: () => void;
-};
-
-const memory = new Map<string, string>();
-const browserStorage = {
-  getItem: (name: string) => {
-    if (typeof window === "undefined") return memory.get(name) ?? null;
-    return window.localStorage.getItem(name);
-  },
-  setItem: (name: string, value: string) => {
-    if (typeof window === "undefined") {
-      memory.set(name, value);
-      return;
-    }
-    window.localStorage.setItem(name, value);
-  },
-  removeItem: (name: string) => {
-    if (typeof window === "undefined") {
-      memory.delete(name);
-      return;
-    }
-    window.localStorage.removeItem(name);
-  },
 };
 
 function stamp(kind: string, detail: string): AuditEvent {
@@ -65,7 +42,6 @@ function stamp(kind: string, detail: string): AuditEvent {
 export const useClinic = create<ClinicState>()(
   persist(
     (set, get) => ({
-      hydrated: false,
       lang: "en",
       jurisdiction: "PK",
       signerName: "",
@@ -185,12 +161,11 @@ export const useClinic = create<ClinicState>()(
         set({ cases: { ...get().cases, [id]: next }, signerName: signerLabel });
       },
       erase: () => set({ cases: {}, order: [], intake: emptyIntake() }),
-      markHydrated: () => set({ hydrated: true }),
     }),
     {
-      name: "mydoctor.v1",
+      name: CLINIC_KEY,
       skipHydration: true,
-      storage: createJSONStorage(() => browserStorage),
+      storage: createJSONStorage(() => appStorage),
       partialize: (state) => ({
         lang: state.lang,
         jurisdiction: state.jurisdiction,
@@ -198,14 +173,11 @@ export const useClinic = create<ClinicState>()(
         cases: state.cases,
         order: state.order,
       }),
-      onRehydrateStorage: () => (state) => {
-        state?.markHydrated();
-      },
     },
   ),
 );
 
 export function rehydrateClinic() {
-  if (useClinic.getState().hydrated) return Promise.resolve();
+  if (useClinic.persist.hasHydrated()) return Promise.resolve();
   return useClinic.persist.rehydrate();
 }

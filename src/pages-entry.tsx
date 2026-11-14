@@ -12,3 +12,8 @@ createRoot(root).render(
     <RouterProvider router={getRouter()} />
   </StrictMode>,
 );
+
+if ("serviceWorker" in navigator) {
+  // A private browser session or a failed download can leave offline use unavailable.
+  void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}pages-sw.js`).catch(() => {});
+}

@@ -6,6 +6,7 @@ import {
   KNOWLEDGE_TOPICS,
   detectIdentifiers,
   loadChatHistory,
+  parseChatHistory,
   saveChatHistory,
   clearChatHistory,
   hasAcceptedDisclaimer,
@@ -14,21 +15,22 @@ import {
 } from "@/lib/mydoctor/assistant";
 import { askClinicalReference } from "@/lib/ai/answer";
 import { t } from "@/lib/mydoctor/copy";
-import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 
 
 export function AssistantScreen() {
   const lang = useClinic((state) => state.lang);
-  const [accepted, setAccepted] = useState(hasAcceptedDisclaimer());
+  const [accepted, setAccepted] = useState(false);
   const [specialty, setSpecialty] = useState(SPECIALTY_ASSISTANTS[0].id);
   const [topic, setTopic] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [warnId, setWarnId] = useState(false);
+  const [importError, setImportError] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setAccepted(hasAcceptedDisclaimer());
     setMessages(loadChatHistory());
   }, []);
 
@@ -83,7 +85,7 @@ export function AssistantScreen() {
   }
 
   function exportHistory() {
-    const blob = new Blob([JSON.stringify(messages, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(messages.slice(-100), null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -92,20 +94,17 @@ export function AssistantScreen() {
     URL.revokeObjectURL(url);
   }
 
-  function importHistory(file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const parsed = JSON.parse(String(reader.result)) as ChatMessage[];
-        if (Array.isArray(parsed)) {
-          setMessages(parsed);
-          saveChatHistory(parsed);
-        }
-      } catch {
-        /* ignore */
+  async function importHistory(file: File) {
+    try {
+      const parsed = file.size <= 2_000_000 ? parseChatHistory(await file.text()) : null;
+      setImportError(!parsed);
+      if (parsed) {
+        setMessages(parsed);
+        saveChatHistory(parsed);
       }
-    };
-    reader.readAsText(file);
+    } catch {
+      setImportError(true);
+    }
   }
 
   if (!accepted) {
@@ -113,12 +112,10 @@ export function AssistantScreen() {
       <section className="flex flex-col gap-6">
         <h1 className="text-3xl font-semibold">{lang === "ur" ? "اعلان" : "Disclaimer"}</h1>
         <p className="rounded-xl border border-line bg-surface p-4 text-sm leading-relaxed">
-          {isStaticPages() ? STATIC_HOST_COPY.assistantDisclaimer[lang] : t(lang, "assistantDisclaimer")}
+          {t(lang, "assistantDisclaimer")}
         </p>
         <Button full onClick={onAccept}>
-          {isStaticPages()
-            ? STATIC_HOST_COPY.assistantAccept[lang]
-            : lang === "ur"
+          {lang === "ur"
               ? "میں سمجھتا/سمجھتی ہوں اور سوال کو عوامی ذرائع میں تلاش کرنے اور AI فراہم کنندہ کو بھیجنے کی رضامندی دیتا/دیتی ہوں"
               : "I understand and consent to search public references and send submitted questions and retrieved passages to the AI provider"}
         </Button>
@@ -138,7 +135,7 @@ export function AssistantScreen() {
           {lang === "ur" ? "ریفرنس اسسٹنٹ" : "Reference Assistant"}
         </h1>
         <p className="text-muted text-sm">
-          {isStaticPages() ? STATIC_HOST_COPY.assistantBanner[lang] : t(lang, "assistantSafetyBanner")}
+          {t(lang, "assistantSafetyBanner")}
         </p>
       </div>
 
@@ -237,7 +234,7 @@ export function AssistantScreen() {
           <Button onClick={() => void send()} disabled={busy || !input.trim()}>
             {busy ? (lang === "ur" ? "ذرائع کی جانچ…" : "Checking sources…") : lang === "ur" ? "بھیجیں" : "Send"}
           </Button>
-          <Button variant="outline" onClick={() => { clearChatHistory(); setMessages([]); }}>
+          <Button variant="outline" disabled={busy} onClick={() => { clearChatHistory(); setMessages([]); }}>
             {lang === "ur" ? "صاف کریں" : "Clear"}
           </Button>
           <Button variant="outline" onClick={exportHistory}>
@@ -248,16 +245,21 @@ export function AssistantScreen() {
             <input
               type="file"
               accept="application/json"
+              disabled={busy}
               className="hidden"
               onChange={(e) => {
                 const f = e.target.files?.[0];
-                if (f) importHistory(f);
+                e.currentTarget.value = "";
+                if (f) void importHistory(f);
               }}
             />
           </label>
         </div>
       </div>
 
+      {importError && <p role="alert" className="text-sm text-accent">
+        {lang === "ur" ? "گفتگو کی فائل درآمد نہیں ہو سکی۔" : "This chat history file could not be imported."}
+      </p>}
       <p className="text-xs text-muted">{t(lang, "assistantVerifyReminder")}</p>
     </section>
   );

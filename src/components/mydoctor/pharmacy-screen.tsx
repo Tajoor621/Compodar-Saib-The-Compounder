@@ -1,3 +1,5 @@
+import { PakistanProducts } from "./pakistan-products";
+import { findPakistanProducts } from "@/lib/mydoctor/pakistan-pharmacy";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { t } from "@/lib/mydoctor/copy";
@@ -9,7 +11,7 @@ import { useClinic } from "@/lib/mydoctor/store";
 import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 import type { Lang } from "@/lib/mydoctor/types";
 
-const CHIPS = ["Panadol", "Nexium", "Gravinate", "Augmentin", "Septran", "Concor"];
+const CHIPS = ["Mac-F", "Cipocain", "Panadol", "Augmentin"];
 
 const FORM_PHRASE: Record<string, string> = {
   tablet: "tablet",
@@ -43,24 +45,30 @@ export function PharmacyScreen() {
   const blocked = query.trim().length > 0 && detectIdentifiers(query);
   const lookup = useMemo(() => (blocked ? null : lookupPharmacy(query)), [blocked, query]);
   const matches = lookup?.matches ?? [];
+  const hasProduct = !blocked && findPakistanProducts(query).length > 0;
   const exact = matches[0]?.score === 100;
   const chosen =
     matches.find((item) => item.row.id === pickedId)?.row ??
-    (matches.length === 1 || exact ? matches[0]?.row : undefined);
+    (exact && !hasProduct ? matches[0]?.row : undefined);
   const formQuery = formPick ? `${query} ${FORM_PHRASE[formPick] ?? formPick}` : query;
 
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold leading-tight">{t(lang, "pharmTitle")}</h1>
-        <p className="text-muted">{t(lang, "pharmLead")}</p>
+        <p className="text-muted">{lang === "ur" ? "پاکستانی برانڈ، جنرک نام یا پیک کی شکل تلاش کریں۔" : "Search by Pakistani brand, generic name, or pack form."}</p>
         <Link to="/reference" className="text-sm font-semibold text-primary">
           {t(lang, "referenceDesk")}
         </Link>
       </div>
-      <label className="flex flex-col gap-2">
-        <span className="text-sm font-semibold">{t(lang, "pharmSearch")}</span>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="pharmacy-query" className="text-sm font-semibold">{t(lang, "pharmSearch")}</label>
         <input
+          id="pharmacy-query"
+          type="search"
+          autoComplete="off"
+          spellCheck={false}
+          maxLength={100}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -71,7 +79,7 @@ export function PharmacyScreen() {
           placeholder={t(lang, "pharmHint")}
           className="min-h-11 rounded-xl border border-line bg-surface px-4 text-lg text-ink outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
         />
-      </label>
+      </div>
       <div className="flex flex-wrap gap-2">
         {CHIPS.map((chip) => (
           <button
@@ -94,10 +102,7 @@ export function PharmacyScreen() {
           {t(lang, "identifierBlocked")}
         </p>
       )}
-      {!blocked && query.trim().length >= 2 && lookup?.kind === "miss" && (
-        <p className="rounded-xl border border-line bg-surface p-4 text-sm">{t(lang, "pharmMiss")}</p>
-      )}
-      {!blocked && lookup?.kind === "named" && matches.length > 1 && (
+      {!blocked && !hasProduct && lookup?.kind === "named" && (matches.length > 1 || !exact) && (
         <div className="flex flex-col gap-2">
           <p className="text-sm font-semibold">{t(lang, "pharmPick")}</p>
           <div className="flex flex-col gap-2">
@@ -128,43 +133,50 @@ export function PharmacyScreen() {
         </div>
       )}
       {chosen && <Card row={chosen} lang={lang} query={formQuery} onForm={setFormPick} formPick={formPick} />}
-      {!blocked && lookup?.kind === "class" && lookup.reading && (
+      {!blocked && !hasProduct && lookup?.kind === "class" && lookup.reading && (
         <Card row={lookup.reading} lang={lang} query={formQuery} onForm={setFormPick} formPick={formPick} classNote />
       )}
+      {!blocked && <PakistanProducts query={query} lang={lang} localMiss={lookup?.kind === "miss"} hasExactMonograph={exact} />}
 
-      <label className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3 text-sm">
-        <input type="checkbox" className="mt-1 size-5" checked={photoConsent} onChange={(event) => setPhotoConsent(event.target.checked)} />
-        <span>{isStaticPages() ? STATIC_HOST_COPY.photoConsent[lang] : t(lang, "pharmPhotoConsent")}</span>
-      </label>
-      <label className={`flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold ${photoConsent ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
-        {t(lang, "pharmPhoto")}
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          className="sr-only"
-          disabled={!photoConsent}
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            event.target.value = "";
-            if (!file) return;
-            void readPhoto(file, lang, setPhoto, setPhotoBusy, setPhotoSeen, setPhotoError, (value) => {
-              setQuery(value);
-              setPickedId(null);
-              setFormPick(null);
-            });
-          }}
-        />
-      </label>
-      {photoBusy && <p className="text-sm text-muted">{t(lang, "pharmPhotoReading")}</p>}
-      {photoError && <p className="rounded-xl border border-line bg-surface p-4 text-sm">{photoError}</p>}
-      {photo && (
-        <figure className="flex flex-col gap-2">
-          <img src={photo} alt="" className="max-h-64 w-full rounded-xl border border-line object-contain bg-surface" />
-          <figcaption className="text-sm text-muted">{photoSeen ? `${t(lang, "pharmPhotoSeen")}: ${photoSeen}` : t(lang, "pharmPhotoNote")}</figcaption>
-        </figure>
+      {isStaticPages() ? (
+        <p className="text-sm text-muted">{STATIC_HOST_COPY.photoConsent[lang]}</p>
+      ) : (
+        <>
+          <label className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3 text-sm">
+            <input type="checkbox" className="mt-1 size-5" checked={photoConsent} onChange={(event) => setPhotoConsent(event.target.checked)} />
+            <span>{t(lang, "pharmPhotoConsent")}</span>
+          </label>
+          <label className={`flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold ${photoConsent ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
+            {t(lang, "pharmPhoto")}
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="sr-only"
+              disabled={!photoConsent || photoBusy}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                event.target.value = "";
+                if (!file) return;
+                void readPhoto(file, lang, setPhoto, setPhotoBusy, setPhotoSeen, setPhotoError, (value) => {
+                  setQuery(value);
+                  setPickedId(null);
+                  setFormPick(null);
+                });
+              }}
+            />
+          </label>
+          {photoBusy && <p className="text-sm text-muted">{t(lang, "pharmPhotoReading")}</p>}
+          {photoError && <p className="rounded-xl border border-line bg-surface p-4 text-sm">{photoError}</p>}
+          {photo && (
+            <figure className="flex flex-col gap-2">
+              <img src={photo} alt="" className="max-h-64 w-full rounded-xl border border-line object-contain bg-surface" />
+              <figcaption className="text-sm text-muted">{photoSeen ? `${t(lang, "pharmPhotoSeen")}: ${photoSeen}` : t(lang, "pharmPhotoNote")}</figcaption>
+            </figure>
+          )}
+          {!photo && <p className="text-sm text-muted">{t(lang, "pharmPhotoNote")}</p>}
+        </>
       )}
-      {!photo && <p className="text-sm text-muted">{t(lang, "pharmPhotoNote")}</p>}
       <p className="text-sm text-muted">{libraryStamp()}</p>
     </section>
   );

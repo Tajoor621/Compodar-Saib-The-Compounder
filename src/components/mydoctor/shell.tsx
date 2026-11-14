@@ -20,8 +20,11 @@ export function Shell({
   useEffect(() => {
     document.documentElement.lang = lang === "ur" ? "ur" : "en";
     document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
-    void rehydrateClinic();
   }, [lang]);
+
+  useEffect(() => {
+    void rehydrateClinic();
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg text-ink">
@@ -66,6 +69,7 @@ export function Shell({
       <main className={cn("mx-auto px-4 py-6", wide ? "max-w-3xl" : "max-w-lg")}>{children}</main>
       <footer className={cn("mx-auto flex flex-wrap items-center gap-3 px-4 pb-10 text-sm text-muted", wide ? "max-w-3xl" : "max-w-lg")}>
         <span>{t(lang, "demoNote")}</span>
+        <Link to="/community-care" className="underline underline-offset-4">{lang === "ur" ? "مقامی طبی رہنمائی" : "Community care"}</Link>
         <Link to="/desks" className="underline underline-offset-4">{lang === "ur" ? "ماہر ڈیسک" : "Specialist desks"}</Link>
         <Link to="/reference" className="underline underline-offset-4">{t(lang, "referenceDesk")}</Link>
         <Link to="/privacy" className="underline underline-offset-4">{lang === "ur" ? "رازداری" : "Privacy"}</Link>

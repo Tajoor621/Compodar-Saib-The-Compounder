@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { assessDesk, DESKS, suggestDesk } from "./assess.ts";
 import { NOTE_COUNT } from "./notes.ts";
-import { exportPortable, exportReports, memoryBucket, mergePortable, parsePortable, profileHasIdentifiers, saveProfiles, saveReports, loadReports } from "./store.ts";
+import { exportPortable, exportReports, memoryBucket, mergePortable, parsePortable, profileHasIdentifiers, saveProfiles, saveReports, loadReports, REPORT_KEY } from "./store.ts";
 import type { DeskReport } from "./types.ts";
 
 const base = {
@@ -159,4 +159,10 @@ test("profiles reject identifiers and reports export", () => {
   assert.equal(merged.profiles[0]?.relation, "mother");
   assert.equal(merged.reports[0]?.id, "r1");
   assert.equal(parsePortable("[]"), null);
+  const malformed = { ...report, result: { ...report.result, causes: null } };
+  bucket.setItem(REPORT_KEY, JSON.stringify([malformed, report]));
+  assert.deepEqual(loadReports(bucket), [report]);
+  assert.equal(parsePortable(JSON.stringify({ ...file, reports: [malformed] })), null);
+  assert.equal(parsePortable(JSON.stringify({ ...file, reports: [{ ...report, complaint: "Name: Jane Doe" }] })), null);
+
 });

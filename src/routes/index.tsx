@@ -1,8 +1,10 @@
+import { FamilyCareLinks } from "@/components/mydoctor/family-care";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ClipboardCheck, Shield, Stethoscope } from "lucide-react";
+import { ClipboardCheck, HeartPulse, Shield, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Shell } from "@/components/mydoctor/shell";
 import { SCENARIOS, t, type CopyKey } from "@/lib/mydoctor/copy";
+import { isStaticPages } from "@/lib/static-pages";
 import { useClinic } from "@/lib/mydoctor/store";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -33,8 +35,21 @@ function Home() {
             <p className="text-muted">{t(lang, "notADoctor")}</p>
           </div>
           <div className="grid gap-2">
+            <Link
+              to="/community-care"
+              className="flex min-h-11 items-center gap-3 rounded-xl bg-primary px-4 py-3 font-semibold text-primary-fg"
+            >
+              <HeartPulse className="size-5 shrink-0" aria-hidden="true" />
+              <span>
+                <span className="block">{lang === "ur" ? "مقامی طبی رہنمائی" : "Community care"}</span>
+                <span className="block text-sm font-normal">
+                  {lang === "ur" ? "خطرے کی علامات، مقامی مدد اور دیکھ بھال" : "Danger signs, local help and practical care"}
+                </span>
+              </span>
+            </Link>
             <Button
               full
+              variant="outline"
               onClick={() => {
                 resetIntake();
                 void navigate({ to: "/intake" });
@@ -64,7 +79,9 @@ function Home() {
               to="/assistant"
               className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-semibold"
             >
-              {lang === "ur" ? "AI اسسٹنٹ" : "AI Assistant"}
+              {isStaticPages()
+                ? (lang === "ur" ? "آف لائن حوالہ اسسٹنٹ" : "Offline reference assistant")
+                : (lang === "ur" ? "AI اسسٹنٹ" : "AI Assistant")}
             </Link>
             <Link
               to="/desks"
@@ -80,6 +97,8 @@ function Home() {
             </Link>
           </div>
         </section>
+
+        <FamilyCareLinks lang={lang} />
 
         <section className="grid gap-4 sm:grid-cols-3">
           {LAYERS.map((layer) => {

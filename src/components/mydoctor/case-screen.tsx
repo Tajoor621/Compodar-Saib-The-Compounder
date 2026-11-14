@@ -60,6 +60,11 @@ export function CaseScreen({ caseId }: { caseId: string }) {
               </a>
             ))}
           </div>
+          {view.phones.length === 0 && (
+            <Link to="/community-care" hash="emergency" className="min-h-11 font-semibold underline">
+              {lang === "ur" ? "اپنے علاقے کا ایمرجنسی نمبر تلاش کریں" : "Find the emergency number for your current location"}
+            </Link>
+          )}
           <p className="text-sm text-accent-fg/80">{t(record.lang, "demoClinician")}</p>
         </section>
       ) : (
