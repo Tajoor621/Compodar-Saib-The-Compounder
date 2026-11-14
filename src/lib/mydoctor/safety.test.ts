@@ -237,11 +237,11 @@ describe("humble suggestions", () => {
     assert.equal(mood.counter.length, 0);
     assert.equal(mood.clinicianOnly.length, 0);
     assert.equal(/aspirin|loprin|amoxicillin|augmentin|sertraline|diazepam|mg\/kg|give \d+ ml/i.test(packs), false);
-    assert.match(heart.withheldEn, /No heart tablet/);
+    assert.match(heart.withheldEn, /Call for emergency help/);
     assert.match(heart.tests.map((item) => item.en).join(" "), /ECG/);
   });
 
-  it("offers a humble 75 mg aspirin only when chest discomfort is not at rest", () => {
+  it("routes exertional chest discomfort for clinical assessment without starting aspirin", () => {
     const stable = careFor(
       {
         primarySpecialty: "cardiology",
@@ -253,29 +253,8 @@ describe("humble suggestions", () => {
       },
       { ...adult, cityId: "karachi", complaint: "Chest discomfort on stairs", cluster: { exertion: "yes", rest: "no" } },
     );
-    const text = JSON.stringify(stable.counter);
-    assert.match(text, /Loprin/);
-    assert.match(text, /Highnoon/);
-    assert.match(text, /Ascard/);
-    assert.match(text, /PKR 107/);
-    assert.equal(/Disprin|antibiotic|you have /i.test(text), false);
-    assert.match(stable.withheldEn, /not a signed or legal prescription/);
-    const dubai = JSON.stringify(
-      careFor(
-        {
-          primarySpecialty: "cardiology",
-          secondary: [],
-          urgency: "AMBER",
-          confidence: "high",
-          reasoning: "effort",
-          halted: false,
-        },
-        { ...adult, cityId: "dubai", complaint: "Chest discomfort on stairs", cluster: { exertion: "yes", rest: "no" } },
-      ).counter,
-    );
-    assert.match(dubai, /Jusprin/);
-    assert.match(dubai, /AED|Julphar/);
-    assert.equal(/Loprin|PKR/.test(dubai), false);
+    assert.deepEqual(stable.counter, []);
+    assert.match(stable.withheldEn, /assessed by a clinician/);
     const gut = JSON.stringify(
       careFor(
         {
@@ -379,45 +358,15 @@ describe("humble suggestions", () => {
     assert.match(shelf, /Zyrtec/);
     assert.match(shelf, /SGD/);
     assert.equal(/Rigix|PKR|AED/.test(shelf), false);
-    const stable = JSON.stringify(
-      careFor(
-        {
-          primarySpecialty: "cardiology",
-          secondary: [],
-          urgency: "AMBER",
-          confidence: "high",
-          reasoning: "effort",
-          halted: false,
-        },
-        { ...adult, cityId: "singapore", complaint: "Chest discomfort on stairs", cluster: { exertion: "yes", rest: "no" } },
-      ).counter,
-    );
-    assert.match(stable, /Cardiprin/);
-    assert.match(stable, /100 mg/);
     const low = JSON.stringify(emergencyBridge(["Metabolic"], { ...adult, cityId: "singapore" }));
     assert.match(low, /Glucolin/);
     assert.match(low, /995/);
     assert.equal(/you have /i.test(low), false);
   });
 
-  it("offers a humble aspirin bridge only while adult cardiac help is coming", () => {
-    const adultBridge = emergencyBridge(["Cardiac"], { ...adult, cityId: "karachi" });
-    const text = JSON.stringify(adultBridge);
-    assert.match(text, /Disprin/);
-    assert.match(text, /already/);
-    assert.match(text, /Not a legal prescription/);
-    assert.equal(/you have |antibiotic|panadol/i.test(text), false);
-    const childBridge = emergencyBridge(["Cardiac"], {
-      ...emptyIntake(),
-      forWhom: "child",
-      ageBand: "1m-5y",
-      cityId: "lahore",
-    });
-    assert.equal(childBridge.length, 0);
-    const dubai = JSON.stringify(emergencyBridge(["Cardiac"], { ...adult, cityId: "dubai" }));
-    assert.match(dubai, /Disprin/);
-    assert.match(dubai, /UAE/);
-    assert.equal(/PKR|Rigix/.test(dubai), false);
+  it("keeps cardiac emergencies free of automated medicine suggestions", () => {
+    assert.deepEqual(emergencyBridge(["Cardiac"], { ...adult, cityId: "karachi" }), []);
+    assert.deepEqual(emergencyBridge(["Cardiac"], { ...adult, cityId: "dubai" }), []);
     const lowSugar = JSON.stringify(emergencyBridge(["Metabolic"], { ...adult, cityId: "karachi" }));
     assert.match(lowSugar, /Glucon-D/);
     assert.match(lowSugar, /Not a legal prescription/);

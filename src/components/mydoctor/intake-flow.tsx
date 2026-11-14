@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DANGER_TEXT, t, type CopyKey } from "@/lib/mydoctor/copy";
 import { evaluateGate } from "@/lib/mydoctor/rules";
 import { clusterFor, type ClusterId } from "@/lib/mydoctor/routing";
+import { CARE_REGIONS } from "@/lib/mydoctor/community/regions";
 import { CITIES, nearestCity } from "@/lib/mydoctor/places";
 import { canListen, listenOnce, speak, stopSpeaking } from "@/lib/mydoctor/speech";
 import { useClinic } from "@/lib/mydoctor/store";
@@ -250,7 +251,6 @@ export function IntakeFlow() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const city = nearestCity(position.coords.latitude, position.coords.longitude);
-        patchIntake({ cityId: city.id });
         setLocating(false);
         setLocNote(`${t(lang, "locFound")}: ${lang === "ur" ? city.ur : city.en}`);
       },
@@ -413,9 +413,9 @@ export function IntakeFlow() {
           {locNote && <p className="text-sm text-muted">{locNote}</p>}
           {(
             [
-              ["SG", "placeSg"],
-              ["AE", "placeAe"],
               ["PK", "placePk"],
+              ["AE", "placeAe"],
+              ["SG", "placeSg"],
               ["UK", "placeUk"],
             ] as const
           ).map(([group, key]) => (
@@ -436,6 +436,19 @@ export function IntakeFlow() {
               </div>
             </div>
           ))}
+          <label className="grid gap-2 font-semibold">
+            {lang === "ur" ? "شہر فہرست میں نہیں؟ ملک منتخب کریں" : "Town or village missing? Select your current country"}
+            <select
+              className="min-h-11 rounded-lg border border-line bg-surface px-3"
+              value={intake.cityId?.startsWith("country:") ? intake.cityId : ""}
+              onChange={(event) => patchIntake({ cityId: event.target.value })}
+            >
+              <option value="" disabled>{lang === "ur" ? "ملک منتخب کریں" : "Select country"}</option>
+              {CARE_REGIONS.map((region) => (
+                <option key={region.id} value={`country:${region.id}`}>{region.name[lang]}</option>
+              ))}
+            </select>
+          </label>
           <button
             type="button"
             aria-pressed={intake.cityId === "other"}

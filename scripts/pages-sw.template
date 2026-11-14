@@ -1,0 +1,33 @@
+/* The Pages build prepends its cache name and static shell URLs. */
+self.addEventListener("install", (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_URLS)));
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    for (const key of await caches.keys()) {
+      if (key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME) await caches.delete(key);
+    }
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(PAGES_SCOPE)) return;
+
+  if (request.mode === "navigate") {
+    event.respondWith((async () => {
+      // Pair this worker with its own assets even during a rolling deploy.
+      const cache = await caches.open(CACHE_NAME);
+      return (await cache.match(PAGES_SCOPE)) ?? fetch(request);
+    })());
+  } else if (SHELL_URLS.includes(url.pathname) && !url.search) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      return (await cache.match(request)) ?? fetch(request);
+    })());
+  }
+});

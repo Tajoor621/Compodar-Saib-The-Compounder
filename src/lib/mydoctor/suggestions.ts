@@ -1,6 +1,6 @@
 import type { Intake, RoutingDecision, SpecialtyId } from "./types.ts";
 import { FORMULARY_LABEL } from "./types.ts";
-import { regionForCity, type Region } from "./places.ts";
+import { medicineMarket, type Region } from "./places.ts";
 import { clusterFor, type ClusterId } from "./routing.ts";
 
 export type ShelfKey =
@@ -12,7 +12,6 @@ export type ShelfKey =
   | "ors"
   | "metformin"
   | "amlodipine"
-  | "aspirin75"
   | "omeprazole"
   | "ibuprofen"
   | "citrate"
@@ -296,41 +295,6 @@ const AMLODIPINE: CareItem = {
       packSize: "tablets",
       mrpNote: "A local amlodipine 5 mg pack often stocked in Pakistan. Do not start a first pack from this screen.",
       status: LATER,
-    },
-  ],
-};
-
-const ASPIRIN75: CareItem = {
-  inn: "aspirin",
-  atc: "B01AC06",
-  shelf: "aspirin75",
-  role: "counter",
-  whyEn:
-    "If a heart doctor is not close, and the discomfort only comes on effort and settles with rest, many clinicians later use one 75 mg aspirin a day. This is a humble suggestion, not a signed prescription and not a diagnosis.",
-  whyUr:
-    "اگر دل کا ڈاکٹر قریب نہ ہو، اور تکلیف صرف محنت پر آئے اور آرام سے ٹھیک ہو، تو بہت سے کلینیشن بعد میں دن میں ایک 75 ملی گرام اسپرین رکھتے ہیں۔ یہ ادب سے تجویز ہے، دستخط شدہ نسخہ نہیں، اور تشخیص نہیں۔",
-  cautionEn:
-    "The usual adult pack says one 75 mg tablet a day, with food. Skip it with a stomach ulcer, aspirin allergy, bleeding, pregnancy, or if aspirin or a blood thinner is already in use. Pain at rest, sweating, or breathlessness means emergency care, not a pharmacy.",
-  cautionUr:
-    "بالغ پیک عام طور پر کھانے کے ساتھ دن میں ایک 75 ملی گرام گولی کہتا ہے۔ معدے کا السر، اسپرین سے الرجی، خون بہنا، حمل، یا پہلے سے اسپرین یا خون پتلی دوا ہو تو نہ شروع کریں۔ آرام پر درد، پسینہ، یا سانس پھولنا فارمیسی نہیں، ایمرجنسی ہے۔",
-  brands: [
-    {
-      id: "loprin-75",
-      brand: "Loprin",
-      company: "Highnoon",
-      strength: "75 mg enteric-coated",
-      packSize: "30 tablets",
-      mrpNote: "Medimart listed Loprin 75 mg, 30 tablets, at PKR 107 in October 2026. Other shops listed about PKR 78–165. Ask today's price. Not an official DRAP quote.",
-      status: COUNTER,
-    },
-    {
-      id: "ascard-75",
-      brand: "Ascard",
-      company: "Atco",
-      strength: "75 mg",
-      packSize: "30 tablets",
-      mrpNote: "A 2026 shop list put Ascard 75, 30 tablets, near PKR 102. Ask today's price. Not an official DRAP quote.",
-      status: COUNTER,
     },
   ],
 };
@@ -809,51 +773,6 @@ const SHELVES: Record<ShelfKey, Record<Region, ShelfBrand[]>> = {
       },
     ],
   },
-  aspirin75: {
-    PK: ASPIRIN75.brands,
-    AE: [
-      {
-        id: "jusprin-81",
-        brand: "Jusprin",
-        company: "Julphar",
-        strength: "81 mg",
-        packSize: "enteric-coated tablets",
-        mrpNote: "Julphar low-dose aspirin. A 2026 listing put Jusprin 81 mg, 30 tablets, near AED 29, and 90 tablets near AED 40. Ask today's price. Not an official tariff.",
-        status: COUNTER,
-      },
-      {
-        id: "aspirin-81-ae",
-        brand: "Aspirin 81 mg",
-        company: "Ask which enteric-coated 75 mg or 81 mg pack is on the shelf",
-        strength: "75 mg or 81 mg",
-        packSize: "tablets",
-        mrpNote: "Match the strength on the pack. Ask today's AED price.",
-        status: COUNTER,
-      },
-    ],
-    UK: [
-      {
-        id: "aspirin-75-uk",
-        brand: "Aspirin 75 mg",
-        company: "Pharmacy dispersible or enteric-coated pack",
-        strength: "75 mg",
-        packSize: "tablets",
-        mrpNote: "Illustrative UK shelf about £1–4 for a small pack. Not an NHS prescription.",
-        status: COUNTER,
-      },
-    ],
-    SG: [
-      {
-        id: "cardiprin-sg",
-        brand: "Cardiprin",
-        company: "Reckitt, Guardian and Watsons",
-        strength: "100 mg",
-        packSize: "30 enteric-coated tablets",
-        mrpNote: "The usual low-dose aspirin in Singapore is 100 mg, not 75 mg. Often about SGD 7–12 for 30 tablets. Ask today's price. Not a signed prescription.",
-        status: COUNTER,
-      },
-    ],
-  },
   omeprazole: {
     PK: OMEPRAZOLE.brands,
     AE: [
@@ -1208,8 +1127,8 @@ export function homeRemedies(routing: RoutingDecision, intake: Intake): CareLine
   return rows;
 }
 
-function localize(item: CareItem, market: Region): CareItem {
-  return { ...item, brands: SHELVES[item.shelf][market] };
+function localize(item: CareItem, market: Region | undefined): CareItem {
+  return { ...item, brands: market ? SHELVES[item.shelf][market] : [] };
 }
 
 function isChild(intake: Intake): boolean {
@@ -1328,9 +1247,6 @@ export function careFor(routing: RoutingDecision, intake: Intake): CarePacket {
         "اگر ایمرجنسی نہ ہو تو کولیسٹرول اور خالی پیٹ گلوکوز بات کے قابل اسکریننگ ہے۔ یہ تشخیص نہیں۔",
       ),
     );
-    if (!pregnant && !child && intake.cluster.rest !== "yes" && !aspirinBlocked(intake)) {
-      counter.push(ASPIRIN75);
-    }
   } else if (specialty === "pediatrics") {
     tests.push(
       line(
@@ -1550,20 +1466,13 @@ export function careFor(routing: RoutingDecision, intake: Intake): CarePacket {
     );
   }
 
-  const market = regionForCity(intake.cityId, "PK");
+  const market = medicineMarket(intake.cityId);
 
   let withheldEn = "A pharmacist still has to agree the pack is right. This is not an order to buy a brand.";
   let withheldUr = "پیک درست ہے یا نہیں، یہ فارماسسٹ مانے گا۔ یہ کسی برانڈ کے خریدنے کا حکم نہیں۔";
   if (specialty === "cardiology") {
-    if (counter.some((item) => item.inn === "aspirin")) {
-      withheldEn =
-        "If a heart doctor is nearby, see them before any purchase. The 75 mg note is a humble bridge only, not a signed or legal prescription. Pain at rest, sweating, or breathlessness means emergency care, not a pharmacy.";
-      withheldUr =
-        "اگر دل کا ڈاکٹر قریب ہو تو خریدنے سے پہلے انہیں دکھائیں۔ 75 ملی گرام کا نوٹ صرف ادب سے سہارا ہے، دستخط شدہ یا قانونی نسخہ نہیں۔ آرام پر درد، پسینہ، یا سانس پھولنا فارمیسی نہیں، ایمرجنسی ہے۔";
-    } else {
-      withheldEn = "No heart tablet is suggested to buy. Pain at rest, or pain with sweating or breathlessness, is emergency care.";
-      withheldUr = "دل کی کوئی گولی خریدنے کو نہیں کہی گئی۔ آرام پر درد، یا پسینے اور سانس پھولنے کے ساتھ درد، ایمرجنسی ہے۔";
-    }
+    withheldEn = "Get chest discomfort assessed by a clinician. Call for emergency help if it is happening at rest or with sweating or breathlessness.";
+    withheldUr = "سینے کی تکلیف کا طبی معائنہ کروائیں۔ آرام کے دوران، یا پسینے یا سانس پھولنے کے ساتھ تکلیف ہو تو ایمرجنسی مدد کے لیے کال کریں۔";
   } else if (specialty === "psychiatry") {
     withheldEn = "No mental-health medicine is suggested. The help is a person who can talk with you today, or emergency care if you are unsafe.";
     withheldUr = "ذہنی صحت کی کوئی دوا تجویز نہیں۔ مدد وہ شخص ہے جو آج بات کر سکے، یا اگر آپ غیر محفوظ ہوں تو ایمرجنسی۔";
@@ -1718,87 +1627,10 @@ export function emergencyChecks(domains: string[]): CareLine[] {
   return (rows.length > 0 ? rows : [checks.Sepsis]).slice(0, 2);
 }
 
-function aspirinBlocked(intake: Intake): boolean {
-  if (isChild(intake) || intake.pregnant === "yes" || intake.pregnant === "unknown") return true;
-  if (intake.cluster.alreadyAspirin === "yes") return true;
-  const blob = `${intake.allergies} ${intake.medications}`;
-  return /aspirin|disprin|nsaid|ibuprofen|warfarin|blood thinner|bleed|ulcer|ascard|loprin/i.test(blob);
-}
-
-function aspirinBrands(market: Region): ShelfBrand[] {
-  if (market === "AE") {
-    return [
-      {
-        id: "disprin-ae",
-        brand: "Disprin",
-        company: "Reckitt, common on UAE shelves",
-        strength: "300 mg soluble",
-        packSize: "one tablet to chew, only if it is already in the house",
-        mrpNote: "Illustrative Dubai range. Not a price to go and pay, and not a prescription.",
-        status: "Only if already with you. Not a prescription.",
-      },
-    ];
-  }
-  if (market === "UK") {
-    return [
-      {
-        id: "aspirin-uk",
-        brand: "Aspirin",
-        company: "Pharmacy dispersible 300 mg",
-        strength: "300 mg",
-        packSize: "one tablet to chew, only if it is already in the house",
-        mrpNote: "Not an NHS prescription. Do not travel to buy it.",
-        status: "Only if already with you. Not a prescription.",
-      },
-    ];
-  }
-  if (market === "SG") {
-    return [
-      {
-        id: "aspirin-sg",
-        brand: "Soluble aspirin 300 mg",
-        company: "Only if a 300 mg tablet is already in the house",
-        strength: "300 mg",
-        packSize: "one tablet to chew, only if it is already with you",
-        mrpNote: "Cardiprin on Singapore shelves is 100 mg and is not this chew-now dose. Do not stop at a pharmacy to buy it. Call 995.",
-        status: "Only if already with you. Not a prescription.",
-      },
-    ];
-  }
-  return [
-    {
-      id: "disprin-pk",
-      brand: "Disprin",
-      company: "Reckitt",
-      strength: "300 mg soluble",
-      packSize: "one tablet to chew, only if it is already in the house",
-      mrpNote: "DRAP index, effective 23 July 2026: Disprin 300 mg, 100 tablets, PKR 334.13. Only if a tablet is already with you. Not a reason to stop at a pharmacy.",
-      status: "Only if already with you. Not a prescription.",
-    },
-  ];
-}
-
 /** Humble bridge while emergency help is coming. Never a reason to delay the call. */
 export function emergencyBridge(domains: string[], intake: Intake): CareItem[] {
-  const market = regionForCity(intake.cityId, "PK");
+  const market = medicineMarket(intake.cityId);
   const items: CareItem[] = [];
-  if (domains.includes("Cardiac") && !aspirinBlocked(intake)) {
-    items.push({
-      inn: "aspirin",
-      atc: "B01AC06",
-      shelf: "paracetamol",
-      role: "counter",
-      whyEn:
-        "While you wait for the ambulance, emergency guides sometimes suggest one 300 mg aspirin chewed, for an adult who is not allergic and not bleeding. Only if that pack is already with you.",
-      whyUr:
-        "ایمبولینس کا انتظار کرتے ہوئے، ہدایات کبھی بالغ کے لیے ایک 300 ملی گرام اسپرین چبانے کی بات کرتی ہیں، اگر الرجی اور خون بہنا نہ ہو۔ صرف اگر پیک پہلے سے گھر میں ہو۔",
-      cautionEn:
-        "Not a legal prescription and not a cure. Do not go to a shop first. Do not give this to a child. Skip it if there is allergy, a bleeding ulcer, or a blood-thinner already in use. Still call.",
-      cautionUr:
-        "یہ قانونی نسخہ نہیں اور علاج نہیں۔ پہلے دکان نہ جائیں۔ بچے کو نہ دیں۔ الرجی، خون بہنے والا السر، یا خون پتلی دوا پہلے سے ہو تو چھوڑ دیں۔ کال پھر بھی کریں۔",
-      brands: aspirinBrands(market),
-    });
-  }
   if (domains.includes("Metabolic")) {
     items.push({
       inn: "glucose by mouth",
@@ -1813,7 +1645,7 @@ export function emergencyBridge(domains: string[], intake: Intake): CareItem[] {
         "Not a legal prescription. If they cannot swallow, or are not awake, do not pour anything in. Do not detour to buy it. Still call.",
       cautionUr:
         "یہ قانونی نسخہ نہیں۔ اگر نگل نہ سکیں، یا جاگ نہ رہے ہوں، تو کچھ منہ میں نہ ڈالیں۔ خریدنے کا چکر نہ لگائیں۔ کال پھر بھی کریں۔",
-      brands: glucoseBrands(market),
+      brands: market ? glucoseBrands(market) : [],
     });
   }
   if (domains.includes("Respiratory") && ownInhaler(intake)) {
@@ -1970,8 +1802,8 @@ export function inspectionNotes(routing: RoutingDecision, intake: Intake): CareL
     } else if (intake.cluster.exertion === "yes") {
       notes.push(
         line(
-          "You said it comes on with effort and settles with rest. The most useful check is still a same-day ECG. If no heart doctor is close, a humble 75 mg note may appear below. It is not a signed prescription.",
-          "آپ نے بتایا محنت پر آتا ہے اور آرام سے ٹھیک ہوتا ہے۔ سب سے مفید جانچ پھر بھی اسی دن کی ای سی جی ہے۔ اگر دل کا ڈاکٹر قریب نہ ہو تو نیچے 75 ملی گرام کا ادب سے نوٹ آ سکتا ہے۔ یہ دستخط شدہ نسخہ نہیں۔",
+          "You said it comes on with effort and settles with rest. Arrange a same-day medical assessment and ask whether you need an ECG.",
+          "آپ نے بتایا محنت پر آتا ہے اور آرام سے ٹھیک ہوتا ہے۔ اسی دن طبی معائنہ کروائیں اور پوچھیں کہ ای سی جی کی ضرورت ہے یا نہیں۔",
         ),
       );
     }

@@ -1,5 +1,13 @@
 # Compodar Saib The Compounder
 
+## Community care
+
+Open **Community care** from the home page for a short danger-sign check, local emergency numbers and guides for fever in dengue or malaria areas, diarrhoea, heat illness and suspected snakebite. The check and care guides are available in English and Urdu. The country selector prioritises South Asia. Afghanistan's listed number is specific to Kabul, and Rescue 1122 and Nepal's 102 depend on local coverage.
+
+On GitHub Pages, the browser downloads the app on the first online visit. Once the service worker finishes caching it, the check, guides and listed numbers can open without internet. Telephone calls depend on available phone service. Maps, external references and telemedicine need connectivity. The map search sends the typed locality to Google only when opened. The quick check keeps answers and locality in the current page.
+
+The community check provides care navigation and general first-aid information. A clinician confirms diagnoses and recommends treatment. The repository's clinical evaluation remains subject to clinician-reviewed datasets and sign-off.
+
 Compodar Saib The Compounder is a bilingual (English / Urdu) clinical reference and patient-safety aid designed for users in Pakistan and the Gulf Cooperation Council (GCC) states. It combines the knowledge of a senior physician, clinical pharmacist familiar with local markets, pathologist, and home-remedies information desk. It provides evidence-based information, triage guidance, and practical suggestions. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
 
 ## $0 Free Workflow

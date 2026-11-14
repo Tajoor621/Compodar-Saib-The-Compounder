@@ -11,13 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as CommunityCareRouteImport } from './routes/community-care'
 import { Route as DeskRouteImport } from './routes/desk'
+import { Route as DesksRouteImport } from './routes/desks'
 import { Route as DrugInfoRouteImport } from './routes/drug-info'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ReferenceRouteImport } from './routes/reference'
-import { Route as DesksRouteImport } from './routes/desks'
 import { Route as CaseCaseIdRouteImport } from './routes/case.$caseId'
 import { Route as DeskIndexRouteImport } from './routes/desk.index'
 import { Route as DeskCaseIdRouteImport } from './routes/desk.$caseId'
@@ -32,9 +33,19 @@ const AssistantRoute = AssistantRouteImport.update({
   path: '/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityCareRoute = CommunityCareRouteImport.update({
+  id: '/community-care',
+  path: '/community-care',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DeskRoute = DeskRouteImport.update({
   id: '/desk',
   path: '/desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesksRoute = DesksRouteImport.update({
+  id: '/desks',
+  path: '/desks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrugInfoRoute = DrugInfoRouteImport.update({
@@ -72,11 +83,6 @@ const DeskIndexRoute = DeskIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DeskRoute,
 } as any)
-const DesksRoute = DesksRouteImport.update({
-  id: '/desks',
-  path: '/desks',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DeskCaseIdRoute = DeskCaseIdRouteImport.update({
   id: '/$caseId',
   path: '/$caseId',
@@ -86,6 +92,7 @@ const DeskCaseIdRoute = DeskCaseIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/community-care': typeof CommunityCareRoute
   '/desk': typeof DeskRouteWithChildren
   '/desks': typeof DesksRoute
   '/drug-info': typeof DrugInfoRoute
@@ -100,12 +107,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/community-care': typeof CommunityCareRoute
+  '/desks': typeof DesksRoute
   '/drug-info': typeof DrugInfoRoute
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/privacy': typeof PrivacyRoute
   '/reference': typeof ReferenceRoute
-  '/desks': typeof DesksRoute
   '/case/$caseId': typeof CaseCaseIdRoute
   '/desk/$caseId': typeof DeskCaseIdRoute
   '/desk': typeof DeskIndexRoute
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/community-care': typeof CommunityCareRoute
   '/desk': typeof DeskRouteWithChildren
   '/desks': typeof DesksRoute
   '/drug-info': typeof DrugInfoRoute
@@ -130,13 +139,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assistant'
+    | '/community-care'
     | '/desk'
+    | '/desks'
     | '/drug-info'
     | '/intake'
     | '/pharmacy'
     | '/privacy'
     | '/reference'
-    | '/desks'
     | '/case/$caseId'
     | '/desk/$caseId'
     | '/desk/'
@@ -144,12 +154,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assistant'
+    | '/community-care'
+    | '/desks'
     | '/drug-info'
     | '/intake'
     | '/pharmacy'
     | '/privacy'
     | '/reference'
-    | '/desks'
     | '/case/$caseId'
     | '/desk/$caseId'
     | '/desk'
@@ -157,13 +168,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/assistant'
+    | '/community-care'
     | '/desk'
+    | '/desks'
     | '/drug-info'
     | '/intake'
     | '/pharmacy'
     | '/privacy'
     | '/reference'
-    | '/desks'
     | '/case/$caseId'
     | '/desk/$caseId'
     | '/desk/'
@@ -172,13 +184,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssistantRoute: typeof AssistantRoute
+  CommunityCareRoute: typeof CommunityCareRoute
   DeskRoute: typeof DeskRouteWithChildren
+  DesksRoute: typeof DesksRoute
   DrugInfoRoute: typeof DrugInfoRoute
   IntakeRoute: typeof IntakeRoute
   PharmacyRoute: typeof PharmacyRoute
   PrivacyRoute: typeof PrivacyRoute
   ReferenceRoute: typeof ReferenceRoute
-  DesksRoute: typeof DesksRoute
   CaseCaseIdRoute: typeof CaseCaseIdRoute
 }
 
@@ -198,11 +211,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community-care': {
+      id: '/community-care'
+      path: '/community-care'
+      fullPath: '/community-care'
+      preLoaderRoute: typeof CommunityCareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/desk': {
       id: '/desk'
       path: '/desk'
       fullPath: '/desk'
       preLoaderRoute: typeof DeskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/desks': {
+      id: '/desks'
+      path: '/desks'
+      fullPath: '/desks'
+      preLoaderRoute: typeof DesksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drug-info': {
@@ -238,13 +265,6 @@ declare module '@tanstack/react-router' {
       path: '/reference'
       fullPath: '/reference'
       preLoaderRoute: typeof ReferenceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/desks': {
-      id: '/desks'
-      path: '/desks'
-      fullPath: '/desks'
-      preLoaderRoute: typeof DesksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/case/$caseId': {
@@ -286,13 +306,14 @@ const DeskRouteWithChildren = DeskRoute._addFileChildren(DeskRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssistantRoute: AssistantRoute,
+  CommunityCareRoute: CommunityCareRoute,
   DeskRoute: DeskRouteWithChildren,
+  DesksRoute: DesksRoute,
   DrugInfoRoute: DrugInfoRoute,
   IntakeRoute: IntakeRoute,
   PharmacyRoute: PharmacyRoute,
   PrivacyRoute: PrivacyRoute,
   ReferenceRoute: ReferenceRoute,
-  DesksRoute: DesksRoute,
   CaseCaseIdRoute: CaseCaseIdRoute,
 }
 export const routeTree = rootRouteImport

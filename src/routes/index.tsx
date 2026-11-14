@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ClipboardCheck, Shield, Stethoscope } from "lucide-react";
+import { ClipboardCheck, HeartPulse, Shield, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Shell } from "@/components/mydoctor/shell";
 import { SCENARIOS, t, type CopyKey } from "@/lib/mydoctor/copy";
@@ -33,8 +33,21 @@ function Home() {
             <p className="text-muted">{t(lang, "notADoctor")}</p>
           </div>
           <div className="grid gap-2">
+            <Link
+              to="/community-care"
+              className="flex min-h-11 items-center gap-3 rounded-xl bg-primary px-4 py-3 font-semibold text-primary-fg"
+            >
+              <HeartPulse className="size-5 shrink-0" aria-hidden="true" />
+              <span>
+                <span className="block">{lang === "ur" ? "مقامی طبی رہنمائی" : "Community care"}</span>
+                <span className="block text-sm font-normal">
+                  {lang === "ur" ? "خطرے کی علامات، مقامی مدد اور دیکھ بھال" : "Danger signs, local help and practical care"}
+                </span>
+              </span>
+            </Link>
             <Button
               full
+              variant="outline"
               onClick={() => {
                 resetIntake();
                 void navigate({ to: "/intake" });

@@ -1,4 +1,5 @@
-import type { Jurisdiction, Lang, SpecialtyId } from "./types.ts";
+import type { Lang, SpecialtyId } from "./types.ts";
+import { careRegionForLocation } from "./community/regions.ts";
 import type { ClusterId } from "./routing.ts";
 
 export type Region = "PK" | "UK" | "AE" | "SG";
@@ -39,7 +40,7 @@ export function cityById(id: string | undefined): City | undefined {
 
 export function cityName(id: string | undefined, lang: Lang): string {
   const city = cityById(id);
-  if (!city || city.id === "other") return "";
+  if (!city || city.id === "other") return careRegionForLocation(id)?.name[lang] ?? "";
   return lang === "ur" ? city.ur : city.en;
 }
 
@@ -68,10 +69,14 @@ export function nearestCity(lat: number, lng: number): City {
   return best;
 }
 
-export function regionForCity(id: string | undefined, fallback: Jurisdiction): Region {
-  const city = cityById(id);
-  if (!city || city.id === "other") return fallback === "UK" ? "UK" : "PK";
-  return city.region;
+export function regionForCity(id: string | undefined) {
+  if (!id || id === "other") return undefined;
+  return careRegionForLocation(id)?.id ?? cityById(id)?.region;
+}
+
+export function medicineMarket(id: string | undefined): Region | undefined {
+  const region = regionForCity(id);
+  return region === "PK" || region === "AE" || region === "SG" || region === "UK" ? region : undefined;
 }
 
 export type Facility = {

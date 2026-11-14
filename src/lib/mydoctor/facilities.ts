@@ -1,3 +1,4 @@
+import { CARE_REGIONS, type CareRegionId } from "./community/regions.ts";
 import type { Region } from "./places.ts";
 import type { Jurisdiction } from "./types.ts";
 
@@ -6,7 +7,7 @@ export type Contact = { name: string; detail: string; phone: string; display: st
 export function emergencyContacts(
   jurisdiction: Jurisdiction,
   psychiatric: boolean,
-  region?: Region,
+  region?: Region | CareRegionId,
 ): Contact[] {
   const where = region ?? (jurisdiction === "UK" ? "UK" : "PK");
   if (where === "UK") {
@@ -78,15 +79,15 @@ export function emergencyContacts(
     }
     return rows;
   }
-  const rows: Contact[] = [
-    {
-      name: "Rescue 1122",
-      detail: "Ambulance and rescue. From a mobile, 112 also reaches emergency services.",
-      phone: "1122",
-      display: "1122",
-    },
-  ];
-  if (psychiatric) {
+  const emergency = CARE_REGIONS.find((item) => item.id === where)?.emergency;
+  if (!emergency) return [];
+  const rows: Contact[] = [{
+    name: emergency.label.en,
+    detail: "If the call does not connect, ask someone nearby to help reach emergency care.",
+    phone: emergency.phone,
+    display: emergency.phone,
+  }];
+  if (psychiatric && where === "PK") {
     rows.push({
       name: "Umang",
       detail: "Mental health line listed by WHO for Pakistan. If it does not connect, use 1122.",

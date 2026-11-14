@@ -1,5 +1,12 @@
 # Changelog — Compodar Saib The Compounder
 
+## Unreleased
+
+- Added bilingual community care with a danger-sign check, South Asian emergency contacts, village and district service search, and four sourced care guides.
+- Detailed intake accepts a country when the town is unlisted and uses that location for emergency contacts. Missing and unsupported locations use local-help guidance without a guessed number or medicine brand.
+- Patient-facing chest symptom results direct people to clinical assessment and emergency care and remove automatic aspirin suggestions.
+- GitHub Pages caches the static app after the first visit and publishes the Community Care and Specialist desks entry pages together with the matching assets.
+
 ## 2026-11-10 — Public GitHub Pages site
 
 - A push to `main` builds the full client app and publishes it at `https://tajoor621.github.io/Compodar-Saib-The-Compounder/`, replacing the Jekyll README page.

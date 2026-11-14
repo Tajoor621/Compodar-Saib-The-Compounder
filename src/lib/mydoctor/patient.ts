@@ -167,7 +167,7 @@ export function patientView(record: CaseRecord): PatientView {
   const psych = record.gate.hits.some((hit) => hit.domain === "Psychiatric");
   const care = careFor(record.routing, record.intake);
   const domains = record.gate.hits.map((hit) => hit.domain);
-  const region = regionForCity(cityId, record.jurisdiction);
+  const region = regionForCity(cityId);
   const text = (item: { en: string; ur: string }) => (lang === "ur" ? item.ur : item.en);
   const visibleTests = emergency ? [] : care.tests;
   const places = suggestPlaces(
@@ -181,7 +181,7 @@ export function patientView(record: CaseRecord): PatientView {
     showEmergency: emergency,
     paragraphs,
     roman,
-    phones: emergency ? emergencyContacts(record.jurisdiction, psych, region) : [],
+    phones: emergency && region ? emergencyContacts(record.jurisdiction, psych, region) : [],
     waiting: record.status !== "signed",
     verdict: record.verdict?.text ?? null,
     signer: record.verdict?.signerLabel ?? null,

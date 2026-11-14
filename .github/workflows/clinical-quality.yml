@@ -48,3 +48,9 @@ jobs:
       - name: GitHub Pages static build
         if: always()
         run: npm run build:pages
+      - name: Install Chromium for the Pages browser check
+        if: always()
+        run: npx playwright install --with-deps chromium
+      - name: Verify community care in browser
+        if: always()
+        run: node scripts/community-care-browser.mjs
