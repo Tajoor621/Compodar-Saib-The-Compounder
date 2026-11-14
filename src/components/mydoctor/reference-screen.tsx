@@ -236,9 +236,10 @@ export function ReferenceScreen() {
       )}
 
       <div className="flex flex-col gap-2">
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="font-semibold">{ur ? "سوال" : "Question"}</span>
+        <div className="flex flex-col gap-1 text-sm">
+          <label htmlFor="reference-question" className="font-semibold">{ur ? "سوال" : "Question"}</label>
           <textarea
+            id="reference-question"
             value={input}
             onChange={(event) => setInput(event.target.value)}
             placeholder={ur ? "سوال لکھیں…" : "Type a question…"}
@@ -251,7 +252,7 @@ export function ReferenceScreen() {
               }
             }}
           />
-        </label>
+        </div>
         <div className="flex flex-wrap gap-2">
           <Button onClick={() => ask(input)} disabled={identifierHit || input.trim().length < 2}>
             {ur ? "نوٹس دیکھیں" : "Search notes"}
