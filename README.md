@@ -10,6 +10,14 @@ The community check provides care navigation and general first-aid information. 
 
 Compodar Saib The Compounder is a bilingual (English / Urdu) clinical reference and patient-safety aid designed for users in Pakistan and the Gulf Cooperation Council (GCC) states. It combines the knowledge of a senior physician, clinical pharmacist familiar with local markets, pathologist, and home-remedies information desk. It provides evidence-based information, triage guidance, and practical suggestions. It is not a diagnostic tool, prescriber, medical device, or substitute for a licensed clinician. It must not be used to make autonomous clinical decisions.
 
+## Pakistan Pharmacist Desk
+
+Look up the brand, generic name or printed form. The desk keeps sourced product identities separate from generic monographs and retailer listings. For example, Mac-F tablets, Mac-F Plus tablets and Mac-F syrup have distinct records, and Cipocain is listed as ear drops.
+
+GitHub Pages searches an indexed snapshot of public product links from SehatMedi and Medishop.pk. The date is shown next to the catalogue results. The first online visit caches the index for offline use. Search links open each retailer’s current catalogue. The separate DRAP links open its registered drugs, provisional health and OTC listings, price index, and recalls. Retailer listings do not establish registration, official price, or stock at a local pharmacy.
+
+On the server build, **Check retailer listings in the app** submits the product name to the two stores’ predictive search and shows their reported price and stock where available. To update the static retailer links, run `npm run refresh:pakistan-pharmacy` and commit the refreshed `public/pakistan-pharmacy/catalog.json`. The refresh preserves the prior snapshot when a source fails.
+
 ## $0 Free Workflow
 
 The app is designed for a zero-cost workflow:

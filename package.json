@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "node scripts/with-app-env.mjs vite dev --host 0.0.0.0 --port 8080",
     "build": "node scripts/with-app-env.mjs vite build && npm run db:migrate",
+    "refresh:pakistan-pharmacy": "node scripts/refresh-pakistan-pharmacy.mjs",
     "build:pages": "node scripts/build-pages.mjs",
     "db:migrate": "node scripts/migrate.mjs",
     "build:dev": "node scripts/with-app-env.mjs vite build --mode development",
@@ -19,11 +20,11 @@
     "preview:stop": "node scripts/preview.mjs stop",
     "typecheck": "tsc --noEmit",
     "check:auth": "node scripts/check-auth-invariant.mjs",
-    "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/preview-path-prefix.test.ts src/lib/mydoctor/safety.test.ts src/lib/mydoctor/safety-privacy.test.ts src/lib/mydoctor/reference/reference.test.ts src/lib/mydoctor/desks/assess.test.ts src/lib/mydoctor/community/triage.test.ts src/lib/mydoctor/pharmacy.test.ts src/lib/mydoctor/drug-info.test.ts src/lib/mydoctor/local-storage.test.ts",
+    "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/preview-path-prefix.test.ts src/lib/mydoctor/safety.test.ts src/lib/mydoctor/safety-privacy.test.ts src/lib/mydoctor/reference/reference.test.ts src/lib/mydoctor/desks/assess.test.ts src/lib/mydoctor/community/triage.test.ts src/lib/mydoctor/pharmacy.test.ts src/lib/mydoctor/pakistan-pharmacy.test.ts src/lib/mydoctor/drug-info.test.ts src/lib/mydoctor/local-storage.test.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "eval": "node scripts/eval/run.mjs",
-    "test:clinical": "node --experimental-strip-types --test src/lib/mydoctor/safety.test.ts src/lib/mydoctor/safety-privacy.test.ts src/lib/mydoctor/reference/reference.test.ts src/lib/mydoctor/desks/assess.test.ts src/lib/mydoctor/community/triage.test.ts src/lib/mydoctor/pharmacy.test.ts src/lib/mydoctor/drug-info.test.ts src/lib/mydoctor/local-storage.test.ts src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/preview-path-prefix.test.ts"
+    "test:clinical": "node --experimental-strip-types --test src/lib/mydoctor/safety.test.ts src/lib/mydoctor/safety-privacy.test.ts src/lib/mydoctor/reference/reference.test.ts src/lib/mydoctor/desks/assess.test.ts src/lib/mydoctor/community/triage.test.ts src/lib/mydoctor/pharmacy.test.ts src/lib/mydoctor/pakistan-pharmacy.test.ts src/lib/mydoctor/drug-info.test.ts src/lib/mydoctor/local-storage.test.ts src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/preview-path-prefix.test.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.4",

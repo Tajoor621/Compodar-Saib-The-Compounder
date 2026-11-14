@@ -1,3 +1,5 @@
+import { PakistanProducts } from "./pakistan-products";
+import { findPakistanProducts } from "@/lib/mydoctor/pakistan-pharmacy";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { t } from "@/lib/mydoctor/copy";
@@ -9,7 +11,7 @@ import { useClinic } from "@/lib/mydoctor/store";
 import { isStaticPages, STATIC_HOST_COPY } from "@/lib/static-pages";
 import type { Lang } from "@/lib/mydoctor/types";
 
-const CHIPS = ["Panadol", "Nexium", "Gravinate", "Augmentin", "Septran", "Concor"];
+const CHIPS = ["Mac-F", "Cipocain", "Panadol", "Augmentin"];
 
 const FORM_PHRASE: Record<string, string> = {
   tablet: "tablet",
@@ -43,24 +45,30 @@ export function PharmacyScreen() {
   const blocked = query.trim().length > 0 && detectIdentifiers(query);
   const lookup = useMemo(() => (blocked ? null : lookupPharmacy(query)), [blocked, query]);
   const matches = lookup?.matches ?? [];
+  const hasProduct = !blocked && findPakistanProducts(query).length > 0;
   const exact = matches[0]?.score === 100;
   const chosen =
     matches.find((item) => item.row.id === pickedId)?.row ??
-    (matches.length === 1 || exact ? matches[0]?.row : undefined);
+    (exact && !hasProduct ? matches[0]?.row : undefined);
   const formQuery = formPick ? `${query} ${FORM_PHRASE[formPick] ?? formPick}` : query;
 
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold leading-tight">{t(lang, "pharmTitle")}</h1>
-        <p className="text-muted">{t(lang, "pharmLead")}</p>
+        <p className="text-muted">{lang === "ur" ? "پاکستانی برانڈ، جنرک نام یا پیک کی شکل تلاش کریں۔" : "Search by Pakistani brand, generic name, or pack form."}</p>
         <Link to="/reference" className="text-sm font-semibold text-primary">
           {t(lang, "referenceDesk")}
         </Link>
       </div>
-      <label className="flex flex-col gap-2">
-        <span className="text-sm font-semibold">{t(lang, "pharmSearch")}</span>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="pharmacy-query" className="text-sm font-semibold">{t(lang, "pharmSearch")}</label>
         <input
+          id="pharmacy-query"
+          type="search"
+          autoComplete="off"
+          spellCheck={false}
+          maxLength={100}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -71,7 +79,7 @@ export function PharmacyScreen() {
           placeholder={t(lang, "pharmHint")}
           className="min-h-11 rounded-xl border border-line bg-surface px-4 text-lg text-ink outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
         />
-      </label>
+      </div>
       <div className="flex flex-wrap gap-2">
         {CHIPS.map((chip) => (
           <button
@@ -94,10 +102,7 @@ export function PharmacyScreen() {
           {t(lang, "identifierBlocked")}
         </p>
       )}
-      {!blocked && query.trim().length >= 2 && lookup?.kind === "miss" && (
-        <p className="rounded-xl border border-line bg-surface p-4 text-sm">{t(lang, "pharmMiss")}</p>
-      )}
-      {!blocked && lookup?.kind === "named" && matches.length > 1 && (
+      {!blocked && !hasProduct && lookup?.kind === "named" && (matches.length > 1 || !exact) && (
         <div className="flex flex-col gap-2">
           <p className="text-sm font-semibold">{t(lang, "pharmPick")}</p>
           <div className="flex flex-col gap-2">
@@ -128,9 +133,10 @@ export function PharmacyScreen() {
         </div>
       )}
       {chosen && <Card row={chosen} lang={lang} query={formQuery} onForm={setFormPick} formPick={formPick} />}
-      {!blocked && lookup?.kind === "class" && lookup.reading && (
+      {!blocked && !hasProduct && lookup?.kind === "class" && lookup.reading && (
         <Card row={lookup.reading} lang={lang} query={formQuery} onForm={setFormPick} formPick={formPick} classNote />
       )}
+      {!blocked && <PakistanProducts query={query} lang={lang} localMiss={lookup?.kind === "miss"} hasExactMonograph={exact} />}
 
       {isStaticPages() ? (
         <p className="text-sm text-muted">{STATIC_HOST_COPY.photoConsent[lang]}</p>

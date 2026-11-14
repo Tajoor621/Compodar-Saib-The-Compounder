@@ -9,12 +9,14 @@ const root = resolve(import.meta.dirname);
 
 function pagesStubs(): Plugin {
   const answer = resolve(root, "src/lib/ai/answer.pages.ts");
+  const market = resolve(root, "src/lib/mydoctor/pakistan-market.pages.ts");
   const pack = resolve(root, "src/lib/mydoctor/read-pack.pages.ts");
   return {
     name: "compodar-pages-stubs",
     enforce: "pre",
     resolveId(id) {
       const clean = id.split("?")[0] ?? id;
+      if (/\/lib\/mydoctor\/pakistan-market(?:\.ts)?$/.test(clean)) return market;
       if (clean.endsWith("/lib/ai/answer") || clean.endsWith("/lib/ai/answer.ts") || clean === "@/lib/ai/answer") {
         return answer;
       }

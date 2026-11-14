@@ -14,6 +14,7 @@ const contentTypes = {
   ".svg": "image/svg+xml",
   ".webmanifest": "application/manifest+json",
   ".png": "image/png",
+  ".json": "application/json",
 };
 const server = createServer(async (req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
@@ -58,6 +59,25 @@ async function verifyOtherScreens(page, base) {
     .first()
     .waitFor();
   assert.equal(await page.locator("input[type=file]").count(), 0);
+  const product = page.getByLabel("Name on the pack", { exact: true });
+  await product.fill("mac-f");
+  await page.getByRole("heading", { name: /Mac-F · Syrup · 120 mL/i }).waitFor();
+  await page.getByRole("heading", { name: /Mac-F Plus · Tablets/i }).waitFor();
+  await product.fill("cipocain");
+  await page.getByRole("heading", { name: /Cipocain · Ear drops · 5 mL/i }).waitFor();
+  await page.getByText("Ciprofloxacin and lignocaine (lidocaine)", { exact: true }).waitFor();
+  await product.fill("layrays");
+  await page.getByRole("heading", { name: "Pakistan retailer catalogue matches" }).waitFor();
+  assert.ok(await page.getByRole("link", { name: /layrays.*Medishop/i }).count());
+  await product.fill("zzzznoexistingpack");
+  await page
+    .getByRole("status")
+    .filter({ hasText: /No exact product record/ })
+    .waitFor();
+  assert.match(
+    await page.getByRole("link", { name: "SehatMedi", exact: true }).getAttribute("href"),
+    /q=zzzznoexistingpack/,
+  );
 
   await open("drug-info/", "Clinical drug information");
   await page.getByLabel("Generic or brand").fill("paracetamol");
@@ -72,7 +92,10 @@ async function verifyOtherScreens(page, base) {
     localStorage.getItem("mydoctor-reference-history")?.includes("local-shelf:paracetamol"),
   );
   await open("reference/", "Reference desk");
-  await page.getByRole("paragraph").filter({ hasText: /^Paracetamol with warfarin$/ }).waitFor();
+  await page
+    .getByRole("paragraph")
+    .filter({ hasText: /^Paracetamol with warfarin$/ })
+    .waitFor();
 
   await open("desks/", "Specialist desks");
   await page.locator("input[type=file]").setInputFiles({

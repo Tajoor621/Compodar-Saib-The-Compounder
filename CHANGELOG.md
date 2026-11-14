@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Expanded the Pharmacist Desk with Pakistani product records, separate Mac-F variants and Cipocain ear drops, a dated retailer index, current DRAP links and live retailer lookup on the server.
+
 - Made the public assistant answer from the same offline references as the Reference desk, and corrected server pack-photo consent to identify Groq.
 - Scoped local data removal to Compodar Saib and fixed the post-clear route for GitHub Pages. Validated saved report and chat formats before loading imports.
 - Extended browser checks across intake and case recovery, specialist desks, reference assistant, pharmacy, drug information and privacy.
