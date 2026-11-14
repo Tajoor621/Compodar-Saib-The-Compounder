@@ -72,7 +72,7 @@ async function verifyOtherScreens(page, base) {
     localStorage.getItem("mydoctor-reference-history")?.includes("local-shelf:paracetamol"),
   );
   await open("reference/", "Reference desk");
-  await page.getByText("Paracetamol with warfarin", { exact: true }).waitFor();
+  await page.getByRole("paragraph").filter({ hasText: /^Paracetamol with warfarin$/ }).waitFor();
 
   await open("desks/", "Specialist desks");
   await page.locator("input[type=file]").setInputFiles({
@@ -94,7 +94,7 @@ async function verifyOtherScreens(page, base) {
   await page.getByRole("button", { name: "New profile" }).click();
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.getByRole("button", { name: /Family doctor/ }).click();
-  await page.getByLabel("Main complaint, in your own words").fill("Chest tightness");
+  await page.locator("main textarea").fill("Chest tightness");
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await page.getByRole("button", { name: "Yes", exact: true }).click();
   await page
@@ -144,7 +144,7 @@ async function verifyOtherScreens(page, base) {
     0,
   );
   await page.getByRole("link", { name: "Return to home" }).click();
-  await page.waitForURL(base);
+  await page.waitForURL((url) => url.pathname.replace(/\/$/, "") === PAGES_BASE.slice(0, -1));
 }
 
 let browser;
