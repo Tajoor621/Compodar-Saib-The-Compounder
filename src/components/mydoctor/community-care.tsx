@@ -1,3 +1,4 @@
+import { FamilyCareLinks } from "@/components/mydoctor/family-care";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, HeartPulse, MapPin, Phone } from "lucide-react";
@@ -249,6 +250,8 @@ export function CommunityCare() {
           </ul>
         </details>
       </section>
+
+      {!needsHelp && <FamilyCareLinks lang={lang} />}
 
       {!needsHelp && (
         <>

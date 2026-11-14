@@ -1,3 +1,4 @@
+import { FamilyCareLinks } from "@/components/mydoctor/family-care";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ClipboardCheck, HeartPulse, Shield, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -96,6 +97,8 @@ function Home() {
             </Link>
           </div>
         </section>
+
+        <FamilyCareLinks lang={lang} />
 
         <section className="grid gap-4 sm:grid-cols-3">
           {LAYERS.map((layer) => {

@@ -45,6 +45,42 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((done) => server.listen(0, "127.0.0.1", done));
 
+async function verifyFamilyCare(page, base, context) {
+  await page.goto(base + "family-care/?track=children");
+  await page.getByRole("heading", { name: "Child health", exact: true }).waitFor();
+  const answer = (name) => page.getByRole("button", { name, exact: true }).click();
+  await page.getByLabel("Patient’s current location").selectOption("PK");
+  await page.locator('a[href="tel:1166"]').waitFor();
+  await answer("No");
+  await answer("No");
+  await page.getByText(/temperature of 38°C/).waitFor();
+  await answer("Yes");
+  await page.getByRole("alert").filter({ hasText: "Get medical care now" }).waitFor();
+  assert.equal(await page.getByRole("heading", { name: /Diarrhoea and ORS/ }).count(), 0);
+  await page.locator('a[href="tel:1122"]').waitFor();
+
+  await page.getByRole("link", { name: "Pregnancy and after birth", exact: true }).click();
+  await answer("No");
+  await answer("No");
+  await page.getByText(/baby stopped moving/).waitFor();
+  await answer("Not sure");
+  await page.getByRole("alert").filter({ hasText: "Get medical care now" }).waitFor();
+
+  await page.getByRole("link", { name: "Periods and pelvic symptoms", exact: true }).click();
+  await answer("Yes");
+  await page.getByRole("alert").filter({ hasText: "Get emergency help now" }).waitFor();
+
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  await context.setOffline(true);
+  const offline = await page.goto(base + "family-care/?track=remedies");
+  assert.equal(offline?.fromServiceWorker(), true);
+  await page.getByRole("heading", { name: /Diarrhoea and ORS/ }).waitFor();
+  await page.getByRole("button", { name: "اردو", exact: true }).click();
+  await page.getByRole("heading", { name: "پاکستان میں گھریلو دیکھ بھال", exact: true }).waitFor();
+  assert.equal(await page.locator("html").getAttribute("dir"), "rtl");
+  await context.setOffline(false);
+}
+
 async function verifyOtherScreens(page, base) {
   const open = async (route, heading) => {
     const response = await page.goto(base + route);
@@ -226,6 +262,7 @@ try {
         await context.setOffline(false);
         await page.getByRole("button", { name: "EN", exact: true }).click();
         await verifyOtherScreens(page, base);
+        await verifyFamilyCare(page, base, context);
       }
       assert.deepEqual(errors, []);
     } finally {

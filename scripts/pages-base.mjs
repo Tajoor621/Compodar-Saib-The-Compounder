@@ -4,6 +4,7 @@ export const PAGES_BASE = "/Compodar-Saib-The-Compounder/";
 export const PAGES_ROUTES = [
   "intake",
   "community-care",
+  "family-care",
   "pharmacy",
   "desk",
   "drug-info",

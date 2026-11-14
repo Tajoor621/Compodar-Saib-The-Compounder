@@ -1,3 +1,4 @@
+import { FamilyCareLinks } from "@/components/mydoctor/family-care";
 import { Link } from "@tanstack/react-router";
 import { detectIdentifiers } from "@/lib/mydoctor/safety";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -235,6 +236,8 @@ export function DesksScreen() {
             : "Do not type names, birth dates, or record numbers. Use a relation such as Me or Mother."}
         </p>
       </div>
+
+      {!started && !viewing && <FamilyCareLinks lang={lang} />}
 
       {!started && !viewing && (
         <>
@@ -612,7 +615,9 @@ function ReportView({ lang, report, onBack, onDelete }: { lang: Lang; report: De
         <>
           <p className="font-semibold">{CARE_LABEL[result.care][ur ? "ur" : "en"]}</p>
           {result.childReview && (
-            <p>{ur ? "عمر بچوں کے ڈاکٹر کی طرف اشارہ کرتی ہے۔ یہ سات ڈیسک میں سے نہیں۔" : "Age points to a children's doctor. That review is not one of these seven desks."}</p>
+            <Link to="/family-care" search={{ track: "children" }} className="inline-flex min-h-11 items-center font-semibold text-primary underline">
+              {ur ? "بچوں کی صحت اور مقامی مدد" : "Child health and local care"}
+            </Link>
           )}
           {result.mentalReview && (
             <p>{ur ? "کہانی مزاج کی ہے۔ موجودہ نوٹ ذہنی صحت کے ڈاکٹر کی طرف اشارہ کرتے ہیں۔" : "The story is about mood. The existing notes point to a mental health doctor."}</p>

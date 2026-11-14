@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added English and Urdu child health, pregnancy and postpartum, gynaecology and Pakistan home-care guides with sourced warning signs, emergency contacts, and local service search.
+
 - Expanded the Pharmacist Desk with Pakistani product records, separate Mac-F variants and Cipocain ear drops, a dated retailer index, current DRAP links and live retailer lookup on the server.
 
 - Made the public assistant answer from the same offline references as the Reference desk, and corrected server pack-photo consent to identify Groq.

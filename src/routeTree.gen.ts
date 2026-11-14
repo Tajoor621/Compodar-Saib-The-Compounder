@@ -15,6 +15,7 @@ import { Route as CommunityCareRouteImport } from './routes/community-care'
 import { Route as DeskRouteImport } from './routes/desk'
 import { Route as DesksRouteImport } from './routes/desks'
 import { Route as DrugInfoRouteImport } from './routes/drug-info'
+import { Route as FamilyCareRouteImport } from './routes/family-care'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -51,6 +52,11 @@ const DesksRoute = DesksRouteImport.update({
 const DrugInfoRoute = DrugInfoRouteImport.update({
   id: '/drug-info',
   path: '/drug-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FamilyCareRoute = FamilyCareRouteImport.update({
+  id: '/family-care',
+  path: '/family-care',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IntakeRoute = IntakeRouteImport.update({
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/desk': typeof DeskRouteWithChildren
   '/desks': typeof DesksRoute
   '/drug-info': typeof DrugInfoRoute
+  '/family-care': typeof FamilyCareRoute
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/privacy': typeof PrivacyRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/community-care': typeof CommunityCareRoute
   '/desks': typeof DesksRoute
   '/drug-info': typeof DrugInfoRoute
+  '/family-care': typeof FamilyCareRoute
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/privacy': typeof PrivacyRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/desk': typeof DeskRouteWithChildren
   '/desks': typeof DesksRoute
   '/drug-info': typeof DrugInfoRoute
+  '/family-care': typeof FamilyCareRoute
   '/intake': typeof IntakeRoute
   '/pharmacy': typeof PharmacyRoute
   '/privacy': typeof PrivacyRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/desk'
     | '/desks'
     | '/drug-info'
+    | '/family-care'
     | '/intake'
     | '/pharmacy'
     | '/privacy'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/community-care'
     | '/desks'
     | '/drug-info'
+    | '/family-care'
     | '/intake'
     | '/pharmacy'
     | '/privacy'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/desk'
     | '/desks'
     | '/drug-info'
+    | '/family-care'
     | '/intake'
     | '/pharmacy'
     | '/privacy'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   DeskRoute: typeof DeskRouteWithChildren
   DesksRoute: typeof DesksRoute
   DrugInfoRoute: typeof DrugInfoRoute
+  FamilyCareRoute: typeof FamilyCareRoute
   IntakeRoute: typeof IntakeRoute
   PharmacyRoute: typeof PharmacyRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       path: '/drug-info'
       fullPath: '/drug-info'
       preLoaderRoute: typeof DrugInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/family-care': {
+      id: '/family-care'
+      path: '/family-care'
+      fullPath: '/family-care'
+      preLoaderRoute: typeof FamilyCareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/intake': {
@@ -310,6 +330,7 @@ const rootRouteChildren: RootRouteChildren = {
   DeskRoute: DeskRouteWithChildren,
   DesksRoute: DesksRoute,
   DrugInfoRoute: DrugInfoRoute,
+  FamilyCareRoute: FamilyCareRoute,
   IntakeRoute: IntakeRoute,
   PharmacyRoute: PharmacyRoute,
   PrivacyRoute: PrivacyRoute,
